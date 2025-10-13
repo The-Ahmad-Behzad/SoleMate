@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "145878439915",
+    "project_id": "solemate-app-d4560",
+    "storage_bucket": "solemate-app-d4560.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145878439915:android:cbf2f8d21f948e7952ebae",
+        "android_client_info": {
+          "package_name": "com.solemate.app.solemate_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_M9y9kcfuRcq5x5uDhP5QNZ3k7ohhqlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

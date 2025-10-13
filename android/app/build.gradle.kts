@@ -1,62 +1,106 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-
-    // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
-
     id("org.jetbrains.kotlin.android")
 }
 
 dependencies {
-    // Import the Firebase BoM
+    // Firebase, ARCore, Filament, TFLite etc.
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.ar:core:1.46.0")
+    implementation("com.google.android.filament:filament-android:1.65.2")
+    implementation("com.google.android.filament:filament-utils-android:1.65.2")
+    implementation("org.tensorflow:tensorflow-lite:2.16.1")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.16.1")
 
-
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics:23.0.0")
-
-    implementation("com.google.firebase:firebase-auth:24.0.1")
-
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
+    // Exclude Play Core duplicates if they appear transitively
+    // (you can remove these if you explicitly add a single play-core dependency)
+    configurations.all {
+        exclude(group = "com.google.android.play", module = "core")
+        exclude(group = "com.google.android.play", module = "core-common")
+    }
 }
 
 android {
     namespace = "com.solemate.app.solemate_app"
     compileSdk = flutter.compileSdkVersion
+    // keep ndkVersion if you pinned one in flutter (optional)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.solemate.app.solemate_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // --- ABI filters: include the ABIs you want packaged into the APK ---
+        // armeabi-v7a (32-bit ARM phones), arm64-v8a (64-bit phones), x86_64 (emulator / some devices)
+        ndk {
+            abiFilters += setOf("armeabi-v7a", "arm64-v8a", "x86_64")
+        }
+
+        // If you use CMake/native libs ensure externalNativeBuild is configured below
     }
+
+    // If you have native code built via CMake, configure it here
+    externalNativeBuild {
+        cmake {
+            // update the path if your CMakeLists is elsewhere
+            path = file("CMakeLists.txt")
+            // version is optional: only include if the SDK Manager has this CMake version installed
+            // version = "3.22.1"
+        }
+    }
+
+    // Optional: produce per-ABI APKs instead of one fat APK.
+    // Use either this (splits) or the ndk.abiFilters above for packaging control.
+//    splits {
+//        abi {
+//            isEnable = true
+//            reset()
+//            include("armeabi-v7a", "arm64-v8a", "x86_64")
+//            isUniversalApk = false // if true, builds a universal APK including all ABIs
+//        }
+//    }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
+
+
+    packaging {
+        jniLibs { useLegacyPackaging = true }
+        resources {
+            excludes += setOf(
+                "META-INF/LICENSE",
+                "META-INF/LICENSE-FIREBASE.txt",
+                "META-INF/NOTICE"
+            )
+        }
+    }
+
+
 }
 
 flutter {

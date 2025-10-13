@@ -1,0 +1,1 @@
+ C:\\Users\\Ahmad\\AndroidStudioProjects\\SoleMate\\.dart_tool\\flutter_build\\3e1a2a85e4687194fdf4ab4bb92b24b5\\dart_build_result.json: 
