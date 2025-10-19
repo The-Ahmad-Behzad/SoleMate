@@ -37,9 +37,11 @@
         <activity
             android:name=".ARActivity"
             android:exported="false"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@style/SoleMateARTheme"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:screenOrientation="portrait" />
+
+
 
 
 
