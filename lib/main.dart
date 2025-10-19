@@ -189,10 +189,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
+import 'firebase_options.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _requestCameraPermission();
   runApp(const MyApp());
 }
@@ -215,47 +217,49 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'SoleMate AR Home'),
+      home: const SplashScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
 
-class _MyHomePageState extends State<MyHomePage> {
-  static const platform = MethodChannel('solemate/native');
-
-  /// 🔹 This now matches the Kotlin method name in MainActivity.kt
-  Future<void> _openARView() async {
-    try {
-      final result = await platform.invokeMethod('openARView');
-      print(result);
-    } on PlatformException catch (e) {
-      print("Failed to open AR view: ${e.message}");
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Text("Press the camera button to open AR view."),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _openARView, // ✅ updated call
-        tooltip: 'Open AR Camera',
-        child: const Icon(Icons.camera_alt),
-      ),
-    );
-  }
-}
-
+// OLD TASHFEEN CODE
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
+//   final String title;
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+//
+// class _MyHomePageState extends State<MyHomePage> {
+//   static const platform = MethodChannel('solemate/native');
+//
+//   /// 🔹 This now matches the Kotlin method name in MainActivity.kt
+//   Future<void> _openARView() async {
+//     try {
+//       final result = await platform.invokeMethod('openARView');
+//       print(result);
+//     } on PlatformException catch (e) {
+//       print("Failed to open AR view: ${e.message}");
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+//         title: Text(widget.title),
+//       ),
+//       body: const Center(
+//         child: Text("Press the camera button to open AR view."),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _openARView, // ✅ updated call
+//         tooltip: 'Open AR Camera',
+//         child: const Icon(Icons.camera_alt),
+//       ),
+//     );
+//   }
+// }
+//

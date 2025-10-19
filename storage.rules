@@ -1,0 +1,24 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // === 1️⃣ General rule: Only authenticated users can write ===
+    match /{allPaths=**} {
+      allow read: if true;  // Public read access (e.g., shoe catalog, 3D assets)
+      allow write: if request.auth != null;  // Only logged-in users can upload
+    }
+
+    // === 2️⃣ User Uploads (e.g., custom skins, AR snapshots) ===
+    match /user_uploads/{userId}/{fileName} {
+      allow read: if true;  // Allow anyone to view shared assets
+      allow write: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // === 3️⃣ Protected internal assets (e.g., official shoe models) ===
+    match /assets/{fileName} {
+      allow read: if true;   // Anyone can view official assets
+      allow write, delete: if false; // Only admin backend (via server key)
+    }
+  }
+}

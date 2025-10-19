@@ -16,6 +16,7 @@ dependencies {
     implementation("com.google.android.filament:filament-utils-android:1.65.2")
     implementation("org.tensorflow:tensorflow-lite:2.16.1")
     implementation("org.tensorflow:tensorflow-lite-gpu:2.16.1")
+    implementation("com.google.android.gms:play-services-auth:21.4.0")
 
 
     // AndroidX AppCompat and UI components

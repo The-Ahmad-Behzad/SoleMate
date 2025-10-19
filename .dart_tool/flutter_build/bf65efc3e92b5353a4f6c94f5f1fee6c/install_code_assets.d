@@ -1,0 +1,1 @@
+ C:\\Projects\\solemate_app\\.dart_tool\\flutter_build\\bf65efc3e92b5353a4f6c94f5f1fee6c\\native_assets.json: 
