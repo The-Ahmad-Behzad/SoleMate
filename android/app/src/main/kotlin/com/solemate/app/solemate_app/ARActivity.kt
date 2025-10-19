@@ -46,36 +46,148 @@
 //}
 
 
+// --------------------------------------------------------------------------------------------
+// V2 of last working state without camera rendering
+//package com.solemate.app.solemate_app
+//
+//import android.app.Activity
+//import android.os.Bundle
+//import android.util.Log
+//import android.view.SurfaceHolder
+//import android.view.SurfaceView
+//import android.widget.Toast
+//import com.google.ar.core.*
+//import com.google.ar.core.ArCoreApk
+//import com.google.ar.core.Session
+//import com.google.ar.core.exceptions.CameraNotAvailableException
+//import com.google.ar.core.exceptions.UnavailableException
+//import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
+//
+//class ARActivity : Activity() {
+//
+//    private var surfaceView: SurfaceView? = null
+//    private var session: Session? = null
+//    private var installRequested = false
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("SoleMateAR", "Opened AR View")
+//
+//        surfaceView = SurfaceView(this)
+//        setContentView(surfaceView)
+//
+//        // Check ARCore availability
+//        try {
+//            when (ArCoreApk.getInstance().checkAvailability(this)) {
+//                ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
+//                    Toast.makeText(this, "ARCore not supported on this device", Toast.LENGTH_LONG).show()
+//                    finish()
+//                    return
+//                }
+//                else -> { /* Supported */ }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error checking ARCore availability: ${e.message}")
+//            finish()
+//        }
+//
+//        // Listen for surface creation
+//        surfaceView?.holder?.addCallback(object : SurfaceHolder.Callback {
+//            override fun surfaceCreated(holder: SurfaceHolder) {
+//                startARSession()
+//            }
+//
+//            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+//            override fun surfaceDestroyed(holder: SurfaceHolder) {
+//                stopARSession()
+//            }
+//        })
+//    }
+//
+//    private fun startARSession() {
+//        if (session == null) {
+//            try {
+//                when (ArCoreApk.getInstance().requestInstall(this, !installRequested)) {
+//                    ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+//                        installRequested = true
+//                        return
+//                    }
+//                    ArCoreApk.InstallStatus.INSTALLED -> {
+//                        session = Session(this)
+//                    }
+//                }
+//            } catch (e: UnavailableUserDeclinedInstallationException) {
+//                Toast.makeText(this, "ARCore installation declined", Toast.LENGTH_LONG).show()
+//                return
+//            } catch (e: UnavailableException) {
+//                Toast.makeText(this, "ARCore unavailable: ${e.message}", Toast.LENGTH_LONG).show()
+//                return
+//            }
+//        }
+//
+//        try {
+//            session?.resume()
+//            Toast.makeText(this, "AR Session started", Toast.LENGTH_SHORT).show()
+//        } catch (e: CameraNotAvailableException) {
+//            Toast.makeText(this, "Camera not available. Try restarting the app.", Toast.LENGTH_LONG).show()
+//            session = null
+//        }
+//    }
+//
+//    private fun stopARSession() {
+//        try {
+//            session?.pause()
+//            session?.close()
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error stopping session: ${e.message}")
+//        }
+//        session = null
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        session?.resume()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        session?.pause()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        stopARSession()
+//    }
+//}
 
 package com.solemate.app.solemate_app
 
-import android.app.Activity
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
-import com.google.ar.core.ArCoreApk
-import com.google.ar.core.Session
 import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.exceptions.UnavailableException
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
 
-class ARActivity : Activity() {
+class ARActivity : AppCompatActivity() {
 
-    private var surfaceView: SurfaceView? = null
+    private var glSurfaceView: GLSurfaceView? = null
     private var session: Session? = null
     private var installRequested = false
+    private var renderer: SimpleRenderer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("SoleMateAR", "Opened AR View")
 
-        surfaceView = SurfaceView(this)
-        setContentView(surfaceView)
+        // ✅ Use GLSurfaceView instead of SurfaceView
+        glSurfaceView = GLSurfaceView(this)
+        setContentView(glSurfaceView)
 
-        // Check ARCore availability
+        // ARCore session setup
         try {
             when (ArCoreApk.getInstance().checkAvailability(this)) {
                 ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
@@ -90,17 +202,12 @@ class ARActivity : Activity() {
             finish()
         }
 
-        // Listen for surface creation
-        surfaceView?.holder?.addCallback(object : SurfaceHolder.Callback {
-            override fun surfaceCreated(holder: SurfaceHolder) {
-                startARSession()
-            }
+        setupSurfaceView()
+    }
 
-            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
-            override fun surfaceDestroyed(holder: SurfaceHolder) {
-                stopARSession()
-            }
-        })
+    private fun setupSurfaceView() {
+        glSurfaceView?.preserveEGLContextOnPause = true
+        glSurfaceView?.setEGLContextClientVersion(2)
     }
 
     private fun startARSession() {
@@ -125,6 +232,11 @@ class ARActivity : Activity() {
         }
 
         try {
+            // ✅ Initialize a simple renderer to draw camera feed
+            renderer = SimpleRenderer(session!!)
+            glSurfaceView?.setRenderer(renderer)
+            glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+
             session?.resume()
             Toast.makeText(this, "AR Session started", Toast.LENGTH_SHORT).show()
         } catch (e: CameraNotAvailableException) {
@@ -145,11 +257,22 @@ class ARActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        session?.resume()
+        if (session == null) {
+            startARSession()
+        } else {
+            try {
+                session?.resume()
+            } catch (e: CameraNotAvailableException) {
+                Toast.makeText(this, "Camera not available.", Toast.LENGTH_LONG).show()
+                session = null
+            }
+        }
+        glSurfaceView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
+        glSurfaceView?.onPause()
         session?.pause()
     }
 
