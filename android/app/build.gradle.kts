@@ -24,6 +24,11 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("com.google.android.material:material:1.12.0")
 
+<<<<<<< HEAD
+=======
+    implementation("com.gorisse.thomas.sceneform:sceneform:1.19.5")
+
+>>>>>>> d37dfd178ec8681c2e9da3e83bed015194efe279
     // ✅ Modern ARCore + Sceneform (SceneView) SDK
 //    implementation("com.google.ar:core:1.41.0")
 //    implementation("io.github.sceneview:arsceneview:1.2.3")
