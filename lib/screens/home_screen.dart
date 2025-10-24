@@ -81,7 +81,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'auth/login_screen.dart';
-import 'ar_main.dart'; // ✅ Import the AR module
+import '../ar/ar_main.dart'; // ✅ Import the AR module
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
