@@ -1,19 +1,151 @@
-# Flutter & Dart
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+# .vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
+.pub/
 build/
-pubspec.lock
+coverage/
 
-# Android
-/android/.gradle/*
-android/build/
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Gradle files
 .gradle/
-.idea/
+gradle-wrapper.jar
+gradle-wrapper.properties
 
-# iOS (if added later)
+# Local configuration file (sdk path, etc)
+local.properties
+android/local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.aab
+*.apk
+output-metadata.json
+
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+key.properties
+
+# Google Services (e.g. APIs or Firebase)
+# Note: Keep google-services.json for Firebase config
+# google-services.json
+
+# Android Profiling
+*.hprof
+
+# iOS specific (if building for iOS)
 ios/Pods/
-ios/build/
 ios/.symlinks/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Flutter-Debug.xcconfig
+ios/Flutter/Flutter-Release.xcconfig
+ios/Flutter/Flutter-Profile.xcconfig
+
+# Web specific
+web/
+
+# Windows specific
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugins.cmake
+
+# Linux specific
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+linux/flutter/generated_plugins.cmake
+
+# macOS specific
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Flutter/ephemeral/
+
+# Project specific generated files
+deps.txt
+flutter
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Editor files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# Firebase (keep firebase_options.dart but can regenerate)
+# firebase_options.dart
+
+# Test coverage
+coverage/
+test/coverage_helper_test.dart
+
+# FVM (Flutter Version Management)
+.fvm/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.config.dart
