@@ -14,6 +14,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }
     }
     plugins {
         id("com.google.gms.google-services") version "4.4.2"
