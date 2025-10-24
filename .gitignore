@@ -52,6 +52,7 @@ gradle-wrapper.properties
 
 # Local configuration file (sdk path, etc)
 local.properties
+android/local.properties
 
 # Log/OS Files
 *.log
