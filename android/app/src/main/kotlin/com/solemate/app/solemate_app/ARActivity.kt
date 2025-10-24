@@ -160,11 +160,304 @@
 //    }
 //}
 
+
+
+
+
+
+// Last Working Code for ARActivity.kt
+
+
+//package com.solemate.app.solemate_app
+//
+//import android.opengl.GLSurfaceView
+//import android.os.Bundle
+//import android.util.Log
+//import android.widget.Toast
+//import androidx.appcompat.app.AppCompatActivity
+//import com.google.ar.core.*
+//import com.google.ar.core.exceptions.CameraNotAvailableException
+//import com.google.ar.core.exceptions.UnavailableException
+//import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
+//
+//class ARActivity : AppCompatActivity() {
+//
+//    private var glSurfaceView: GLSurfaceView? = null
+//    private var session: Session? = null
+//    private var installRequested = false
+//    private var renderer: SimpleRenderer? = null
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("SoleMateAR", "Opened AR View")
+//
+//        // ✅ Use GLSurfaceView instead of SurfaceView
+//        glSurfaceView = GLSurfaceView(this)
+//        setContentView(glSurfaceView)
+//
+//        // ARCore session setup
+//        try {
+//            when (ArCoreApk.getInstance().checkAvailability(this)) {
+//                ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
+//                    Toast.makeText(this, "ARCore not supported on this device", Toast.LENGTH_LONG).show()
+//                    finish()
+//                    return
+//                }
+//                else -> { /* Supported */ }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error checking ARCore availability: ${e.message}")
+//            finish()
+//        }
+//
+//        setupSurfaceView()
+//    }
+//
+//    private fun setupSurfaceView() {
+//        glSurfaceView?.preserveEGLContextOnPause = true
+//        glSurfaceView?.setEGLContextClientVersion(2)
+//    }
+//
+//    private fun startARSession() {
+//        if (session == null) {
+//            try {
+//                when (ArCoreApk.getInstance().requestInstall(this, !installRequested)) {
+//                    ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+//                        installRequested = true
+//                        return
+//                    }
+//                    ArCoreApk.InstallStatus.INSTALLED -> {
+//                        session = Session(this)
+//                    }
+//                }
+//            } catch (e: UnavailableUserDeclinedInstallationException) {
+//                Toast.makeText(this, "ARCore installation declined", Toast.LENGTH_LONG).show()
+//                return
+//            } catch (e: UnavailableException) {
+//                Toast.makeText(this, "ARCore unavailable: ${e.message}", Toast.LENGTH_LONG).show()
+//                return
+//            }
+//        }
+//
+//        try {
+//            // ✅ Initialize a simple renderer to draw camera feed
+//            renderer = SimpleRenderer(session!!)
+//            glSurfaceView?.setRenderer(renderer)
+//            glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+//
+//            session?.resume()
+//            Toast.makeText(this, "AR Session started", Toast.LENGTH_SHORT).show()
+//        } catch (e: CameraNotAvailableException) {
+//            Toast.makeText(this, "Camera not available. Try restarting the app.", Toast.LENGTH_LONG).show()
+//            session = null
+//        }
+//    }
+//
+//    private fun stopARSession() {
+//        try {
+//            session?.pause()
+//            session?.close()
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error stopping session: ${e.message}")
+//        }
+//        session = null
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        if (session == null) {
+//            startARSession()
+//        } else {
+//            try {
+//                session?.resume()
+//            } catch (e: CameraNotAvailableException) {
+//                Toast.makeText(this, "Camera not available.", Toast.LENGTH_LONG).show()
+//                session = null
+//            }
+//        }
+//        glSurfaceView?.onResume()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        glSurfaceView?.onPause()
+//        session?.pause()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        stopARSession()
+//    }
+//}
+//----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+//package com.solemate.app.solemate_app
+//
+//import android.opengl.GLSurfaceView
+//import android.os.Bundle
+//import android.util.Log
+//import android.widget.Toast
+//import androidx.appcompat.app.AppCompatActivity
+//import com.google.ar.core.*
+//import com.google.ar.core.exceptions.CameraNotAvailableException
+//import com.google.ar.core.exceptions.UnavailableException
+//import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
+//
+//class ARActivity : AppCompatActivity() {
+//
+//    private var glSurfaceView: GLSurfaceView? = null
+//    private var session: Session? = null
+//    private var installRequested = false
+//    private var renderer: SimpleRenderer? = null
+//    private lateinit var rotationHelper: DisplayRotationHelper
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("SoleMateAR", "Opened AR View")
+//
+//        // ✅ Initialize GLSurfaceView for AR rendering
+//        glSurfaceView = GLSurfaceView(this)
+//        setContentView(glSurfaceView)
+//
+//        rotationHelper = DisplayRotationHelper(this)
+//
+//        // ✅ Check ARCore support
+//        try {
+//            when (ArCoreApk.getInstance().checkAvailability(this)) {
+//                ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
+//                    Toast.makeText(this, "ARCore not supported on this device", Toast.LENGTH_LONG).show()
+//                    finish()
+//                    return
+//                }
+//                else -> { /* Supported */ }
+//            }
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error checking ARCore availability: ${e.message}")
+//            finish()
+//        }
+//
+//        setupSurfaceView()
+//    }
+//
+//    private fun setupSurfaceView() {
+//        glSurfaceView?.preserveEGLContextOnPause = true
+//        glSurfaceView?.setEGLContextClientVersion(2)
+//    }
+//
+//    private fun startARSession() {
+//        if (session == null) {
+//            try {
+//                when (ArCoreApk.getInstance().requestInstall(this, !installRequested)) {
+//                    ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+//                        installRequested = true
+//                        return
+//                    }
+//                    ArCoreApk.InstallStatus.INSTALLED -> {
+//                        session = Session(this)
+//                    }
+//                    ArCoreApk.InstallStatus.INSTALLED -> {
+//                        session = Session(this)
+//
+//                        // ✅ Configure ARCore for horizontal plane detection
+//                        session?.let { arSession ->
+//                            val config = Config(arSession)
+//                            config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
+//                            config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+//                            arSession.configure(config)
+//                        }
+//                    }
+//                }
+//            } catch (e: UnavailableUserDeclinedInstallationException) {
+//                Toast.makeText(this, "ARCore installation declined", Toast.LENGTH_LONG).show()
+//                return
+//            } catch (e: UnavailableException) {
+//                Toast.makeText(this, "ARCore unavailable: ${e.message}", Toast.LENGTH_LONG).show()
+//                return
+//            }
+//        }
+//
+//        try {
+//            // ✅ Pass DisplayRotationHelper to renderer for correct orientation
+//            renderer = SimpleRenderer(session!!, rotationHelper)
+//            glSurfaceView?.setRenderer(renderer)
+//            glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
+//
+//            session?.resume()
+//            Toast.makeText(this, "AR Session started", Toast.LENGTH_SHORT).show()
+//        } catch (e: CameraNotAvailableException) {
+//            Toast.makeText(this, "Camera not available. Try restarting the app.", Toast.LENGTH_LONG).show()
+//            session = null
+//        }
+//    }
+//
+//    private fun stopARSession() {
+//        try {
+//            session?.pause()
+//            session?.close()
+//        } catch (e: Exception) {
+//            Log.e("SoleMateAR", "Error stopping session: ${e.message}")
+//        }
+//        session = null
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (session == null) {
+//            startARSession()
+//        } else {
+//            try {
+//                session?.resume()
+//            } catch (e: CameraNotAvailableException) {
+//                Toast.makeText(this, "Camera not available.", Toast.LENGTH_LONG).show()
+//                session = null
+//            }
+//        }
+//
+//        rotationHelper.onSurfaceChanged(
+//            glSurfaceView?.width ?: 0,
+//            glSurfaceView?.height ?: 0
+//        )
+//
+//        glSurfaceView?.onResume()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        glSurfaceView?.onPause()
+//        session?.pause()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        stopARSession()
+//    }
+//}
+
+
+
+//__________________________________________________________________________________
+
+
+
+
+
+
+
+
+
 package com.solemate.app.solemate_app
 
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
@@ -178,16 +471,30 @@ class ARActivity : AppCompatActivity() {
     private var session: Session? = null
     private var installRequested = false
     private var renderer: SimpleRenderer? = null
+    private lateinit var rotationHelper: DisplayRotationHelper
+
+    // ✅ new: store a single queued tap for the renderer to consume
+    private var queuedSingleTap: MotionEvent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("SoleMateAR", "Opened AR View")
 
-        // ✅ Use GLSurfaceView instead of SurfaceView
+        // ✅ Initialize GLSurfaceView for AR rendering
         glSurfaceView = GLSurfaceView(this)
         setContentView(glSurfaceView)
 
-        // ARCore session setup
+        rotationHelper = DisplayRotationHelper(this)
+
+        // ✅ Listen for screen taps (one at a time)
+        glSurfaceView?.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                queuedSingleTap = event
+            }
+            true
+        }
+
+        // ✅ Check ARCore support
         try {
             when (ArCoreApk.getInstance().checkAvailability(this)) {
                 ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE -> {
@@ -220,6 +527,14 @@ class ARActivity : AppCompatActivity() {
                     }
                     ArCoreApk.InstallStatus.INSTALLED -> {
                         session = Session(this)
+
+                        // ✅ Configure ARCore for horizontal plane detection
+                        session?.let { arSession ->
+                            val config = Config(arSession)
+                            config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
+                            config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+                            arSession.configure(config)
+                        }
                     }
                 }
             } catch (e: UnavailableUserDeclinedInstallationException) {
@@ -232,8 +547,8 @@ class ARActivity : AppCompatActivity() {
         }
 
         try {
-            // ✅ Initialize a simple renderer to draw camera feed
-            renderer = SimpleRenderer(session!!)
+            // ✅ Pass DisplayRotationHelper to renderer for correct orientation
+            renderer = SimpleRenderer(session!!, rotationHelper, this)
             glSurfaceView?.setRenderer(renderer)
             glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
 
@@ -243,6 +558,13 @@ class ARActivity : AppCompatActivity() {
             Toast.makeText(this, "Camera not available. Try restarting the app.", Toast.LENGTH_LONG).show()
             session = null
         }
+    }
+
+    /** ✅ Safely provides and clears any pending tap */
+    fun getQueuedSingleTap(): MotionEvent? {
+        val tap = queuedSingleTap
+        queuedSingleTap = null
+        return tap
     }
 
     private fun stopARSession() {
@@ -257,6 +579,7 @@ class ARActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         if (session == null) {
             startARSession()
         } else {
@@ -267,6 +590,12 @@ class ARActivity : AppCompatActivity() {
                 session = null
             }
         }
+
+        rotationHelper.onSurfaceChanged(
+            glSurfaceView?.width ?: 0,
+            glSurfaceView?.height ?: 0
+        )
+
         glSurfaceView?.onResume()
     }
 
