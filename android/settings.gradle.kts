@@ -27,4 +27,17 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
 }
 
+dependencyResolutionManagement {
+    // ⚙️ Prefer project repositories so JitPack isn’t blocked
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url = uri("https://maven.google.com") }
+
+    }
+}
+
 include(":app")
