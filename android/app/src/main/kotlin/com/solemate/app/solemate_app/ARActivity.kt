@@ -533,6 +533,8 @@ class ARActivity : AppCompatActivity() {
                             val config = Config(arSession)
                             config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
                             config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+                            config.depthMode = Config.DepthMode.AUTOMATIC
+                            config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
                             arSession.configure(config)
                         }
                     }
@@ -607,6 +609,9 @@ class ARActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        try {
+            renderer?.release()
+        } catch (_: Exception) { }
         stopARSession()
     }
 }

@@ -14,6 +14,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }
     }
     plugins {
         id("com.google.gms.google-services") version "4.4.2"
@@ -24,6 +25,19 @@ plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "8.9.1" apply false
     id("org.jetbrains.kotlin.android") version "2.1.0" apply false
+}
+
+dependencyResolutionManagement {
+    // ⚙️ Prefer project repositories so JitPack isn’t blocked
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url = uri("https://maven.google.com") }
+
+    }
 }
 
 include(":app")
