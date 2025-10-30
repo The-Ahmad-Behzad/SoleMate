@@ -16,10 +16,16 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 
 data class FootDetectionResult(
     val detected: Boolean,
-    val xPx: Int = 0,
-    val yPx: Int = 0,
-    val toeXPx: Int? = null,
-    val toeYPx: Int? = null
+    val side: String = "",           // "LEFT" or "RIGHT"
+    val ankleX: Float = 0f,          // normalized 0-1
+    val ankleY: Float = 0f,          // normalized 0-1
+    val toeX: Float? = null,         // normalized 0-1
+    val toeY: Float? = null,         // normalized 0-1
+    val heelX: Float? = null,        // normalized 0-1
+    val heelY: Float? = null,        // normalized 0-1
+    val visibility: Float = 0f,      // ankle visibility for quality check
+    val imgWidth: Int = 0,           // image dimensions for conversion
+    val imgHeight: Int = 0
 )
 
 class FootTracker(private val context: Context) {
@@ -67,6 +73,8 @@ class FootTracker(private val context: Context) {
             // MediaPipe Pose indices
             val LEFT_ANKLE = 27
             val RIGHT_ANKLE = 28
+            val LEFT_HEEL = 29
+            val RIGHT_HEEL = 30
             val LEFT_FOOT_INDEX = 31
             val RIGHT_FOOT_INDEX = 32
 
@@ -75,6 +83,8 @@ class FootTracker(private val context: Context) {
 
             val la = lmOrNull(LEFT_ANKLE)
             val ra = lmOrNull(RIGHT_ANKLE)
+            val lh = lmOrNull(LEFT_HEEL)
+            val rh = lmOrNull(RIGHT_HEEL)
             val lfi = lmOrNull(LEFT_FOOT_INDEX)
             val rfi = lmOrNull(RIGHT_FOOT_INDEX)
 
@@ -84,11 +94,16 @@ class FootTracker(private val context: Context) {
             }
 
             // Score left vs right: prioritize higher visibility then lower y (closer to bottom)
-            data class Candidate(val side: String, val ankle: NormalizedLandmark, val toe: NormalizedLandmark?)
+            data class Candidate(
+                val side: String, 
+                val ankle: NormalizedLandmark, 
+                val heel: NormalizedLandmark?,
+                val toe: NormalizedLandmark?
+            )
 
             val candidates = mutableListOf<Candidate>()
-            if (la != null) candidates.add(Candidate("LEFT", la, lfi))
-            if (ra != null) candidates.add(Candidate("RIGHT", ra, rfi))
+            if (la != null) candidates.add(Candidate("LEFT", la, lh, lfi))
+            if (ra != null) candidates.add(Candidate("RIGHT", ra, rh, rfi))
 
             fun optionalToFloat(opt: java.util.Optional<Float>?): Float = opt?.orElse(0f) ?: 0f
             fun visibilityOf(n: NormalizedLandmark?): Float = optionalToFloat(n?.visibility())
@@ -97,19 +112,39 @@ class FootTracker(private val context: Context) {
                 .thenByDescending { it.ankle.y() })
 
             val chosenAnkle = chosen!!.ankle
-            val xPx = (chosenAnkle.x() * bitmap.width).toInt().coerceIn(0, bitmap.width - 1)
-            val yPx = (chosenAnkle.y() * bitmap.height).toInt().coerceIn(0, bitmap.height - 1)
-
-            val toe = chosen.toe
-            val toeXPx = toe?.let { (it.x() * bitmap.width).toInt().coerceIn(0, bitmap.width - 1) }
-            val toeYPx = toe?.let { (it.y() * bitmap.height).toInt().coerceIn(0, bitmap.height - 1) }
+            val chosenHeel = chosen.heel
+            val chosenToe = chosen.toe
+            
+            // Return normalized coordinates (0-1 range), clamped for safety
+            val ankleX = chosenAnkle.x().coerceIn(0f, 1f)
+            val ankleY = chosenAnkle.y().coerceIn(0f, 1f)
+            val toeX = chosenToe?.x()?.coerceIn(0f, 1f)
+            val toeY = chosenToe?.y()?.coerceIn(0f, 1f)
+            val heelX = chosenHeel?.x()?.coerceIn(0f, 1f)
+            val heelY = chosenHeel?.y()?.coerceIn(0f, 1f)
+            val ankleVis = visibilityOf(chosenAnkle)
 
             Log.d(
                 "FootTracker",
-                "Pose detected: side=${chosen.side} ankle=(${"%.3f".format(chosenAnkle.x())},${"%.3f".format(chosenAnkle.y())}) -> px=($xPx,$yPx) vis=${"%.2f".format(visibilityOf(chosen.ankle))}"
+                "Pose detected: side=${chosen.side} ankle=(${"%.3f".format(ankleX)},${"%.3f".format(ankleY)}) " +
+                "toe=${if (toeX != null) "(${"%.3f".format(toeX)},${"%.3f".format(toeY)})" else "null"} " +
+                "heel=${if (heelX != null) "(${"%.3f".format(heelX)},${"%.3f".format(heelY)})" else "null"} " +
+                "vis=${"%.2f".format(ankleVis)}"
             )
 
-            FootDetectionResult(true, xPx, yPx, toeXPx, toeYPx)
+            FootDetectionResult(
+                detected = true,
+                side = chosen.side,
+                ankleX = ankleX,
+                ankleY = ankleY,
+                toeX = toeX,
+                toeY = toeY,
+                heelX = heelX,
+                heelY = heelY,
+                visibility = ankleVis,
+                imgWidth = bitmap.width,
+                imgHeight = bitmap.height
+            )
         } catch (t: Throwable) {
             Log.e("FootTracker", "Detection failed: ${t.message}")
             FootDetectionResult(false)
