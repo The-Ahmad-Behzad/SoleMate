@@ -5,11 +5,15 @@ import '../widgets/product_card.dart';
 import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
 import '../ar/ar_main.dart';
+import '../models/product.dart';
 import 'auth/login_screen.dart';
+import 'catalog_screen.dart';
 
 /// AR Try-On screen with camera preview and shoe selection
 class ARTryOnScreen extends StatefulWidget {
-  const ARTryOnScreen({super.key});
+  const ARTryOnScreen({super.key, this.selectedProduct});
+
+  final Product? selectedProduct;
 
   @override
   State<ARTryOnScreen> createState() => _ARTryOnScreenState();
@@ -20,6 +24,13 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
   final ARMain _arMain = ARMain();
   int _selectedShoeIndex = 0;
   bool _isARActive = false;
+  Product? _selectedProduct;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedProduct = widget.selectedProduct;
+  }
 
   /// Opens AR Camera using ARMain widget
   Future<void> _openARView() async {
@@ -54,6 +65,14 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
         leading: const LogoButton(),
         title: const Text('AR Try-On'),
         actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CatalogScreen()),
+              );
+            },
+            child: const Text('View all'),
+          ),
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'logout') {
@@ -141,6 +160,27 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
           ),
           textAlign: TextAlign.center,
         ),
+        if (_selectedProduct != null) ...[
+          const SizedBox(height: AppSpacing.md),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.accent10,
+              borderRadius: AppRadius.radiusLarge,
+              border: Border.all(color: AppColors.accent),
+            ),
+            child: Text(
+              'Selected: ' + _selectedProduct!.name,
+              style: AppTypography.bodyMedium.copyWith(
+                color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                fontWeight: AppTypography.semibold,
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

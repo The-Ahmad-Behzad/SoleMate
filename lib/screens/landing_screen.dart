@@ -3,6 +3,10 @@ import '../theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/feature_card.dart';
 import 'main_shell.dart';
+import '../services/local_catalog_service.dart';
+import '../models/product.dart';
+import '../widgets/product_card.dart';
+import 'catalog_screen.dart';
 
 /// Landing/Welcome screen with hero section and features
 class LandingScreen extends StatelessWidget {
@@ -24,6 +28,9 @@ class LandingScreen extends StatelessWidget {
             // Features Section
             _buildFeaturesSection(context, isDark),
             
+          // Popular & Recent Shoes Sections (horizontal lists)
+          _buildCatalogTeasers(context, isDark),
+
             // CTA Section
             _buildCTASection(context, isDark),
           ],
@@ -325,6 +332,44 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCatalogTeasers(BuildContext context, bool isDark) {
+    final service = LocalCatalogService();
+    return FutureBuilder<List<Product>>(
+      future: service.loadProducts(),
+      builder: (context, snapshot) {
+        final List<Product> all = snapshot.data ?? <Product>[];
+        final List<Product> popular = all.where((p) => p.isPopular).toList(growable: false);
+        final List<Product> recents = all
+            .where((p) => p.lastTriedAt != null)
+            .toList(growable: false);
+
+        return Column(
+          children: [
+            _HorizontalSection(
+              title: 'Popular Shoes',
+              isDark: isDark,
+              products: popular.isNotEmpty ? popular : all,
+              onViewAll: () => _navigateToCatalog(context),
+            ),
+            _HorizontalSection(
+              title: 'Recently Tried',
+              isDark: isDark,
+              products: recents,
+              onViewAll: () => _navigateToCatalog(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToCatalog(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CatalogScreen()),
+    );
+  }
+
   void _navigateToMainApp(BuildContext context, {int initialTab = 0}) {
     Navigator.pushReplacement(
       context,
@@ -340,6 +385,85 @@ class LandingScreen extends StatelessWidget {
       context,
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
+    );
+  }
+}
+
+class _HorizontalSection extends StatelessWidget {
+  const _HorizontalSection({
+    required this.title,
+    required this.isDark,
+    required this.products,
+    required this.onViewAll,
+  });
+
+  final String title;
+  final bool isDark;
+  final List<Product> products;
+  final VoidCallback onViewAll;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.lg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: AppTypography.headline4.copyWith(
+                  color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                ),
+              ),
+              TextButton(
+                onPressed: onViewAll,
+                child: const Text('View all'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SizedBox(
+            height: 240,
+            child: products.isEmpty
+                ? Center(
+                    child: Text(
+                      'No items to show',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: isDark
+                            ? AppColors.darkMutedForeground
+                            : AppColors.lightMutedForeground,
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: products.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.lg),
+                    itemBuilder: (context, index) {
+                      final p = products[index];
+                      return SizedBox(
+                        width: 180,
+                        child: ProductCard(
+                          imagePath: p.thumbnailUrl ?? '',
+                          title: p.name,
+                          price: p.price,
+                          onTap: onViewAll,
+                          showActions: false,
+                          aspectRatio: 0.85,
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

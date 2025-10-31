@@ -16,10 +16,16 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 
 data class FootDetectionResult(
     val detected: Boolean,
-    val xPx: Int = 0,
-    val yPx: Int = 0,
-    val toeXPx: Int? = null,
-    val toeYPx: Int? = null
+    val imgWidth: Int = 0,
+    val imgHeight: Int = 0,
+    val side: String = "UNKNOWN",
+    val ankleX: Float = 0f,   // normalized [0,1]
+    val ankleY: Float = 0f,   // normalized [0,1]
+    val toeX: Float? = null,  // normalized [0,1]
+    val toeY: Float? = null,  // normalized [0,1]
+    val heelX: Float? = null, // not available from PoseLandmarker; reserved
+    val heelY: Float? = null,
+    val visibility: Float = 0f
 )
 
 class FootTracker(private val context: Context) {
@@ -97,19 +103,31 @@ class FootTracker(private val context: Context) {
                 .thenByDescending { it.ankle.y() })
 
             val chosenAnkle = chosen!!.ankle
-            val xPx = (chosenAnkle.x() * bitmap.width).toInt().coerceIn(0, bitmap.width - 1)
-            val yPx = (chosenAnkle.y() * bitmap.height).toInt().coerceIn(0, bitmap.height - 1)
-
+            val ankleX = chosenAnkle.x()
+            val ankleY = chosenAnkle.y()
+            val side = chosen.side
             val toe = chosen.toe
-            val toeXPx = toe?.let { (it.x() * bitmap.width).toInt().coerceIn(0, bitmap.width - 1) }
-            val toeYPx = toe?.let { (it.y() * bitmap.height).toInt().coerceIn(0, bitmap.height - 1) }
+            val toeX = toe?.x()
+            val toeY = toe?.y()
 
             Log.d(
                 "FootTracker",
-                "Pose detected: side=${chosen.side} ankle=(${"%.3f".format(chosenAnkle.x())},${"%.3f".format(chosenAnkle.y())}) -> px=($xPx,$yPx) vis=${"%.2f".format(visibilityOf(chosen.ankle))}"
+                "Pose detected: side=$side ankle=(${"%.3f".format(ankleX)},${"%.3f".format(ankleY)}) vis=${"%.2f".format(visibilityOf(chosen.ankle))}"
             )
 
-            FootDetectionResult(true, xPx, yPx, toeXPx, toeYPx)
+            FootDetectionResult(
+                detected = true,
+                imgWidth = bitmap.width,
+                imgHeight = bitmap.height,
+                side = side,
+                ankleX = ankleX,
+                ankleY = ankleY,
+                toeX = toeX,
+                toeY = toeY,
+                heelX = null,
+                heelY = null,
+                visibility = visibilityOf(chosen.ankle)
+            )
         } catch (t: Throwable) {
             Log.e("FootTracker", "Detection failed: ${t.message}")
             FootDetectionResult(false)
