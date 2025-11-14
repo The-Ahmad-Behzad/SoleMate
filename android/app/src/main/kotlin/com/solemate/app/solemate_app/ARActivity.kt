@@ -454,10 +454,16 @@
 
 package com.solemate.app.solemate_app
 
+import android.graphics.Color
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.MotionEvent
+import android.view.TextureView
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.ar.core.*
@@ -468,10 +474,12 @@ import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationExceptio
 class ARActivity : AppCompatActivity() {
 
     private var glSurfaceView: GLSurfaceView? = null
+    private var textureView: TextureView? = null
     private var session: Session? = null
     private var installRequested = false
     private var renderer: SimpleRenderer? = null
     private lateinit var rotationHelper: DisplayRotationHelper
+    private var shoeRendererInstance: ShoeRenderer? = null
 
     // ✅ new: store a single queued tap for the renderer to consume
     private var queuedSingleTap: MotionEvent? = null
@@ -480,14 +488,57 @@ class ARActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("SoleMateAR", "Opened AR View")
 
-        // ✅ Initialize GLSurfaceView for AR rendering
+        // ✅ Create GLSurfaceView for ARCore (background layer)
         glSurfaceView = GLSurfaceView(this)
-        setContentView(glSurfaceView)
+        
+        // ✅ Create TextureView for Filament overlay (foreground layer)
+        textureView = TextureView(this)
+        textureView?.isOpaque = false  // Transparent background
+        
+        // ✅ Wrap both views in FrameLayout
+        val frameLayout = FrameLayout(this)
+        frameLayout.addView(glSurfaceView, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        ))
+        frameLayout.addView(textureView, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        ))
+        
+        // ✅ Add recalibration button
+        val recalibrateButton = Button(this).apply {
+            text = "Recalibrate"
+            setBackgroundColor(Color.parseColor("#2196F3"))  // Material Blue
+            setTextColor(Color.WHITE)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            setPadding(32, 16, 32, 16)
+            elevation = 8f
+            
+            setOnClickListener {
+                renderer?.requestRecalibration()
+                Toast.makeText(this@ARActivity, "Recalibrating shoe placement...", Toast.LENGTH_SHORT).show()
+                Log.d("ARActivity", "Recalibration requested by user")
+            }
+        }
+        
+        // Position button at bottom-center
+        val buttonParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            bottomMargin = 48  // 48dp from bottom
+        }
+        frameLayout.addView(recalibrateButton, buttonParams)
+        
+        setContentView(frameLayout)
+        Log.d("ARActivity", "Created TextureView overlay with recalibration button")
 
         rotationHelper = DisplayRotationHelper(this)
 
-        // ✅ Listen for screen taps (one at a time)
-        glSurfaceView?.setOnTouchListener { _, event ->
+        // ✅ Listen for screen taps on the frame layout
+        frameLayout.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 queuedSingleTap = event
             }
@@ -514,7 +565,8 @@ class ARActivity : AppCompatActivity() {
 
     private fun setupSurfaceView() {
         glSurfaceView?.preserveEGLContextOnPause = true
-        glSurfaceView?.setEGLContextClientVersion(2)
+        // Filament requires OpenGL ES 3.0+
+        glSurfaceView?.setEGLContextClientVersion(3)
     }
 
     private fun startARSession() {
@@ -549,8 +601,14 @@ class ARActivity : AppCompatActivity() {
         }
 
         try {
-            // ✅ Pass DisplayRotationHelper to renderer for correct orientation
-            renderer = SimpleRenderer(session!!, rotationHelper, this)
+            // ✅ Create ShoeRenderer and attach to TextureView
+            shoeRendererInstance = ShoeRenderer(this)
+            textureView?.let { tv ->
+                shoeRendererInstance!!.attachToTextureView(tv)
+            }
+            
+            // ✅ Pass DisplayRotationHelper and ShoeRenderer to renderer
+            renderer = SimpleRenderer(session!!, rotationHelper, this, shoeRendererInstance)
             glSurfaceView?.setRenderer(renderer)
             glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
 
@@ -568,6 +626,7 @@ class ARActivity : AppCompatActivity() {
         queuedSingleTap = null
         return tap
     }
+
 
     private fun stopARSession() {
         try {

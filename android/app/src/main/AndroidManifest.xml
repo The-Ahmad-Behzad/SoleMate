@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:name=".ARActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/SoleMateARTheme"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:screenOrientation="portrait" />
