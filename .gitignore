@@ -150,3 +150,17 @@ test/coverage_helper_test.dart
 *.g.dart
 *.freezed.dart
 *.config.dart
+
+# Backend/Node.js related
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/.cache/
+backend/.npm/
+backend/npm-debug.log*
+backend/.nyc_output/
+backend/coverage/
+backend/.next/
+backend/.turbo/
+backend/.vercel/
+backend/.swc/

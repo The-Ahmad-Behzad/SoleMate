@@ -1,0 +1,67 @@
+import { AuthRequest } from '../middleware/authMiddleware.js';
+import { Response } from 'express';
+import { UserModel } from '../models/User.js';
+import { TryOnHistoryModel } from '../models/TryOnHistory.js';
+
+export async function getUserProfile(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const user = await UserModel.findOne({ uid: req.user.uid }).lean();
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error('Get profile error:', err);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+}
+
+export async function updateUserProfile(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const { name, preferences } = req.body;
+
+    const user = await UserModel.findOneAndUpdate(
+      { uid: req.user.uid },
+      { name, preferences },
+      { new: true, upsert: true }
+    ).lean();
+
+    res.json(user);
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+}
+
+export async function getUserStats(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const tryOnCount = await TryOnHistoryModel.countDocuments({ userId: req.user.uid });
+
+    res.json({
+      tryOnCount,
+      userId: req.user.uid,
+    });
+  } catch (err) {
+    console.error('Get stats error:', err);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+}
+
