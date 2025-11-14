@@ -9,6 +9,7 @@ class ProductCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     this.subtitle,
+    this.price,
     this.isFavorite = false,
     this.onTap,
     this.onFavoriteToggle,
@@ -21,6 +22,7 @@ class ProductCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String? subtitle;
+  final double? price;
   final bool isFavorite;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteToggle;
@@ -68,26 +70,7 @@ class ProductCard extends StatelessWidget {
                         topLeft: Radius.circular(AppRadius.lg),
                         topRight: Radius.circular(AppRadius.lg),
                       ),
-                      child: Image.asset(
-                        imagePath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: AppGradients.elementGradient,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: AppColors.accent,
-                                size: 48,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                      child: _buildImage(imagePath),
                     ),
                     
                     // Favorite star (top-right)
@@ -134,6 +117,18 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+
+                  // Price (optional)
+                  if (price != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      _formatPrice(price!),
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: AppColors.secondary,
+                        fontWeight: AppTypography.semibold,
+                      ),
+                    ),
+                  ],
                   
                   // Subtitle (optional)
                   if (subtitle != null) ...[
@@ -169,6 +164,44 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage(String path) {
+    final bool isNetwork = path.startsWith('http://') || path.startsWith('https://');
+    final Widget placeholder = Container(
+      decoration: BoxDecoration(
+        gradient: AppGradients.elementGradient,
+      ),
+      child: const Center(
+        child: Icon(
+          Icons.image_not_supported,
+          color: AppColors.accent,
+          size: 48,
+        ),
+      ),
+    );
+
+    if (isNetwork) {
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) => placeholder,
+      );
+    }
+    return Image.asset(
+      path,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      errorBuilder: (context, error, stackTrace) => placeholder,
+    );
+  }
+
+  static String _formatPrice(double value) {
+    // Simple currency formatting without intl to avoid extra deps
+    return 'Rs. ' + value.toStringAsFixed(2);
   }
 }
 

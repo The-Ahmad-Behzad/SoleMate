@@ -16,16 +16,16 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 
 data class FootDetectionResult(
     val detected: Boolean,
-    val side: String = "",           // "LEFT" or "RIGHT"
-    val ankleX: Float = 0f,          // normalized 0-1
-    val ankleY: Float = 0f,          // normalized 0-1
-    val toeX: Float? = null,         // normalized 0-1
-    val toeY: Float? = null,         // normalized 0-1
-    val heelX: Float? = null,        // normalized 0-1
-    val heelY: Float? = null,        // normalized 0-1
-    val visibility: Float = 0f,      // ankle visibility for quality check
-    val imgWidth: Int = 0,           // image dimensions for conversion
-    val imgHeight: Int = 0
+    val imgWidth: Int = 0,
+    val imgHeight: Int = 0,
+    val side: String = "UNKNOWN",
+    val ankleX: Float = 0f,   // normalized [0,1]
+    val ankleY: Float = 0f,   // normalized [0,1]
+    val toeX: Float? = null,  // normalized [0,1]
+    val toeY: Float? = null,  // normalized [0,1]
+    val heelX: Float? = null, // not available from PoseLandmarker; reserved
+    val heelY: Float? = null,
+    val visibility: Float = 0f
 )
 
 class FootTracker(private val context: Context) {
@@ -134,19 +134,19 @@ class FootTracker(private val context: Context) {
 
             FootDetectionResult(
                 detected = true,
+                imgWidth = bitmap.width,
+                imgHeight = bitmap.height,
                 side = chosen.side,
                 ankleX = ankleX,
                 ankleY = ankleY,
                 toeX = toeX,
                 toeY = toeY,
-                heelX = heelX,
-                heelY = heelY,
-                visibility = ankleVis,
-                imgWidth = bitmap.width,
-                imgHeight = bitmap.height
+                heelX = null,
+                heelY = null,
+                visibility = visibilityOf(chosen.ankle)
             )
         } catch (t: Throwable) {
-            Log.e("FootTracker", "Detection failed: ${t.message}")
+            Log.e("FootTracker", "Detection failed: ${t.message}")  
             FootDetectionResult(false)
         }
     }

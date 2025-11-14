@@ -1,0 +1,52 @@
+[
+  {
+    "id": "shoe-001",
+    "name": "Classic Sneakers",
+    "brand": "SoleMate",
+    "price": 79.99,
+    "category": "casual",
+    "thumbnailUrl": "assets/images/shoes/shoe1.jpg",
+    "modelUrl": "android/app/src/main/assets/models/shoes/nike_journey_run_left.glb",
+    "textureUrl": null,
+    "isPopular": true,
+    "lastTriedAt": null
+  },
+  {
+    "id": "shoe-002",
+    "name": "Running Shoes",
+    "brand": "SoleMate",
+    "price": 119.00,
+    "category": "running",
+    "thumbnailUrl": "assets/images/shoes/shoe2.jpg",
+    "modelUrl": "android/app/src/main/assets/models/shoes/puma_winter_shoe_left.glb",
+    "textureUrl": null,
+    "isPopular": true,
+    "lastTriedAt": null
+  },
+  {
+    "id": "shoe-003",
+    "name": "Leather Oxfords",
+    "brand": "SoleMate",
+    "price": 149.50,
+    "category": "formal",
+    "thumbnailUrl": "assets/images/shoes/shoe3.jpg",
+    "modelUrl": "android/app/src/main/assets/models/shoes/caterpillar_work_boot_left.glb",
+    "textureUrl": null,
+    "isPopular": false,
+    "lastTriedAt": null
+  },
+  {
+    "id": "shoe-004",
+    "name": "Hiking Boots",
+    "brand": "SoleMate",
+    "price": 135.00,
+    "category": "outdoor",
+    "thumbnailUrl": "assets/images/shoes/shoe4.jpg",
+    "modelUrl": "android/app/src/main/assets/models/shoes/airmax_270_left.glb",
+    "textureUrl": null,
+    "isPopular": false,
+    "lastTriedAt": null
+  }
+]
+
+
