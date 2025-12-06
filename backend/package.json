@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "seed": "tsx src/scripts/seed.ts",
-    "setup": "node setup-env.js"
+    "setup": "node setup-env.js",
+    "keep-redis-active": "tsx src/scripts/keepRedisActive.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

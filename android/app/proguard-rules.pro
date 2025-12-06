@@ -17,3 +17,26 @@
 -keep class org.tensorflow.** { *; }
 -keep class com.google.ar.** { *; }
 -keep class com.solemate.app.solemate_app.** { *; }
+
+# Fix R8 build errors: Keep annotation processing API classes
+# These are needed by AutoValue/JavaPoet at compile time
+-keep class javax.lang.model.** { *; }
+-keep class javax.tools.** { *; }
+-dontwarn javax.lang.model.**
+-dontwarn javax.tools.**
+-dontwarn javax.tools.Diagnostic$Kind
+-dontwarn javax.tools.JavaFileObject
+
+# Keep AutoValue and JavaPoet classes (including shaded versions)
+-keep class com.google.auto.value.** { *; }
+-keep class com.squareup.javapoet.** { *; }
+-keep class autovalue.shaded.com.squareup.javapoet.** { *; }
+-dontwarn com.google.auto.value.**
+-dontwarn com.squareup.javapoet.**
+-dontwarn autovalue.shaded.com.squareup.javapoet.**
+
+# Keep annotation processor generated classes
+-keep class * extends com.google.auto.value.processor.AutoValueProcessor { *; }
+-keepclassmembers class * {
+    @com.google.auto.value.AutoValue <methods>;
+}

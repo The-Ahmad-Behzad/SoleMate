@@ -23,8 +23,8 @@ function initializeRedis() {
         const delay = Math.min(times * 50, 2000);
         return delay;
       },
-      enableOfflineQueue: false,
-      lazyConnect: true,
+      enableOfflineQueue: true, // Allow queuing commands while connecting
+      lazyConnect: false, // Connect immediately
     });
 
     redis.on('connect', () => {
@@ -69,7 +69,7 @@ export default {
     const client = initializeRedis();
     if (!client) return null;
     try {
-      return await client.set(key, value);
+      return await client.set(key, value, ...args);
     } catch (err) {
       console.error('Redis set error:', err);
       return null;
