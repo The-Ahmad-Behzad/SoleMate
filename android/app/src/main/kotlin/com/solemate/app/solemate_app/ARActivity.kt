@@ -454,6 +454,7 @@
 
 package com.solemate.app.solemate_app
 
+import android.content.Context
 import android.graphics.Color
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -591,7 +592,44 @@ class ARActivity : AppCompatActivity() {
             }
         }
         
-        // Position button at bottom-center
+        // === Phase 3.1: Add FPS selection toggle ===
+        var currentFPS = 30  // Default to 30 FPS
+        val fpsButton = Button(this).apply {
+            text = "FPS: 30"
+            setBackgroundColor(Color.parseColor("#4CAF50"))  // Green
+            setTextColor(Color.WHITE)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            setPadding(32, 16, 32, 16)
+            elevation = 8f
+            
+            setOnClickListener {
+                currentFPS = if (currentFPS == 30) 60 else 30
+                text = "FPS: $currentFPS"
+                renderer?.setTargetFPS(currentFPS)
+                // Save preference
+                val prefs = getSharedPreferences("solemate_settings", Context.MODE_PRIVATE)
+                prefs.edit().putInt("target_fps", currentFPS).apply()
+                Toast.makeText(this@ARActivity, "FPS set to $currentFPS", Toast.LENGTH_SHORT).show()
+                Log.d("ARActivity", "FPS set to $currentFPS")
+            }
+        }
+        
+        // Load saved FPS preference
+        val prefs = getSharedPreferences("solemate_settings", Context.MODE_PRIVATE)
+        currentFPS = prefs.getInt("target_fps", 30)
+        fpsButton.text = "FPS: $currentFPS"
+        
+        // Create horizontal layout for buttons
+        val buttonLayout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 0)
+        }
+        
+        buttonLayout.addView(recalibrateButton)
+        buttonLayout.addView(fpsButton)
+        
+        // Position buttons at bottom-center
         val buttonParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT,
             FrameLayout.LayoutParams.WRAP_CONTENT
@@ -599,7 +637,7 @@ class ARActivity : AppCompatActivity() {
             gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             bottomMargin = 48  // 48dp from bottom
         }
-        frameLayout.addView(recalibrateButton, buttonParams)
+        frameLayout.addView(buttonLayout, buttonParams)
         
         setContentView(frameLayout)
         Log.d(TAG, "setContentView() called with frameLayout")
