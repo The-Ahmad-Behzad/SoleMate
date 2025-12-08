@@ -1,46 +1,25 @@
 <!-- 66aa09eb-9167-40c9-936e-7b2d93f95907 ffab4eb1-13de-4c4e-b642-01c637e63da8 -->
 # 3D Shoe Overlay Implementation Plan
 
-## Current System (What's implemented now)
+## Current System (What’s implemented now)
 
-### Dual-Path AR Architecture
-
-The system now supports two AR tracking modes:
-
-1. **ARCore Path** (default on supported devices):
-   - Uses Google ARCore SDK for world tracking
-   - Full plane detection, anchors, depth estimation
-   - Automatic light estimation
-
-2. **VIO Path** (fallback on non-ARCore devices):
-   - Custom Visual-Inertial Odometry (VIO) implementation
-   - RANSAC-based plane estimation
-   - Camera2 API for camera feed
-   - IMU sensor fusion for pose tracking
-
-The system automatically detects ARCore availability and selects the appropriate mode. See `docs/AR-Fallback-VIO.md` for detailed VIO implementation documentation.
-
-### AR Session/Activity
-
-- File: `android/app/src/main/kotlin/com/solemate/app/solemate_app/ARActivity.kt`
-- **ARCore Mode**: Initializes ARCore `Session` with:
+- AR session/activity
+  - File: `android/app/src/main/kotlin/com/solemate/app/solemate_app/ARActivity.kt`
+  - Initializes ARCore `Session` with:
     - PlaneFinding: HORIZONTAL
     - UpdateMode: LATEST_CAMERA_IMAGE
     - DepthMode: AUTOMATIC
     - InstantPlacement: LOCAL_Y_UP
-- **VIO Mode**: Initializes VioEngine, VioPoseProvider, and Camera2Manager
-- Hosts a `GLSurfaceView` and hands rendering to `SimpleRenderer`.
+  - Hosts a `GLSurfaceView` and hands rendering to `SimpleRenderer`.
 
 - Rendering & hit testing
   - File: `android/app/src/main/kotlin/com/solemate/app/solemate_app/SimpleRenderer.kt`
-  - Uses `WorldPoseProvider` abstraction interface (supports both ARCore and VIO)
-  - **ARCore Mode**: Draws camera feed using `BackgroundRenderer.draw(frame)` with external OES texture
-  - **VIO Mode**: Draws camera feed using `BackgroundRenderer.drawCamera2Texture()` with regular 2D texture
-  - Renders detected planes via `PlaneRenderer` (works with both modes)
-  - Grabs throttled camera images; runs foot detection in a background executor
-  - Transforms MediaPipe foot pixel coords (IMAGE_PIXELS) → VIEW using `poseProvider.transformCoordinates2d()`
-  - Performs `poseProvider.hitTest(viewX, viewY)` and selects best hit among Plane/Point/DepthPoint
-  - Keeps anchors list (ARCore mode) or uses plane-based placement (VIO mode)
+  - Draws camera feed using `BackgroundRenderer` (UV transform accounted).
+  - Renders detected planes via `PlaneRenderer`.
+  - Grabs throttled `frame.acquireCameraImage()`; runs foot detection in a background executor.
+  - Transforms MediaPipe foot pixel coords (IMAGE_PIXELS) → VIEW using `frame.transformCoordinates2d`.
+  - Performs `frame.hitTest(viewX, viewY)` and selects best hit among Plane/Point/DepthPoint to create anchors.
+  - Keeps anchors list and draws anchor markers for visual debug.
 
 - Foot detection (MediaPipe)
   - File: `android/app/src/main/kotlin/com/solemate/app/solemate_app/FootTracker.kt`
@@ -49,21 +28,13 @@ The system automatically detects ARCore availability and selects the appropriate
   - Renderer prefers toe tip or downward-biased ankle when hit testing.
 
 - Utilities
-  - `DisplayRotationHelper`: sync viewport with AR session (works with both ARCore Session and Camera2)
-  - `YuvConverter`: YUV_420_888 → Bitmap
-  - `WorldPoseProvider`: Abstraction interface for AR pose tracking
-  - `ArcorePoseProvider`: ARCore implementation of WorldPoseProvider
-  - `VioPoseProvider`: VIO implementation of WorldPoseProvider
-  - `Camera2Manager`: Camera2 API wrapper for VIO mode
-  - `PlaneEstimator`: RANSAC-based plane fitting with gravity alignment
-  - `FootPoseFusion`: Optional pose fusion with smoothing and drift detection
-  - `CalibrationManager`: Calibration persistence (phone height, shoe size)
+  - `DisplayRotationHelper`: sync viewport with AR session.
+  - `YuvConverter`: YUV_420_888 → Bitmap.
 
 - Dependencies already present
-  - ARCore: `com.google.ar:core:1.46.0` (optional, only on supported devices)
+  - ARCore: `com.google.ar:core:1.46.0`
   - Filament: `filament-android`, `filament-utils-android`, `gltfio-android` (for .glb/.gltf)
   - MediaPipe Tasks Vision: `0.10.14`
-  - Android NDK: For native VIO implementation (C++)
 
 ## Goal
 
@@ -250,18 +221,6 @@ if (le.state == LightEstimate.State.VALID) {
 - 24+ FPS on a mid-range device.
 - No leaks; clean shutdown via renderer `release()`.
 
-### VIO Implementation Status
-
-- [x] Abstraction layer (WorldPoseProvider interface)
-- [x] Native VIO module (VioEngine C++, VioBridge JNI)
-- [x] Kotlin VIO integration (VioEngine.kt, PlaneEstimator.kt, VioPoseProvider.kt)
-- [x] Camera2 integration (Camera2Manager.kt)
-- [x] Renderer updates (BackgroundRenderer, PlaneRenderer support both modes)
-- [x] Activity updates (ARActivity supports both ARCore and VIO modes)
-- [x] Calibration system (phone height, shoe size with persistence)
-- [x] Debug overlays (optional VIO tracking status, performance metrics)
-- [x] Documentation (AR-Fallback-VIO.md)
-
 ### To-dos
 
 - [ ] Create ShoeRenderer to load and render GLB via Filament
@@ -271,6 +230,3 @@ if (le.state == LightEstimate.State.VALID) {
 - [ ] Use ARCore LightEstimate and enable depth-based occlusion
 - [ ] Add reticle, axes/arrow gizmo, grid, and logging
 - [ ] Add smoothing and re-anchoring logic for robustness
-- [ ] Integrate FootPoseFusion into SimpleRenderer for enhanced stability
-- [ ] Test VIO mode on non-ARCore devices
-- [ ] Performance optimization for low-end devices
