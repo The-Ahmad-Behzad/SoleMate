@@ -58,6 +58,58 @@ class PlaneRenderer {
         val mvpMatrix = FloatArray(16)
         android.opengl.Matrix.multiplyMM(mvpMatrix, 0, viewProjMatrix, 0, modelMatrix, 0)
 
+        drawPlaneInternal(polygonBuffer, mvpMatrix, polygon.capacity() / 2)
+    }
+
+    /**
+     * Draws a plane from PlaneInfo (abstraction layer compatible).
+     * Extracts polygon from PlaneInfo if available, otherwise creates a simple rectangle.
+     */
+    fun drawPlane(planeInfo: PlaneInfo, viewProjMatrix: FloatArray) {
+        val modelMatrix = planeInfo.centerPose.toMatrix()
+        val mvpMatrix = FloatArray(16)
+        android.opengl.Matrix.multiplyMM(mvpMatrix, 0, viewProjMatrix, 0, modelMatrix, 0)
+
+        val polygonBuffer: FloatBuffer = if (planeInfo.polygon != null && planeInfo.polygon.isNotEmpty()) {
+            // Use provided polygon
+            val vertices = planeInfo.polygon.flatMap { it.toList() }.toFloatArray()
+            ByteBuffer.allocateDirect(vertices.size * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(vertices)
+                .apply { position(0) }
+        } else {
+            // Create a simple rectangle from extent
+            val halfX = planeInfo.extentX / 2f
+            val halfZ = planeInfo.extentZ / 2f
+            val rectCoords = floatArrayOf(
+                -halfX, 0f, -halfZ,
+                halfX, 0f, -halfZ,
+                halfX, 0f, halfZ,
+                -halfX, 0f, halfZ
+            )
+            ByteBuffer.allocateDirect(rectCoords.size * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer()
+                .put(rectCoords)
+                .apply { position(0) }
+        }
+
+        val vertexCount = if (planeInfo.polygon != null && planeInfo.polygon.isNotEmpty()) {
+            planeInfo.polygon.size
+        } else {
+            4 // Rectangle
+        }
+
+        drawPlaneInternal(polygonBuffer, mvpMatrix, vertexCount)
+    }
+
+    /**
+     * Internal method to draw plane geometry with common rendering logic.
+     */
+    private fun drawPlaneInternal(polygonBuffer: FloatBuffer, mvpMatrix: FloatArray, vertexCount: Int) {
+        if (vertexCount < 3) return
+
         GLES20.glUseProgram(program)
 
         val posHandle = GLES20.glGetAttribLocation(program, "a_Position")
@@ -68,16 +120,16 @@ class PlaneRenderer {
         GLES20.glEnable(GLES20.GL_BLEND)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
 
-        // ✅ Disable depth writing so the plane doesn’t overwrite background
+        // ✅ Disable depth writing so the plane doesn't overwrite background
         GLES20.glDepthMask(false)
 
         GLES20.glEnableVertexAttribArray(posHandle)
-        GLES20.glVertexAttribPointer(posHandle, 2, GLES20.GL_FLOAT, false, 0, polygonBuffer)
+        GLES20.glVertexAttribPointer(posHandle, 3, GLES20.GL_FLOAT, false, 0, polygonBuffer)
 
         GLES20.glUniform4fv(colorHandle, 1, planeColor, 0)
         GLES20.glUniformMatrix4fv(mvpHandle, 1, false, mvpMatrix, 0)
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, polygon.capacity() / 2)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount)
 
         // ✅ Restore depth mask and blending
         GLES20.glDepthMask(true)

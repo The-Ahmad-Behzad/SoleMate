@@ -46,6 +46,27 @@ app.use(errorHandler);
 
 const port = Number(process.env.PORT || 8080);
 
-app.listen(port, () => {
-  logger.info({ port }, 'BFF listening');
-});
+// Initialize connections on startup
+async function startServer() {
+  // Initialize Redis connection (will connect automatically)
+  const redis = (await import('./config/redis.js')).default;
+  redis.instance; // Trigger initialization
+  
+  // Try to connect to MongoDB, but don't block server startup
+  try {
+    await connectToDatabase();
+    logger.info('[OK] MongoDB connected');
+  } catch (err: any) {
+    logger.warn({ err: err.message }, '[WARN] MongoDB connection failed - server will start but database operations will fail');
+    logger.warn('[TIP] To fix: Add your IP address to MongoDB Atlas IP whitelist');
+    logger.warn('      See: https://www.mongodb.com/docs/atlas/security-whitelist/');
+    // Continue server startup even if MongoDB fails
+    // This allows Redis and other services to work
+  }
+  
+  app.listen(port, () => {
+    logger.info({ port }, 'BFF listening');
+  });
+}
+
+startServer();
