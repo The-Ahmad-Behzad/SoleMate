@@ -1,0 +1,72 @@
+// Filament material for depth displacement occlusion
+// Displaces a grid mesh based on ARCore depth texture to create an invisible occluder
+
+material {
+    name : depth_displacement,
+    
+    // Unlit - invisible occluder
+    shadingModel : unlit,
+    
+    // Write to depth buffer only
+    colorWrite : false,
+    depthWrite : true,
+    depthCulling : true,
+    
+    // Opaque blending
+    blending : opaque,
+    
+    // Render back faces too just in case
+    doubleSided : true,
+    
+    parameters : [
+        // ARCore depth texture
+        {
+            type : sampler2d,
+            name : depthTexture
+        },
+        // Explicit camera position to avoid built-in function issues
+        {
+            type : float3,
+            name : viewOrigin
+        }
+    ],
+    
+    requires : [
+        uv0,
+        position
+    ]
+}
+
+vertex {
+    void materialVertex(inout MaterialVertexInputs material) {
+        // Sample depth at this vertex's UV
+        vec2 uv = material.uv0;
+        
+        // Use textureLod in vertex shader as implicit derivatives are not available
+        vec2 packedDepth = textureLod(materialParams_depthTexture, uv, 0.0).rg;
+        
+        float z_meters = (packedDepth.r * 255.0 + packedDepth.g * 255.0 * 256.0) / 1000.0;
+        
+        // If depth is invalid (0), push vertex to far plane
+        if (z_meters < 0.1) {
+            z_meters = 100.0;
+        }
+
+        // Use custom parameter for camera position
+        vec3 origin = vec3(materialParams.viewOrigin);
+        vec3 worldPos = vec3(material.worldPosition);
+        vec3 rayVector = worldPos - origin;
+        
+        // Scale the ray by the depth
+        material.worldPosition.xyz = origin + rayVector * z_meters;
+        
+        material.uv0 = uv;
+    }
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        material.baseColor = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+}

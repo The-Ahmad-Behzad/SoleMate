@@ -1,0 +1,145 @@
+// Filament material for depth-based occlusion
+// Compares virtual object depth against ARCore scene depth
+// to create realistic occlusion where real objects appear in front
+
+material {
+    name : depth_occlusion,
+    
+    // Required for transparency/blending
+    shadingModel : lit,
+    blending : transparent,
+    
+    // Material parameters accessible from Kotlin
+    parameters : [
+        // Depth texture from ARCore (16-bit packed as RG8)
+        {
+            type : sampler2d,
+            name : depthTexture
+        },
+        // UV transform matrix (3x3) for depth coordinate conversion
+        {
+            type : float3,
+            name : depthUvTransformCol0
+        },
+        {
+            type : float3,
+            name : depthUvTransformCol1
+        },
+        {
+            type : float3,
+            name : depthUvTransformCol2
+        },
+        // Toggle for occlusion (0.0 = off, 1.0 = on)
+        {
+            type : float,
+            name : occlusionEnabled
+        },
+        // Base color/albedo for the material
+        {
+            type : float4,
+            name : baseColor
+        },
+        // Metallic factor
+        {
+            type : float,
+            name : metallic
+        },
+        // Roughness factor
+        {
+            type : float,
+            name : roughness
+        }
+    ],
+    
+    // Required vertex attributes
+    requires : [
+        uv0,
+        position
+    ]
+}
+
+fragment {
+    // Unpack 16-bit depth from RG8 texture
+    // R = low 8 bits, G = high 8 bits
+    // Returns depth in millimeters
+    float getDepthMillimeters(sampler2D depthTex, vec2 depthUv) {
+        vec2 packedDepth = texture(depthTex, depthUv).rg;
+        // Depth is stored as: depth_mm = R + G * 256
+        // But in normalized [0,1] format, so multiply by 255
+        return packedDepth.r * 255.0 + packedDepth.g * 255.0 * 256.0;
+    }
+    
+    // Compute visibility factor based on depth comparison
+    // Returns 1.0 for fully visible, 0.0 for fully occluded
+    float computeOcclusionVisibility(float sceneDepthMm, float objectDepthMm) {
+        // If no depth data (0 value), assume fully visible
+        if (sceneDepthMm < 1.0) {
+            return 1.0;
+        }
+        
+        // Tolerance bands for smooth blending
+        // Objects within 15mm per meter of scene depth get soft edges
+        float kDepthTolerancePerMm = 0.015;
+        float tolerance = kDepthTolerancePerMm * objectDepthMm;
+        
+        // Soft comparison with smooth transition
+        // visibility = 1.0 when object is in front of scene
+        // visibility = 0.0 when object is behind scene
+        float visibility = 1.0 - smoothstep(
+            sceneDepthMm - tolerance * 0.5,
+            sceneDepthMm + tolerance,
+            objectDepthMm
+        );
+        
+        // Clamp for safety
+        return clamp(visibility, 0.0, 1.0);
+    }
+    
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        
+        // Set base material properties
+        material.baseColor = materialParams.baseColor;
+        material.metallic = materialParams.metallic;
+        material.roughness = materialParams.roughness;
+        
+        // Apply occlusion if enabled
+        if (materialParams.occlusionEnabled > 0.5) {
+            // Get fragment position in view space
+            // getViewFromWorldMatrix() * worldPosition gives view-space position
+            // For depth comparison, we need the fragment's depth
+            vec3 viewPos = getWorldPosition() * mat3(getViewFromWorldMatrix());
+            float viewZ = (getViewFromWorldMatrix() * vec4(getWorldPosition(), 1.0)).z;
+            
+            // Object depth in millimeters (view space Z is negative, looking down -Z)
+            float objectDepthMm = -viewZ * 1000.0;
+            
+            // Convert clip position to NDC for depth UV lookup
+            vec4 clipPos = getClipFromWorldMatrix() * vec4(getWorldPosition(), 1.0);
+            vec2 ndcXY = clipPos.xy / clipPos.w;
+            
+            // Build the 3x3 transform matrix from columns
+            mat3 uvTransform = mat3(
+                materialParams.depthUvTransformCol0,
+                materialParams.depthUvTransformCol1,
+                materialParams.depthUvTransformCol2
+            );
+            
+            // Transform NDC to depth UV
+            vec3 depthUvHomogeneous = uvTransform * vec3(ndcXY, 1.0);
+            vec2 depthUv = depthUvHomogeneous.xy;
+            
+            // Clamp UV to valid range
+            depthUv = clamp(depthUv, 0.0, 1.0);
+            
+            // Sample scene depth from ARCore depth texture
+            float sceneDepthMm = getDepthMillimeters(materialParams_depthTexture, depthUv);
+            
+            // Compute occlusion visibility
+            float visibility = computeOcclusionVisibility(sceneDepthMm, objectDepthMm);
+            
+            // Apply to alpha channel
+            material.baseColor.a *= visibility;
+        }
+    }
+}

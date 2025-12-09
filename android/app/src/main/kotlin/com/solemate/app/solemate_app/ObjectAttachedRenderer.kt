@@ -4,7 +4,9 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.util.Log
+import com.google.android.filament.Texture
 import com.google.ar.core.Anchor
+import com.google.ar.core.Config
 import com.google.ar.core.Coordinates2d
 import com.google.ar.core.Frame
 import com.google.ar.core.Session
@@ -73,6 +75,10 @@ class ObjectAttachedRenderer(
     // Recalibration flag
     @Volatile
     private var recalibrationRequested = false
+    
+    // === Depth Occlusion ===
+    private var depthTextureHandler: DepthTextureHandler? = null
+    private var isDepthSupported = false
 
     fun release() {
         try {
@@ -83,6 +89,9 @@ class ObjectAttachedRenderer(
         } catch (_: Exception) { }
         try {
             footAnchor?.detach()
+        } catch (_: Exception) { }
+        try {
+            depthTextureHandler?.release()
         } catch (_: Exception) { }
         try {
             shoeRenderer?.release()
@@ -103,7 +112,11 @@ class ObjectAttachedRenderer(
         session.setCameraTextureName(backgroundRenderer.getTextureId())
         planeRenderer.createOnGlThread()
         footDetector.init()
+        
+        // Check if depth is supported and enabled
+        isDepthSupported = session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)
         Log.i(TAG, "✅ ObjectAttachedRenderer initialized (Instant Placement mode)")
+        Log.i(TAG, "📐 Depth support: $isDepthSupported")
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -145,7 +158,7 @@ class ObjectAttachedRenderer(
             }
 
             // === Update shoe rendering using anchor ===
-            updateShoeFromAnchor(viewMatrix, projMatrix)
+            updateShoeFromAnchor(viewMatrix, projMatrix, frame)
 
         } catch (e: CameraNotAvailableException) {
             Log.e(TAG, "Camera not available: ${e.message}")
@@ -254,13 +267,19 @@ class ObjectAttachedRenderer(
     }
 
     /**
-     * Update shoe rendering from anchor pose
+     * Update shoe rendering from anchor pose with depth occlusion
      * 
-     * The anchor provides a stable 3D pose that ARCore tracks automatically
+     * The anchor provides a stable 3D pose that ARCore tracks automatically.
+     * Depth texture is updated and passed to ShoeRenderer for occlusion.
      */
-    private fun updateShoeFromAnchor(viewMatrix: FloatArray, projMatrix: FloatArray) {
+    private fun updateShoeFromAnchor(viewMatrix: FloatArray, projMatrix: FloatArray, frame: Frame) {
         shoeRenderer?.let { sr ->
             sr.setCamera(viewMatrix, projMatrix)
+            
+            // === Update depth texture for occlusion ===
+            if (isDepthSupported) {
+                updateDepthForOcclusion(sr, frame)
+            }
             
             footAnchor?.let { anchor ->
                 if (anchor.trackingState == TrackingState.TRACKING) {
@@ -268,28 +287,72 @@ class ObjectAttachedRenderer(
                     val modelMatrix = FloatArray(16)
                     anchor.pose.toMatrix(modelMatrix, 0)
                     
-                    // Apply rotation to orient shoe correctly
-                    // Rotate 90° around X to lay flat, then adjust for toe direction
+                    // Build rotation matrix for proper shoe orientation
                     val rotatedMatrix = FloatArray(16)
                     Matrix.setIdentityM(rotatedMatrix, 0)
                     
-                    // Copy translation from anchor
+                    // 1. Copy translation from anchor (world position)
                     Matrix.translateM(rotatedMatrix, 0, modelMatrix[12], modelMatrix[13], modelMatrix[14])
                     
-                    // Apply rotations for proper shoe orientation
-                    // Rotate to lay shoe flat on ground plane
-                    Matrix.rotateM(rotatedMatrix, 0, -90f, 1f, 0f, 0f)
+                    // 2. Calculate yaw to point toe away from camera
+                    val cameraZ = floatArrayOf(viewMatrix[2], viewMatrix[6], viewMatrix[10])
+                    val yawDegrees = Math.toDegrees(kotlin.math.atan2(cameraZ[0].toDouble(), cameraZ[2].toDouble())).toFloat()
                     
-                    // Apply scale
+                    // Apply yaw rotation (Y axis) to point toe away from camera
+                    Matrix.rotateM(rotatedMatrix, 0, yawDegrees, 0f, 1f, 0f)
+                    
+                    // 3. Rotate 180° around X to lay shoe flat with sole facing down
+                    Matrix.rotateM(rotatedMatrix, 0, 180f, 1f, 0f, 0f)
+                    
+                    // 4. Flip 180° around Z so sole faces down (was facing away)
+                    Matrix.rotateM(rotatedMatrix, 0, 180f, 0f, 0f, 1f)
+                    
+                    // 5. Apply scale
                     Matrix.scaleM(rotatedMatrix, 0, SHOE_SCALE, SHOE_SCALE, SHOE_SCALE)
                     
                     sr.setModelMatrix(rotatedMatrix)
                     
                     if (frameCounter % 60 == 0) {
-                        Log.d(TAG, "👟 Rendering shoe at anchor: pos=[${modelMatrix[12]}, ${modelMatrix[13]}, ${modelMatrix[14]}]")
+                        val occlusionStatus = if (sr.isOcclusionActive()) "ON" else "OFF"
+                        Log.d(TAG, "👟 Rendering shoe: pos=[${modelMatrix[12]}, ${modelMatrix[13]}, ${modelMatrix[14]}], yaw=$yawDegrees°, occlusion=$occlusionStatus")
                     }
                 }
             }
+        }
+    }
+    
+    /**
+     * Update depth texture and pass to ShoeRenderer for occlusion.
+     * Lazily initializes DepthTextureHandler when first called with a valid engine.
+     */
+    private fun updateDepthForOcclusion(sr: ShoeRenderer, frame: Frame) {
+        try {
+            // Lazy initialization of DepthTextureHandler
+            if (depthTextureHandler == null) {
+                val engine = sr.getEngine()
+                if (engine != null) {
+                    depthTextureHandler = DepthTextureHandler(engine)
+                    Log.i(TAG, "📐 DepthTextureHandler initialized")
+                } else {
+                    return // Engine not ready yet
+                }
+            }
+            
+            val handler = depthTextureHandler ?: return
+            
+            // Update depth texture from current frame
+            val depthUpdated = handler.updateDepthTexture(frame)
+            
+            if (depthUpdated) {
+                // Pass depth data to ShoeRenderer
+                val depthTexture = handler.getDepthTexture()
+                val uvTransform = handler.getDepthUvTransform()
+                sr.setDepthData(depthTexture, uvTransform)
+            }
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Depth update failed: ${e.message}")
+            // Continue without occlusion
         }
     }
     
