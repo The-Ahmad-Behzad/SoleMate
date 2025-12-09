@@ -105,6 +105,13 @@ dependencies {
 
     implementation("com.google.mediapipe:tasks-vision:0.10.14")
 
+    // ML Kit Object Detection - for tracking with persistent IDs
+    implementation("com.google.mlkit:object-detection:17.0.0")
+    implementation("com.google.mlkit:object-detection-custom:17.0.0")
+    
+    // TFLite Support Library - for model metadata and image processing
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+
     // AndroidX AppCompat and UI components
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.core:core-ktx:1.13.1")

@@ -477,7 +477,7 @@ class ARActivity : AppCompatActivity() {
     private var textureView: TextureView? = null
     private var session: Session? = null
     private var installRequested = false
-    private var renderer: SimpleRenderer? = null
+    private var renderer: ObjectAttachedRenderer? = null  // Using object-based renderer
     private lateinit var rotationHelper: DisplayRotationHelper
     private var shoeRendererInstance: ShoeRenderer? = null
 
@@ -580,12 +580,15 @@ class ARActivity : AppCompatActivity() {
                     ArCoreApk.InstallStatus.INSTALLED -> {
                         session = Session(this)
 
-                        // ✅ Configure ARCore for horizontal plane detection
+                        // ✅ Configure ARCore - Hybrid mode: ML detection + Instant Placement
                         session?.let { arSession ->
                             val config = Config(arSession)
-                            config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
+                            // Disable plane detection - using ML object detection instead
+                            config.planeFindingMode = Config.PlaneFindingMode.DISABLED
                             config.updateMode = Config.UpdateMode.LATEST_CAMERA_IMAGE
+                            // Enable depth for better positioning
                             config.depthMode = Config.DepthMode.AUTOMATIC
+                            // Enable Instant Placement for anchor-based shoe placement
                             config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
                             arSession.configure(config)
                         }
@@ -607,8 +610,8 @@ class ARActivity : AppCompatActivity() {
                 shoeRendererInstance!!.attachToTextureView(tv)
             }
             
-            // ✅ Pass DisplayRotationHelper and ShoeRenderer to renderer
-            renderer = SimpleRenderer(session!!, rotationHelper, this, shoeRendererInstance)
+            // ✅ Use ObjectAttachedRenderer for foot-based shoe attachment
+            renderer = ObjectAttachedRenderer(session!!, rotationHelper, this, shoeRendererInstance)
             glSurfaceView?.setRenderer(renderer)
             glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
 
