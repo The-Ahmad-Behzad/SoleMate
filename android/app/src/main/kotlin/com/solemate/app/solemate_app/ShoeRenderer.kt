@@ -33,6 +33,10 @@ import java.nio.ByteOrder
  */
 class ShoeRenderer(private val context: Context) {
 
+    companion object {
+        private const val TAG = "ShoeRenderer"
+    }
+
     private var engine: Engine? = null
     private var renderer: Renderer? = null
     private var scene: Scene? = null
@@ -45,8 +49,16 @@ class ShoeRenderer(private val context: Context) {
     private var assetLoader: AssetLoader? = null
     private var resourceLoader: ResourceLoader? = null
 
+    // Legacy single shoe support
     private var asset: FilamentAsset? = null
     private var rootEntity: Int = 0
+    
+    // Multi-shoe support (left and right)
+    private var leftAsset: FilamentAsset? = null
+    private var leftRootEntity: Int = 0
+    private var rightAsset: FilamentAsset? = null
+    private var rightRootEntity: Int = 0
+    
     private var lightEntity: Int = 0
     private var viewportWidth = 0
     private var viewportHeight = 0
@@ -84,9 +96,13 @@ class ShoeRenderer(private val context: Context) {
                 // Initialize Filament on its own thread
                 renderHandler?.post {
                     init(width, height, Surface(surfaceTexture))
-                    // Load model after surface is ready - use dynamically selected model
-                    loadGlbFromAssets(SelectedShoeManager.getSelectedModel())
-                    // Don't set model scale here - it will be part of the model matrix from SimpleRenderer
+                    
+                    // Load shoes - use pair mode for left/right rendering
+                    val modelPath = SelectedShoeManager.getSelectedModel()
+                    loadShoe(modelPath, isLeft = true)
+                    loadShoe(modelPath, isLeft = false)  // Same model, will be mirrored via transform
+                    
+                    Log.d(TAG, "Loaded shoe pair: $modelPath")
                     
                     // Start rendering loop
                     startRenderLoop()
@@ -199,22 +215,29 @@ class ShoeRenderer(private val context: Context) {
         view?.viewport = Viewport(0, 0, width, height)
     }
 
-    fun loadGlbFromAssets(assetPath: String): Boolean {
+    /**
+     * Load a shoe model for multi-shoe comparison (left/right pair).
+     * The same model can be loaded for both feet - the right shoe will be mirrored via transform.
+     * 
+     * @param assetPath The path to the GLB asset
+     * @param isLeft true for left shoe, false for right shoe
+     * @return true if loading succeeded
+     */
+    fun loadShoe(assetPath: String, isLeft: Boolean): Boolean {
         val eng = engine ?: return false
         val loader = assetLoader ?: return false
         val resLoader = resourceLoader ?: return false
         try {
             val buffer = readAssetToDirectBuffer(context.assets, assetPath)
-            Log.d("ShoeRenderer", "Loading GLB: $assetPath, buffer size: ${buffer.remaining()} bytes")
+            val label = if (isLeft) "LEFT" else "RIGHT"
+            Log.d(TAG, "Loading $label shoe: $assetPath, buffer size: ${buffer.remaining()} bytes")
             
-            // Direct API call (Filament 1.65.2 uses createAsset, not createAssetFromBinary)
             val loaded = loader.createAsset(buffer)
             if (loaded == null) {
-                Log.e("ShoeRenderer", "AssetLoader.createAsset returned null for: $assetPath")
+                Log.e(TAG, "AssetLoader.createAsset returned null for: $assetPath")
                 return false
             }
             
-            asset = loaded
             resLoader.loadResources(loaded)
             loaded.releaseSourceData()
 
@@ -223,30 +246,75 @@ class ShoeRenderer(private val context: Context) {
             for (e in entities) {
                 scene?.addEntity(e)
             }
-            rootEntity = loaded.root
-            Log.i("ShoeRenderer", "GLB loaded: $assetPath, entities=${entities.size}, root=$rootEntity")
+            
+            // Store in appropriate slot
+            if (isLeft) {
+                leftAsset = loaded
+                leftRootEntity = loaded.root
+                // Also update legacy single-shoe references for backward compatibility
+                asset = loaded
+                rootEntity = loaded.root
+            } else {
+                rightAsset = loaded
+                rightRootEntity = loaded.root
+            }
+            
+            Log.i(TAG, "$label shoe loaded: entities=${entities.size}, root=${loaded.root}")
             return true
         } catch (t: Throwable) {
-            Log.e("ShoeRenderer", "Exception loading GLB: ${t.message}", t)
+            Log.e(TAG, "Exception loading shoe: ${t.message}", t)
             return false
         }
     }
 
     /**
-     * Sets the model matrix for the loaded asset's root entity.
+     * Legacy method: Load a single GLB from assets.
+     * For backward compatibility - internally uses loadShoe for left shoe.
+     */
+    fun loadGlbFromAssets(assetPath: String): Boolean {
+        return loadShoe(assetPath, isLeft = true)
+    }
+
+    /**
+     * Sets the model matrix for the left shoe.
      * Thread-safe: Can be called from any thread, will execute on render thread.
      */
-    fun setModelMatrix(modelMatrix: FloatArray) {
+    fun setLeftModelMatrix(modelMatrix: FloatArray) {
         renderHandler?.post {
             val eng = engine ?: return@post
-            if (rootEntity == 0) return@post
+            if (leftRootEntity == 0) return@post
             val tm = eng.transformManager
-            val inst = tm.getInstance(rootEntity)
+            val inst = tm.getInstance(leftRootEntity)
             if (inst != 0) {
-                // Use the model matrix as-is (scale is already baked in from SimpleRenderer)
                 tm.setTransform(inst, modelMatrix)
             }
         }
+    }
+
+    /**
+     * Sets the model matrix for the right shoe.
+     * The matrix should include mirroring (negative X scale) for proper foot orientation.
+     * Thread-safe: Can be called from any thread, will execute on render thread.
+     */
+    fun setRightModelMatrix(modelMatrix: FloatArray) {
+        renderHandler?.post {
+            val eng = engine ?: return@post
+            if (rightRootEntity == 0) return@post
+            val tm = eng.transformManager
+            val inst = tm.getInstance(rightRootEntity)
+            if (inst != 0) {
+                tm.setTransform(inst, modelMatrix)
+            }
+        }
+    }
+
+    /**
+     * Sets the model matrix for the loaded asset's root entity (legacy single shoe).
+     * For backward compatibility - now sets the left shoe matrix.
+     * Thread-safe: Can be called from any thread, will execute on render thread.
+     */
+    fun setModelMatrix(modelMatrix: FloatArray) {
+        setLeftModelMatrix(modelMatrix)
     }
 
     fun setModelScale(scale: Float) {
@@ -307,16 +375,32 @@ class ShoeRenderer(private val context: Context) {
     fun release() {
         try {
             val eng = engine ?: return
-            asset?.let { a ->
-                // Remove from scene and destroy entities
-                val entities = a.entities
-                for (e in entities) {
-                    scene?.removeEntity(e)
-                    eng.destroyEntity(e)
+            
+            // Helper function to clean up an asset
+            fun cleanupAsset(a: FilamentAsset?) {
+                a?.let { asset ->
+                    val entities = asset.entities
+                    for (e in entities) {
+                        scene?.removeEntity(e)
+                        eng.destroyEntity(e)
+                    }
+                    asset.releaseSourceData()
                 }
-                a.releaseSourceData()
             }
+            
+            // Clean up left shoe
+            cleanupAsset(leftAsset)
+            leftAsset = null
+            leftRootEntity = 0
+            
+            // Clean up right shoe
+            cleanupAsset(rightAsset)
+            rightAsset = null
+            rightRootEntity = 0
+            
+            // Legacy single shoe reference (may point to leftAsset)
             asset = null
+            rootEntity = 0
 
             // Correct cleanup methods
             assetLoader?.let { 
@@ -340,7 +424,7 @@ class ShoeRenderer(private val context: Context) {
             // Engine doesn't have a destroy method - it will be GC'd when engine is nulled
             engine = null
         } catch (t: Throwable) {
-            Log.e("ShoeRenderer", "Release error: ${t.message}", t)
+            Log.e(TAG, "Release error: ${t.message}", t)
         }
     }
 
