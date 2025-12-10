@@ -7,8 +7,8 @@ material {
     // Unlit - invisible occluder
     shadingModel : unlit,
     
-    // Write to depth buffer only
-    colorWrite : false,
+    // DEBUG: Enable color to see occluder mesh
+    colorWrite : true,
     depthWrite : true,
     depthCulling : true,
     
@@ -28,6 +28,11 @@ material {
         {
             type : float3,
             name : viewOrigin
+        },
+        // UV Transform for ARCore depth alignment
+        {
+            type : mat3,
+            name : uvTransform
         }
     ],
     
@@ -42,24 +47,38 @@ vertex {
         // Sample depth at this vertex's UV
         vec2 uv = material.uv0;
         
+        // Apply UV transform
+        vec3 transformedUv = materialParams.uvTransform * vec3(uv, 1.0);
+        uv = transformedUv.xy;
+        
         // Use textureLod in vertex shader as implicit derivatives are not available
         vec2 packedDepth = textureLod(materialParams_depthTexture, uv, 0.0).rg;
         
+        // Unpack depth: R = low byte, G = high byte, result in millimeters
         float z_meters = (packedDepth.r * 255.0 + packedDepth.g * 255.0 * 256.0) / 1000.0;
         
-        // If depth is invalid (0), push vertex to far plane
+        // If depth is invalid (0 or very small), push vertex to far plane
         if (z_meters < 0.1) {
             z_meters = 100.0;
         }
+        
+        // Clamp depth to reasonable range
+        z_meters = clamp(z_meters, 0.1, 10.0);
 
-        // Use custom parameter for camera position
+        // Get camera position and compute ray direction
         vec3 origin = vec3(materialParams.viewOrigin);
         vec3 worldPos = vec3(material.worldPosition);
-        vec3 rayVector = worldPos - origin;
+        vec3 rayDir = worldPos - origin;
         
-        // Scale the ray by the depth
-        material.worldPosition.xyz = origin + rayVector * z_meters;
+        // IMPORTANT: Normalize the ray, then scale by actual depth
+        float rayLen = length(rayDir);
+        if (rayLen > 0.001) {
+            vec3 rayNormalized = rayDir / rayLen;
+            // Place vertex at z_meters distance from camera along this ray
+            material.worldPosition.xyz = origin + rayNormalized * z_meters;
+        }
         
+        // Pass UV to fragment for debug
         material.uv0 = uv;
     }
 }
@@ -67,6 +86,22 @@ vertex {
 fragment {
     void material(inout MaterialInputs material) {
         prepareMaterial(material);
-        material.baseColor = vec4(0.0, 0.0, 0.0, 0.0);
+        
+        // Debug: visualize depth as color (green = close, blue = far)
+        // Resample depth in fragment for visualization
+        vec2 uv = getUV0();
+        vec2 packedDepth = texture(materialParams_depthTexture, uv).rg;
+        float z = (packedDepth.r * 255.0 + packedDepth.g * 255.0 * 256.0) / 1000.0;
+        
+        // Map depth 0-3m to color: R=invalid, G=close (0.5m), B=far (3m)
+        float normalizedDepth = clamp(z / 3.0, 0.0, 1.0);
+        
+        if (z < 0.1) {
+            // Invalid depth - RED
+            material.baseColor = vec4(1.0, 0.0, 0.0, 0.6);
+        } else {
+            // Valid depth - Green to Blue gradient
+            material.baseColor = vec4(0.0, 1.0 - normalizedDepth, normalizedDepth, 0.6);
+        }
     }
 }

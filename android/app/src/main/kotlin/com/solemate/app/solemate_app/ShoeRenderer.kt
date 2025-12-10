@@ -106,6 +106,9 @@ class ShoeRenderer(private val context: Context) {
     private var occluderVertexBuffer: VertexBuffer? = null
     private var occluderIndexBuffer: IndexBuffer? = null
     private val occluderGridSize = 120 // 120x120 grid
+    
+    // Model matrix storage for occluder positioning
+    private var lastModelMatrix: FloatArray? = null
 
     init {
         // Ensure Filament JNI is loaded
@@ -362,6 +365,12 @@ class ShoeRenderer(private val context: Context) {
      * Thread-safe: Can be called from any thread, will execute on render thread.
      */
     fun setModelMatrix(modelMatrix: FloatArray) {
+        // Store for leg occluder positioning
+        if (lastModelMatrix == null) {
+            lastModelMatrix = FloatArray(16)
+        }
+        System.arraycopy(modelMatrix, 0, lastModelMatrix!!, 0, 16)
+        
         renderHandler?.post {
             val eng = engine ?: return@post
             if (rootEntity == 0) return@post
@@ -370,6 +379,9 @@ class ShoeRenderer(private val context: Context) {
             if (inst != 0) {
                 tm.setTransform(inst, modelMatrix)
             }
+            
+            // Also update leg occluder position (if enabled)
+            updateDepthMaterialParams()
         }
     }
 
@@ -434,36 +446,34 @@ class ShoeRenderer(private val context: Context) {
      */
     private fun updateDepthMaterialParams() {
         val mi = depthMaterialInstance ?: return
-        // Update depth occlusion parameters
-        if (hasDepthData && depthTexture != null && occlusionEnabled) {
-            val eng = engine ?: return
+        val eng = engine ?: return
+        
+        // Update leg occluder transform to follow shoe position + upward offset
+        // NOTE: The shoe transform includes SHOE_SCALE (0.08), so we need to compensate
+        if (occluderEntity != 0 && lastModelMatrix != null) {
+            val tm = eng.transformManager
+            val occInst = tm.getInstance(occluderEntity)
             
-            // Update occluder transform to match camera (so mesh is always in front of view)
-            if (cameraEntity != 0 && occluderEntity != 0) {
-                val tm = eng.transformManager
-                val camInst = tm.getInstance(cameraEntity)
-                val occInst = tm.getInstance(occluderEntity)
+            if (occInst != 0) {
+                // Create a new transform for the leg occluder
+                // Extract just the translation from shoe transform (ignore scale/rotation)
+                val legTransform = FloatArray(16)
+                android.opengl.Matrix.setIdentityM(legTransform, 0)
                 
-                if (camInst != 0 && occInst != 0) {
-                    // Copy camera transform to occluder
-                    val transform = FloatArray(16)
-                    tm.getWorldTransform(camInst, transform)
-                    tm.setTransform(occInst, transform)
-                }
-            }
-
-            // Update occluder material
-            occluderMaterialInstance?.let { mi ->
-                mi.setParameter("depthTexture", depthTexture!!, depthSampler)
+                // Copy translation (position) from shoe
+                legTransform[12] = lastModelMatrix!![12] // X position
+                legTransform[13] = lastModelMatrix!![13] + 0.15f  // Y position + 15cm up
+                legTransform[14] = lastModelMatrix!![14] + 0.20f // Z position + 20cm backward (toward leg, away from camera)
                 
-                // Pass camera position (world space) to shader via viewOrigin parameter
-                if (camera != null) {
-                    val camPos = floatArrayOf(0f, 0f, 0f)
-                    // getPosition returns a float array
-                    val posArray = camera!!.getPosition(camPos)
-                    mi.setParameter("viewOrigin", posArray[0], posArray[1], posArray[2])
-                }
+                // Apply larger scale for the leg box (1.0 = real size, not shoe-scaled)
+                android.opengl.Matrix.scaleM(legTransform, 0, 1.0f, 1.0f, 1.0f)
+                
+                tm.setTransform(occInst, legTransform)
             }
+        }
+        
+        // Update depth occlusion parameters (only if depth data available)
+        if (hasDepthData && depthTexture != null && occlusionEnabled) {
 
             // Set depth texture for the main material
             mi.setParameter("depthTexture", depthTexture!!, depthSampler)
@@ -519,113 +529,94 @@ class ShoeRenderer(private val context: Context) {
     }
     
     /**
-     * Setup the invisible occluder mesh.
-     * This creates a dense grid attached to the camera that is displaced by depth data.
+     * Setup a simple leg occluder box.
+     * This creates an invisible box positioned above the shoe to represent the leg,
+     * causing the shoe heel to be occluded behind it.
      */
     private fun setupOccluder() {
         val eng = engine ?: return
         val entityManager = EntityManager.get()
         
         try {
-            // 1. Create Occluder Material
-            val buffer = readAssetToDirectBuffer(context.assets, "materials/depth_displacement.filamat")
+            // 1. Create Simple Occluder Material (depth-only, invisible)
+            val buffer = readAssetToDirectBuffer(context.assets, "materials/leg_occluder.filamat")
             occluderMaterial = Material.Builder()
                 .payload(buffer, buffer.remaining())
                 .build(eng)
             occluderMaterialInstance = occluderMaterial?.createInstance()
             
-            // 2. Generate Grid Mesh
-            // Grid spanning -2 to +2 in X/Y at Z = -1.0 (covering wide FOV)
-            val N = occluderGridSize
-            val vertexCount = (N + 1) * (N + 1)
-            val indexCount = N * N * 6
+            // 2. Generate Simple Box Mesh (representing leg cross-section)
+            // Box dimensions: width 0.1m, height 0.3m, depth 0.15m (leg-like)
+            val halfW = 0.05f   // 10cm wide
+            val halfH = 0.15f  // 30cm tall
+            val halfD = 0.075f // 15cm deep
             
-            // Buffers
-            val vertexData = FloatBuffer.allocate(vertexCount * 5) // Position(3) + UV(2)
-            val indexData = ByteBuffer.allocateDirect(indexCount * 4).order(ByteOrder.nativeOrder()).asIntBuffer()
+            // 8 vertices for a box
+            val vertices = floatArrayOf(
+                // Front face (Z+)
+                -halfW, -halfH, halfD,   halfW, -halfH, halfD,   halfW, halfH, halfD,   -halfW, halfH, halfD,
+                // Back face (Z-)
+                -halfW, -halfH, -halfD,  -halfW, halfH, -halfD,  halfW, halfH, -halfD,  halfW, -halfH, -halfD
+            )
             
-            val extent = 2.0f
-            val step = (extent * 2.0f) / N
-            val uvStep = 1.0f / N
-            
-            // Generate vertices
-            for (y in 0..N) {
-                for (x in 0..N) {
-                    val posX = -extent + x * step
-                    val posY = -extent + y * step
-                    val posZ = -1.0f // 1 meter forward in view space
-                    
-                    val u = x * uvStep
-                    val v = y * uvStep
-                    
-                    vertexData.put(posX).put(posY).put(posZ)
-                    vertexData.put(u).put(v)
-                }
-            }
-            vertexData.flip()
-            
-            // Generate indices (quads -> triangles)
-            for (y in 0 until N) {
-                for (x in 0 until N) {
-                    val i0 = y * (N + 1) + x
-                    val i1 = i0 + 1
-                    val i2 = i0 + (N + 1)
-                    val i3 = i2 + 1
-                    
-                    // Triangle 1
-                    indexData.put(i0).put(i2).put(i1)
-                    // Triangle 2
-                    indexData.put(i1).put(i2).put(i3)
-                }
-            }
-            indexData.flip()
+            // 12 triangles (36 indices) for a box
+            val indices = intArrayOf(
+                // Front
+                0, 1, 2, 2, 3, 0,
+                // Back
+                4, 5, 6, 6, 7, 4,
+                // Left
+                0, 3, 5, 5, 4, 0,
+                // Right
+                1, 7, 6, 6, 2, 1,
+                // Top
+                3, 2, 6, 6, 5, 3,
+                // Bottom
+                0, 4, 7, 7, 1, 0
+            )
             
             // 3. Create Filament Buffers
             occluderVertexBuffer = VertexBuffer.Builder()
                 .bufferCount(1)
-                .vertexCount(vertexCount)
-                .attribute(VertexBuffer.VertexAttribute.POSITION, 0, VertexBuffer.AttributeType.FLOAT3, 0, 20) // stride 20 bytes (5 floats)
-                .attribute(VertexBuffer.VertexAttribute.UV0, 0, VertexBuffer.AttributeType.FLOAT2, 12, 20) // offset 12 bytes
+                .vertexCount(8)
+                .attribute(VertexBuffer.VertexAttribute.POSITION, 0, VertexBuffer.AttributeType.FLOAT3, 0, 12)
                 .build(eng)
             
             occluderIndexBuffer = IndexBuffer.Builder()
-                .indexCount(indexCount)
+                .indexCount(36)
                 .bufferType(IndexBuffer.Builder.IndexType.UINT)
                 .build(eng)
                 
-            occluderVertexBuffer!!.setBufferAt(eng, 0, java.nio.ByteBuffer.allocateDirect(vertexData.capacity() * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().put(vertexData))
-            occluderIndexBuffer!!.setBuffer(eng, java.nio.ByteBuffer.allocateDirect(indexCount * 4).order(ByteOrder.nativeOrder()).asIntBuffer().put(indexData))
+            // Copy vertex data
+            val vByteBuf = ByteBuffer.allocateDirect(vertices.size * 4).order(ByteOrder.nativeOrder())
+            vByteBuf.asFloatBuffer().put(vertices)
+            vByteBuf.rewind()
+            occluderVertexBuffer!!.setBufferAt(eng, 0, vByteBuf)
+            
+            // Copy index data
+            val iByteBuf = ByteBuffer.allocateDirect(indices.size * 4).order(ByteOrder.nativeOrder())
+            iByteBuf.asIntBuffer().put(indices)
+            iByteBuf.rewind()
+            occluderIndexBuffer!!.setBuffer(eng, iByteBuf)
             
             // 4. Create Entity and Renderable
             occluderEntity = entityManager.create()
             RenderableManager.Builder(1)
-                .boundingBox(Box(-extent, -extent, -1.0f, extent, extent, 0.0f))
+                .boundingBox(Box(-halfW, -halfH, -halfD, halfW, halfH, halfD))
                 .geometry(0, PrimitiveType.TRIANGLES, occluderVertexBuffer!!, occluderIndexBuffer!!)
                 .material(0, occluderMaterialInstance!!)
-                .culling(false) // Never cull
+                .culling(false)  // Never cull
                 .castShadows(false)
                 .receiveShadows(false)
+                .priority(0)  // Render FIRST (before shoe at priority 4)
                 .build(eng, occluderEntity)
-                
-            // 5. Attach to Camera so it stays locked to view
-            // Note: Camera entity is 'cameraEntity'. Occluder should be its child?
-            // Filament doesn't support scene graph hierarchy directly via EntityManager parent/child
-            // without TransformManager.
-            // Better: Just update its transform every frame to match camera * offset?
-            // Or simpler: Attach it to the scene, and let the Vertex Shader logic handle the "View Space" assumption
-            // by passing the Camera Position.
-            // BUT, our Vertex Shader assumes input vertices are in World Space relative to Camera?
-            // NO, proper way:
-            // Use TransformManager to parent occluderEntity to cameraEntity?
-            // Or just set occluderEntity transform to Identity and attach to Camera?
-            // Filament Camera is an entity.
-            // Let's rely on manually setting the transform to match the camera.
             
-            scene?.addEntity(occluderEntity)
-            Log.i(TAG, "Occluder mesh initialized")
+            // 5. Add to scene (DISABLED - focusing on shoe alignment first)
+            // scene?.addEntity(occluderEntity)
+            Log.i(TAG, "Leg occluder box initialized (DISABLED)")
             
         } catch (t: Throwable) {
-            Log.e(TAG, "Failed to setup occluder: ${t.message}", t)
+            Log.e(TAG, "Failed to setup leg occluder: ${t.message}", t)
         }
     }
 
