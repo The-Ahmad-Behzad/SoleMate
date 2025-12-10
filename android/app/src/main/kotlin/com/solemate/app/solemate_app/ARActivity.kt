@@ -479,7 +479,7 @@ class ARActivity : AppCompatActivity() {
     private var installRequested = false
     private var renderer: ObjectAttachedRenderer? = null  // Using object-based renderer
     private lateinit var rotationHelper: DisplayRotationHelper
-    private var shoeRendererInstance: ShoeRenderer? = null
+    private var shoeRenderer: ShoeRenderer? = null  // Single renderer managing both shoes
 
     // ✅ new: store a single queued tap for the renderer to consume
     private var queuedSingleTap: MotionEvent? = null
@@ -604,19 +604,20 @@ class ARActivity : AppCompatActivity() {
         }
 
         try {
-            // ✅ Create ShoeRenderer and attach to TextureView
-            shoeRendererInstance = ShoeRenderer(this)
+            // ✅ Create single ShoeRenderer that manages both shoes internally
+            shoeRenderer = ShoeRenderer(this)
+            
             textureView?.let { tv ->
-                shoeRendererInstance!!.attachToTextureView(tv)
+                shoeRenderer!!.attachToTextureView(tv)
             }
             
-            // ✅ Use ObjectAttachedRenderer for foot-based shoe attachment
-            renderer = ObjectAttachedRenderer(session!!, rotationHelper, this, shoeRendererInstance)
+            // ✅ Use ObjectAttachedRenderer with single shoe renderer
+            renderer = ObjectAttachedRenderer(session!!, rotationHelper, this, shoeRenderer)
             glSurfaceView?.setRenderer(renderer)
             glSurfaceView?.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
 
             session?.resume()
-            Toast.makeText(this, "AR Session started", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "AR Session started (dual foot tracking)", Toast.LENGTH_SHORT).show()
         } catch (e: CameraNotAvailableException) {
             Toast.makeText(this, "Camera not available. Try restarting the app.", Toast.LENGTH_LONG).show()
             session = null

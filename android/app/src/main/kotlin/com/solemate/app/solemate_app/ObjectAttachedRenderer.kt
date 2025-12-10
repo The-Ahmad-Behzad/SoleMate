@@ -33,7 +33,7 @@ class ObjectAttachedRenderer(
     private val session: Session,
     private val rotationHelper: DisplayRotationHelper,
     private val activity: ARActivity,
-    private var shoeRenderer: ShoeRenderer? = null
+    private var shoeRenderer: ShoeRenderer? = null  // Single renderer managing both shoes
 ) : GLSurfaceView.Renderer {
 
     companion object {
@@ -63,15 +63,27 @@ class ObjectAttachedRenderer(
     // Detected feet from background thread
     private val pendingDetections = AtomicReference<List<DetectedFoot>>(emptyList())
     
-    // Foot orientation from landmarks (for tilt tracking)
+    // Foot orientation from bounding box (for tilt tracking) - PER FOOT
     @Volatile
-    private var footTiltAngle: Float = 0f  // Tilt angle in degrees (from toe-heel vector)
+    private var leftTiltAngle: Float = 0f
     @Volatile
-    private var footYawAngle: Float = 0f   // Yaw angle in degrees (left-right orientation)
+    private var leftRollAngle: Float = 0f
+    @Volatile
+    private var rightTiltAngle: Float = 0f
+    @Volatile
+    private var rightRollAngle: Float = 0f
     
-    // Current foot anchor - the 3D anchor where shoe is placed
-    private var footAnchor: Anchor? = null
-    private var attachedFootId: Int? = null
+    // Dual foot anchors - one for each foot
+    private var leftFootAnchor: Anchor? = null
+    private var rightFootAnchor: Anchor? = null
+    private var leftFootId: Int? = null
+    private var rightFootId: Int? = null
+    
+    // Per-foot visibility - only render shoe when foot is currently detected
+    @Volatile
+    private var leftFootVisible: Boolean = false
+    @Volatile
+    private var rightFootVisible: Boolean = false
     
     // Surface and image dimensions
     private var surfaceWidth = 0
@@ -98,7 +110,10 @@ class ObjectAttachedRenderer(
             detectionExecutor.shutdownNow()
         } catch (_: Exception) { }
         try {
-            footAnchor?.detach()
+            leftFootAnchor?.detach()
+        } catch (_: Exception) { }
+        try {
+            rightFootAnchor?.detach()
         } catch (_: Exception) { }
         try {
             depthTextureHandler?.release()
@@ -196,30 +211,37 @@ class ObjectAttachedRenderer(
                     if (detections.isNotEmpty()) {
                         pendingDetections.set(detections)
                         
-                        // Use bounding box to estimate foot tilt and roll
-                        val foot = detections[0]
-                        val boxWidth = foot.width
-                        val boxHeight = foot.height
-                        val centerX = foot.centerX  // Normalized 0-1
-                        
-                        if (boxWidth > 0.01f && boxHeight > 0.01f) {
-                            // === TILT (pitch - toe up/down) ===
-                            // When foot tilts up, bounding box becomes taller (lower aspect ratio)
-                            val aspectRatio = boxWidth / boxHeight
-                            val normalAspect = 2.0f  // Expected when flat
-                            val tiltFactor = (normalAspect - aspectRatio) / normalAspect
-                            // NEGATED to fix direction: higher bbox = toe up = positive tilt
-                            footTiltAngle = -tiltFactor * 90f
+                        // Process each foot for tilt/roll
+                        for (foot in detections) {
+                            val boxWidth = foot.width
+                            val boxHeight = foot.height
                             
-                            // === ROLL (left/right side up) ===
-                            // When foot rolls to side, the visible height/shape changes
-                            // Use centerY deviation - foot rolled to side appears shifted
-                            val centerY = foot.centerY
-                            val yOffset = centerY - 0.5f  // -0.5 to +0.5
-                            footYawAngle = yOffset * 90f  // Increased sensitivity for roll
-                            
-                            if (frameCounter % 30 == 0) {
-                                Log.d(TAG, "Foot: aspect=${"%.2f".format(aspectRatio)} tilt=${"%.1f".format(footTiltAngle)}° roll=${"%.1f".format(footYawAngle)}° centerY=${"%.2f".format(centerY)}")
+                            if (boxWidth > 0.01f && boxHeight > 0.01f) {
+                                // === TILT (pitch - toe up/down) from aspect ratio ===
+                                val aspectRatio = boxWidth / boxHeight
+                                val normalAspect = 2.0f
+                                val tiltFactor = (normalAspect - aspectRatio) / normalAspect
+                                val tiltAngle = -tiltFactor * 90f
+                                
+                                // === ROLL from segmentation orientation (image moments) ===
+                                // foot.orientation is computed from principal axis of foot pixels
+                                val rollAngle = foot.orientation
+                                
+                                // Store per-foot angles
+                                when (foot.label) {
+                                    "left_foot" -> {
+                                        leftTiltAngle = tiltAngle
+                                        leftRollAngle = rollAngle
+                                    }
+                                    "right_foot" -> {
+                                        rightTiltAngle = tiltAngle
+                                        rightRollAngle = rollAngle
+                                    }
+                                }
+                                
+                                if (frameCounter % 30 == 0) {
+                                    Log.d(TAG, "${foot.label}: tilt=${"%.1f".format(tiltAngle)}° roll=${"%.1f".format(rollAngle)}° (orientation)")
+                                }
                             }
                         }
                     }
@@ -245,10 +267,13 @@ class ObjectAttachedRenderer(
      */
     private fun handleRecalibration() {
         recalibrationRequested = false
-        footAnchor?.detach()
-        footAnchor = null
-        attachedFootId = null
-        Log.d(TAG, "✅ Recalibration complete - anchor detached")
+        leftFootAnchor?.detach()
+        leftFootAnchor = null
+        leftFootId = null
+        rightFootAnchor?.detach()
+        rightFootAnchor = null
+        rightFootId = null
+        Log.d(TAG, "✅ Recalibration complete - both anchors detached")
     }
 
     /**
@@ -257,117 +282,135 @@ class ObjectAttachedRenderer(
      * This replaces manual 3D position computation with ARCore's hitTestInstantPlacement
      */
     private fun processDetectionsWithInstantPlacement(detections: List<DetectedFoot>, frame: Frame) {
-        val foot = detections.firstOrNull() ?: return
-        
-        // ALWAYS update anchor to follow foot movement continuously
-        // Previous logic skipped updates if anchor existed, but this made shoe static
-        
-        try {
-            // Use HEEL position (top-center of bounding box) instead of center
-            // The bounding box top edge is closer to the ankle/heel
-            // boundingBox: left=x1, top=y1, right=x2, bottom=y2 (normalized)
-            val heelX = foot.centerX  // Center X is fine
-            val heelY = foot.boundingBox.top + foot.height * 0.1f  // 10% down from top = near heel
-            
-            // Convert normalized heel position to IMAGE_PIXELS coordinates
-            val imageX = heelX * lastImageWidth
-            val imageY = heelY * lastImageHeight
-            
-            // Transform from IMAGE_PIXELS to VIEW coordinates
-            val inputCoords = floatArrayOf(imageX, imageY)
-            val viewCoords = FloatArray(2)
-            
-            frame.transformCoordinates2d(
-                Coordinates2d.IMAGE_PIXELS,
-                inputCoords,
-                Coordinates2d.VIEW,
-                viewCoords
-            )
-            
-            Log.d(TAG, "Foot HEEL: norm($heelX, $heelY) → img($imageX, $imageY) → view(${viewCoords[0]}, ${viewCoords[1]})")
-            
-            // Use Instant Placement hit test (no planes required)
-            val hits = frame.hitTestInstantPlacement(viewCoords[0], viewCoords[1], ESTIMATED_DEPTH)
-            
-            if (hits.isNotEmpty()) {
-                // Detach old anchor if exists
-                footAnchor?.detach()
+        // Process ALL detected feet, not just the first one
+        for (foot in detections) {
+            try {
+                // Use HEEL position (top-center of bounding box)
+                val heelX = foot.centerX
+                val heelY = foot.boundingBox.top + foot.height * 0.1f
                 
-                // Create new anchor at instant placement point
-                val hit = hits[0]
-                footAnchor = hit.createAnchor()
-                attachedFootId = foot.id
+                // Convert normalized heel position to IMAGE_PIXELS coordinates
+                val imageX = heelX * lastImageWidth
+                val imageY = heelY * lastImageHeight
                 
-                val pose = footAnchor!!.pose
-                Log.i(TAG, "👟 Created anchor for ${foot.label} at pos=[${pose.tx()}, ${pose.ty()}, ${pose.tz()}]")
-            } else {
-                Log.w(TAG, "No instant placement hit at view coords (${viewCoords[0]}, ${viewCoords[1]})")
+                // Transform from IMAGE_PIXELS to VIEW coordinates
+                val inputCoords = floatArrayOf(imageX, imageY)
+                val viewCoords = FloatArray(2)
+                
+                frame.transformCoordinates2d(
+                    Coordinates2d.IMAGE_PIXELS,
+                    inputCoords,
+                    Coordinates2d.VIEW,
+                    viewCoords
+                )
+                
+                // Use Instant Placement hit test
+                val hits = frame.hitTestInstantPlacement(viewCoords[0], viewCoords[1], ESTIMATED_DEPTH)
+                
+                if (hits.isNotEmpty()) {
+                    val hit = hits[0]
+                    val newAnchor = hit.createAnchor()
+                    val pose = newAnchor.pose
+                    
+                    // Assign anchor to appropriate foot
+                    when (foot.label) {
+                        "left_foot" -> {
+                            leftFootAnchor?.detach()
+                            leftFootAnchor = newAnchor
+                            leftFootId = foot.id
+                            Log.i(TAG, "👟 LEFT foot anchor at pos=[${pose.tx()}, ${pose.ty()}, ${pose.tz()}]")
+                        }
+                        "right_foot" -> {
+                            rightFootAnchor?.detach()
+                            rightFootAnchor = newAnchor
+                            rightFootId = foot.id
+                            Log.i(TAG, "👟 RIGHT foot anchor at pos=[${pose.tx()}, ${pose.ty()}, ${pose.tz()}]")
+                        }
+                    }
+                }
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Instant placement failed for ${foot.label}: ${e.message}")
             }
-            
-        } catch (e: Exception) {
-            Log.e(TAG, "Instant placement failed: ${e.message}")
         }
     }
 
     /**
      * Update shoe rendering from anchor pose with depth occlusion
      * 
-     * The anchor provides a stable 3D pose that ARCore tracks automatically.
-     * Depth texture is updated and passed to ShoeRenderer for occlusion.
+     * Renders BOTH left and right shoes using a single ShoeRenderer.
+     * Each shoe tracks its respective foot anchor independently.
      */
     private fun updateShoeFromAnchor(viewMatrix: FloatArray, projMatrix: FloatArray, frame: Frame) {
         shoeRenderer?.let { sr ->
             sr.setCamera(viewMatrix, projMatrix)
             
-            // === Update depth texture for occlusion ===
             if (isDepthSupported) {
                 updateDepthForOcclusion(sr, frame)
             }
             
-            footAnchor?.let { anchor ->
+            // === Render LEFT shoe ===
+            leftFootAnchor?.let { anchor ->
                 if (anchor.trackingState == TrackingState.TRACKING) {
-                    // Get model matrix from anchor pose
-                    // This includes both position AND rotation from the detected surface/foot
-                    val modelMatrix = FloatArray(16)
-                    anchor.pose.toMatrix(modelMatrix, 0)
-                    
-                    // Apply WORLD SPACE offsets to anchor position BEFORE rotations
-                    // This ensures the shoe moves backward toward leg in actual world coordinates
-                    modelMatrix[12] = modelMatrix[12]  // X unchanged
-                    modelMatrix[13] = modelMatrix[13] - 0.05f  // Y down in world space (foot immersion)
-                    modelMatrix[14] = modelMatrix[14] + 0.15f  // Z backward in world space (behind leg)
-                    
-                    // Copy modified anchor to final matrix
-                    val finalMatrix = FloatArray(16)
-                    System.arraycopy(modelMatrix, 0, finalMatrix, 0, 16)
-                    
-                    // Rotation corrections for shoe model (in local space):
-                    // Model needs: toe forward, sole down
-                    Matrix.rotateM(finalMatrix, 0, 180f, 0f, 0f, 1f)  // Flip around Z
-                    Matrix.rotateM(finalMatrix, 0, 180f, 1f, 0f, 0f)  // Flip around X
-                    
-                    // Apply foot tilt tracking from bounding box
-                    // footTiltAngle = pitch (toe up/down)
-                    if (kotlin.math.abs(footTiltAngle) > 0.5f) {
-                        Matrix.rotateM(finalMatrix, 0, footTiltAngle, 1f, 0f, 0f)  // Tilt around X
-                    }
-                    // footYawAngle = roll (left/right side up)
-                    if (kotlin.math.abs(footYawAngle) > 0.5f) {
-                        Matrix.rotateM(finalMatrix, 0, footYawAngle, 0f, 0f, 1f)  // Roll around Z
-                    }
-                    
-                    // Apply scale
-                    Matrix.scaleM(finalMatrix, 0, SHOE_SCALE, SHOE_SCALE, SHOE_SCALE)
-                    
-                    sr.setModelMatrix(finalMatrix)
+                    val matrix = computeShoeMatrix(anchor, leftTiltAngle, leftRollAngle, isMirrored = false)
+                    sr.setLeftModelMatrix(matrix)
                     
                     if (frameCounter % 60 == 0) {
-                        val occlusionStatus = if (sr.isOcclusionActive()) "ON" else "OFF"
-                        Log.d(TAG, "👟 Rendering shoe: pos=[${modelMatrix[12]}, ${modelMatrix[13]}, ${modelMatrix[14]}], occlusion=$occlusionStatus")
+                        Log.d(TAG, "👟 LEFT shoe rendering")
+                    }
+                }
+            }
+            
+            // === Render RIGHT shoe (mirrored) ===
+            rightFootAnchor?.let { anchor ->
+                if (anchor.trackingState == TrackingState.TRACKING) {
+                    val matrix = computeShoeMatrix(anchor, rightTiltAngle, rightRollAngle, isMirrored = true)
+                    sr.setRightModelMatrix(matrix)
+                    
+                    if (frameCounter % 60 == 0) {
+                        Log.d(TAG, "👟 RIGHT shoe rendering (mirrored)")
                     }
                 }
             }
         }
+    }
+    
+    /**
+     * Compute the final transformation matrix for a shoe
+     */
+    private fun computeShoeMatrix(
+        anchor: Anchor,
+        tiltAngle: Float,
+        rollAngle: Float,
+        isMirrored: Boolean
+    ): FloatArray {
+        val modelMatrix = FloatArray(16)
+        anchor.pose.toMatrix(modelMatrix, 0)
+        
+        // World space offsets
+        modelMatrix[13] = modelMatrix[13] - 0.05f  // Y down (foot immersion)
+        modelMatrix[14] = modelMatrix[14] + 0.15f  // Z backward (behind leg)
+        
+        val finalMatrix = FloatArray(16)
+        System.arraycopy(modelMatrix, 0, finalMatrix, 0, 16)
+        
+        // Rotation corrections
+        Matrix.rotateM(finalMatrix, 0, 180f, 0f, 0f, 1f)  // Flip around Z
+        Matrix.rotateM(finalMatrix, 0, 180f, 1f, 0f, 0f)  // Flip around X
+        
+        // Per-foot tilt tracking
+        if (kotlin.math.abs(tiltAngle) > 0.5f) {
+            Matrix.rotateM(finalMatrix, 0, tiltAngle, 1f, 0f, 0f)
+        }
+        if (kotlin.math.abs(rollAngle) > 0.5f) {
+            Matrix.rotateM(finalMatrix, 0, rollAngle, 0f, 0f, 1f)
+        }
+        
+        // Apply scale - mirror on X for right foot
+        val xScale = if (isMirrored) -SHOE_SCALE else SHOE_SCALE
+        Matrix.scaleM(finalMatrix, 0, xScale, SHOE_SCALE, SHOE_SCALE)
+        
+        return finalMatrix
     }
     
     /**
@@ -406,7 +449,11 @@ class ObjectAttachedRenderer(
     }
     
     /**
-     * Get current anchor tracking state
+     * Get current anchor tracking state - true if ANY foot is anchored
      */
-    fun isShoeAnchored(): Boolean = footAnchor?.trackingState == TrackingState.TRACKING
+    fun isShoeAnchored(): Boolean {
+        val leftTracking = leftFootAnchor?.trackingState == TrackingState.TRACKING
+        val rightTracking = rightFootAnchor?.trackingState == TrackingState.TRACKING
+        return leftTracking || rightTracking
+    }
 }

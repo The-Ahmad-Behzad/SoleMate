@@ -25,7 +25,8 @@ data class DetectedFoot(
     val centerX: Float,             // Bounding box center X (normalized)
     val centerY: Float,             // Bounding box center Y (normalized)
     val width: Float,               // Bounding box width (normalized)
-    val height: Float               // Bounding box height (normalized)
+    val height: Float,              // Bounding box height (normalized)
+    val orientation: Float = 0f     // Roll orientation in degrees (from image moments)
 )
 
 /**
@@ -214,13 +215,15 @@ class FootObjectDetector(private val context: Context) {
         var leftMaxX = Int.MIN_VALUE
         var leftMinY = Int.MAX_VALUE
         var leftMaxY = Int.MIN_VALUE
-        var leftPixelCount = 0
         
         var rightMinX = Int.MAX_VALUE
         var rightMaxX = Int.MIN_VALUE
         var rightMinY = Int.MAX_VALUE
         var rightMaxY = Int.MIN_VALUE
-        var rightPixelCount = 0
+        
+        // Collect pixel coordinates for orientation calculation
+        val leftFootPixels = mutableListOf<Pair<Int, Int>>()
+        val rightFootPixels = mutableListOf<Pair<Int, Int>>()
         
         // Scan mask for foot pixels
         for (y in 0 until maskHeight) {
@@ -247,13 +250,13 @@ class FootObjectDetector(private val context: Context) {
                         leftMaxX = maxOf(leftMaxX, x)
                         leftMinY = minOf(leftMinY, y)
                         leftMaxY = maxOf(leftMaxY, y)
-                        leftPixelCount++
+                        leftFootPixels.add(x to y)
                     } else {
                         rightMinX = minOf(rightMinX, x)
                         rightMaxX = maxOf(rightMaxX, x)
                         rightMinY = minOf(rightMinY, y)
                         rightMaxY = maxOf(rightMaxY, y)
-                        rightPixelCount++
+                        rightFootPixels.add(x to y)
                     }
                 }
             }
@@ -262,43 +265,51 @@ class FootObjectDetector(private val context: Context) {
         val minPixels = 50  // Minimum pixels to consider a valid foot region
         
         // Create detection for left foot if found
-        if (leftPixelCount >= minPixels) {
+        if (leftFootPixels.size >= minPixels) {
             val x1 = leftMinX.toFloat() / maskWidth
             val y1 = leftMinY.toFloat() / maskHeight
             val x2 = leftMaxX.toFloat() / maskWidth
             val y2 = leftMaxY.toFloat() / maskHeight
             
+            // Compute orientation using image moments
+            val leftOrientation = computeOrientation(leftFootPixels)
+            
             detections.add(DetectedFoot(
                 id = 0,
                 label = "left_foot",
                 boundingBox = RectF(x1, y1, x2, y2),
-                confidence = leftPixelCount.toFloat() / (maskWidth * maskHeight),
+                confidence = leftFootPixels.size.toFloat() / (maskWidth * maskHeight),
                 centerX = (x1 + x2) / 2f,
                 centerY = (y1 + y2) / 2f,
                 width = x2 - x1,
-                height = y2 - y1
+                height = y2 - y1,
+                orientation = leftOrientation
             ))
-            Log.d(TAG, "Found left foot: pixels=$leftPixelCount, bbox=[$x1,$y1,$x2,$y2]")
+            Log.d(TAG, "Found left foot: pixels=${leftFootPixels.size}, orientation=${leftOrientation}°")
         }
         
         // Create detection for right foot if found
-        if (rightPixelCount >= minPixels) {
+        if (rightFootPixels.size >= minPixels) {
             val x1 = rightMinX.toFloat() / maskWidth
             val y1 = rightMinY.toFloat() / maskHeight
             val x2 = rightMaxX.toFloat() / maskWidth
             val y2 = rightMaxY.toFloat() / maskHeight
             
+            // Compute orientation using image moments
+            val rightOrientation = computeOrientation(rightFootPixels)
+            
             detections.add(DetectedFoot(
                 id = 0,
                 label = "right_foot",
                 boundingBox = RectF(x1, y1, x2, y2),
-                confidence = rightPixelCount.toFloat() / (maskWidth * maskHeight),
+                confidence = rightFootPixels.size.toFloat() / (maskWidth * maskHeight),
                 centerX = (x1 + x2) / 2f,
                 centerY = (y1 + y2) / 2f,
                 width = x2 - x1,
-                height = y2 - y1
+                height = y2 - y1,
+                orientation = rightOrientation
             ))
-            Log.d(TAG, "Found right foot: pixels=$rightPixelCount, bbox=[$x1,$y1,$x2,$y2]")
+            Log.d(TAG, "Found right foot: pixels=${rightFootPixels.size}, orientation=${rightOrientation}°")
         }
         
         if (detections.isEmpty()) {
@@ -328,6 +339,56 @@ class FootObjectDetector(private val context: Context) {
         return detections
     }
     
+    /**
+     * Compute the orientation (roll angle) of a foot using image moments.
+     * 
+     * This calculates the principal axis of the foot shape using second-order
+     * central moments (similar to PCA). The angle of the principal axis
+     * indicates the foot's roll orientation.
+     * 
+     * @param pixels List of (x, y) pixel coordinates belonging to the foot
+     * @return Orientation angle in degrees (-90 to +90)
+     */
+    private fun computeOrientation(pixels: List<Pair<Int, Int>>): Float {
+        if (pixels.size < 10) return 0f  // Not enough data
+        
+        // Compute centroid
+        var sumX = 0.0
+        var sumY = 0.0
+        for ((x, y) in pixels) {
+            sumX += x
+            sumY += y
+        }
+        val cx = sumX / pixels.size
+        val cy = sumY / pixels.size
+        
+        // Compute second-order central moments
+        var mu11 = 0.0  // Mixed moment (covariance)
+        var mu20 = 0.0  // Variance in X
+        var mu02 = 0.0  // Variance in Y
+        
+        for ((x, y) in pixels) {
+            val dx = x - cx
+            val dy = y - cy
+            mu11 += dx * dy
+            mu20 += dx * dx
+            mu02 += dy * dy
+        }
+        
+        // Compute orientation using atan2
+        // This gives the angle of the principal axis
+        val theta = 0.5 * kotlin.math.atan2(2.0 * mu11, mu20 - mu02)
+        
+        // Convert to degrees
+        val degrees = Math.toDegrees(theta).toFloat()
+        
+        // Normalize to -90 to +90 range
+        return when {
+            degrees > 90 -> degrees - 180
+            degrees < -90 -> degrees + 180
+            else -> degrees
+        }
+    }
     /**
      * Apply Non-Maximum Suppression to remove overlapping detections
      */
