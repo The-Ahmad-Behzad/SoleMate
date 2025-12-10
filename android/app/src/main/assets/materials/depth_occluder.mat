@@ -1,0 +1,41 @@
+// Filament material for depth-only rendering (invisible occluder)
+// This material writes to depth buffer but produces no visible output
+// Used to create an invisible occluder mesh from ARCore depth data
+
+material {
+    name : depth_occluder,
+    
+    // Unlit - we don't need lighting calculations
+    shadingModel : unlit,
+    
+    // Write to depth buffer but not color buffer
+    colorWrite : false,
+    depthWrite : true,
+    depthCulling : true,
+    
+    // No blending needed
+    blending : opaque,
+    
+    // Double-sided to handle inverted geomety
+    doubleSided : true,
+    
+    parameters : [
+        // Depth value in normalized form [0, 1]
+        {
+            type : float,
+            name : depthValue
+        }
+    ],
+    
+    requires : [
+        position
+    ]
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        // No color output - just depth
+        material.baseColor = vec4(0.0, 0.0, 0.0, 0.0);
+    }
+}
