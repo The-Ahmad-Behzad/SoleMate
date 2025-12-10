@@ -141,8 +141,8 @@ class FootTracker(private val context: Context) {
                 ankleY = ankleY,
                 toeX = toeX,
                 toeY = toeY,
-                heelX = null,
-                heelY = null,
+                heelX = heelX,
+                heelY = heelY,
                 visibility = visibilityOf(chosen.ankle)
             )
         } catch (t: Throwable) {

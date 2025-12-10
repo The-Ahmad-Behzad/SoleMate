@@ -1,0 +1,27 @@
+// Simple depth-only occluder material for leg cylinder
+// Writes to depth buffer only, completely invisible
+
+material {
+    name : leg_occluder,
+    
+    shadingModel : unlit,
+    
+    // DEBUG: Enable color to see box
+    colorWrite : true,
+    depthWrite : true,
+    depthCulling : true,
+    
+    // Opaque for proper depth
+    blending : opaque,
+    
+    // Double-sided cylinder
+    doubleSided : true
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        // DEBUG: Red color so we can see the box
+        material.baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+}

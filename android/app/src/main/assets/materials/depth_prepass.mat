@@ -1,0 +1,40 @@
+// Simple depth prepass material for Filament 1.65.2
+// Renders invisible geometry that writes to depth buffer only
+// Used to pre-fill depth from ARCore depth data
+
+material {
+    name : depth_prepass,
+    
+    // Unlit for performance
+    shadingModel : unlit,
+    
+    // Enable depth write
+    depthWrite : true,
+    depthCulling : true,
+    
+    // Opaque to write depth
+    blending : opaque,
+    
+    // No culling for quad
+    culling : none,
+    
+    parameters : [
+        // Background alpha (set to 0.001 to be nearly invisible but still write depth)
+        {
+            type : float,
+            name : alpha
+        }
+    ],
+    
+    requires : [
+        position
+    ]
+}
+
+fragment {
+    void material(inout MaterialInputs material) {
+        prepareMaterial(material);
+        // Nearly invisible but writes to depth
+        material.baseColor = vec4(0.0, 0.0, 0.0, materialParams.alpha);
+    }
+}
