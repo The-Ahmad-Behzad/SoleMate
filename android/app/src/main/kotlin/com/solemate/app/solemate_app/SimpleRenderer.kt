@@ -354,14 +354,21 @@ class SimpleRenderer(
     private var shoeModelMatrix: FloatArray? = null
     private var shoePlaced = false
     private var lastPlacementTime = 0L
-    private val placementCooldownMs = 500L  // Update placement every 500ms max
-    private val soleOffsetMeters = 0.02f
+    private val placementCooldownMs = 100L  // Update placement every 100ms (faster tracking)
+    private val soleOffsetMeters = 0.0f  // Model origin is at sole center, no Y offset needed
     private val baseModelScale = 0.05f  // Base scale for the shoe model (5% of original size)
-    private val minFootLength = 0.15f   // Minimum realistic foot length (15cm)
-    private val maxFootLength = 0.35f   // Maximum realistic foot length (35cm)
+    private val minFootLength = 0.08f   // Minimum realistic foot length (8cm - projected on ground)
+    private val maxFootLength = 0.50f   // Maximum realistic foot length (50cm - generous for angles)
     private val referenceFootLength = 0.26f  // Average adult foot length (26cm)
     private val maxHitDistance = 3.0f   // Maximum distance for valid hit-test (3 meters)
     private val minVisibility = 0.3f    // Minimum landmark visibility threshold
+    
+    // ==== Temporal Smoothing ====
+    private val smoothingAlpha = 0.3f  // EMA smoothing factor (0.0=max smooth, 1.0=no smooth)
+    private var smoothedPosition: FloatArray? = null  // [x, y, z]
+    private var smoothedYaw: Float? = null  // radians
+    private val minMovementThreshold = 0.01f  // 1cm - ignore tiny movements
+    private val minRotationThreshold = 0.05f  // ~3 degrees - ignore tiny rotations
     
     // Recalibration request flag
     @Volatile
@@ -588,10 +595,13 @@ class SimpleRenderer(
                 recalibrationRequested = false
                 shoePlaced = false
                 lastPlacementTime = 0L
+                // Clear smoothing buffers
+                smoothedPosition = null
+                smoothedYaw = null
                 // Clear old anchors
                 anchors.forEach { it.detach() }
                 anchors.clear()
-                Log.d("SimpleRenderer", "✅ Recalibration: Reset placement state")
+                Log.d("SimpleRenderer", "✅ Recalibration: Reset placement state and smoothing")
             }
             
             // === If we have a pending foot point (normalized coords), transform to VIEW coords and hitTest ===
@@ -666,30 +676,34 @@ class SimpleRenderer(
                             return bestHit
                         }
                         
-                        // Hit-test ankle and toe positions to get 3D world coordinates
-                        Log.d("FootAnchor", "Processing foot: side=${fp.side} vis=${fp.visibility} ankle=(${fp.ankleX},${fp.ankleY}) toe=(${fp.toeX},${fp.toeY})")
+                        // Hit-test ankle, heel, and toe positions to get 3D world coordinates
+                        Log.d("FootAnchor", "Processing foot: side=${fp.side} vis=${fp.visibility} ankle=(${fp.ankleX},${fp.ankleY}) toe=(${fp.toeX},${fp.toeY}) heel=(${fp.heelX},${fp.heelY})")
                         
                         val ankleView = normalizedToView(fp.ankleX, fp.ankleY)
                         val toeView = if (fp.toeX != null && fp.toeY != null) {
                             normalizedToView(fp.toeX, fp.toeY, 0.005f) // small downward bias
                         } else null
+                        val heelView = if (fp.heelX != null && fp.heelY != null) {
+                            normalizedToView(fp.heelX, fp.heelY, 0.005f) // small downward bias
+                        } else null
                         
-                        Log.d("FootAnchor", "Converted to view coords: ankle=$ankleView toe=$toeView")
+                        Log.d("FootAnchor", "Converted to view coords: ankle=$ankleView toe=$toeView heel=$heelView")
                         
                         val ankleHit = ankleView?.let { (vx, vy) -> hitTestPoint(vx, vy, "ankle") }
                         val toeHit = toeView?.let { (vx, vy) -> hitTestPoint(vx, vy, "toe") }
+                        val heelHit = heelView?.let { (vx, vy) -> hitTestPoint(vx, vy, "heel") }
                         
-                        Log.d("FootAnchor", "Hit test results: ankleHit=${ankleHit != null} (d=${ankleHit?.distance?.let{"%.2f".format(it)}}) toeHit=${toeHit != null} (d=${toeHit?.distance?.let{"%.2f".format(it)}})")
+                        Log.d("FootAnchor", "Hit test results: ankleHit=${ankleHit != null} toeHit=${toeHit != null} heelHit=${heelHit != null}")
                         
-                        // Prefer toe for anchor, fall back to ankle
-                        val primaryHit = toeHit ?: ankleHit
+                        // For anchor creation, prefer heel (closest to ground), fall back to toe, then ankle
+                        val primaryHit = heelHit ?: toeHit ?: ankleHit
                         
                         primaryHit?.let { chosen ->
-                            // Validate that ankle and toe are reasonably close to each other
-                            if (ankleHit != null && toeHit != null) {
-                                val distanceBetween = kotlin.math.abs(ankleHit.distance - toeHit.distance)
+                            // Validate that landmark hits are reasonably close to each other
+                            if (heelHit != null && toeHit != null) {
+                                val distanceBetween = kotlin.math.abs(heelHit.distance - toeHit.distance)
                                 if (distanceBetween > 0.5f) {
-                                    Log.w("FootAnchor", "❌ Ankle/toe distance mismatch: ${distanceBetween}m, skipping")
+                                    Log.w("FootAnchor", "❌ Heel/toe distance mismatch: ${distanceBetween}m, skipping")
                                     return@let
                                 }
                             }
@@ -709,51 +723,129 @@ class SimpleRenderer(
                                 else -> "Other"
                             }
                             
-                            // Calculate foot dimensions and orientation if we have both ankle and toe
-                            if (ankleHit != null && toeHit != null) {
-                                val anklePos = ankleHit.hitPose.translation
-                                val toePos = toeHit.hitPose.translation
+                            // Build the model matrix using available landmarks
+                            // Best case: heel + toe for direction and position
+                            // Fallback: ankle + toe, or single point
+                            
+                            val hasHeelAndToe = heelHit != null && toeHit != null
+                            val hasAnkleAndToe = ankleHit != null && toeHit != null
+                            
+                            if (hasHeelAndToe || hasAnkleAndToe) {
+                                // Use heel→toe for direction (or ankle→toe as fallback)
+                                val backPos = if (hasHeelAndToe) heelHit!!.hitPose.translation else ankleHit!!.hitPose.translation
+                                val frontPos = toeHit!!.hitPose.translation
                                 
-                                // Calculate foot length in 3D (XZ plane)
-                                val dx = toePos[0] - anklePos[0]
-                                val dz = toePos[2] - anklePos[2]
-                                val dy = toePos[1] - anklePos[1]
-                                val footLengthMeters = kotlin.math.sqrt(dx * dx + dz * dz)
+                                // Calculate foot direction vector (from back to front)
+                                val dx = frontPos[0] - backPos[0]
+                                val dy = frontPos[1] - backPos[1]
+                                val dz = frontPos[2] - backPos[2]
+                                
+                                // Calculate foot length in XZ plane (horizontal projection)
+                                val footLengthXZ = kotlin.math.sqrt(dx * dx + dz * dz)
+                                // Full 3D length
+                                val footLength3D = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
                                 
                                 // Check if foot length is realistic
-                                val isRealisticLength = footLengthMeters >= minFootLength && footLengthMeters <= maxFootLength
+                                val isRealisticLength = footLengthXZ >= minFootLength && footLengthXZ <= maxFootLength
                                 
-                                // Calculate foot yaw (direction from ankle to toe)
-                                val footYaw = kotlin.math.atan2(dx, dz) // radians
+                                // Calculate foot yaw (rotation around Y axis)
+                                // atan2(dx, dz) gives angle from +Z axis
+                                val rawYaw = kotlin.math.atan2(dx, dz)
                                 
                                 // Calculate scale based on foot length
-                                // If unrealistic, use 1.0x (assume reference size)
                                 val footScale = if (isRealisticLength) {
-                                    (footLengthMeters / referenceFootLength).coerceIn(0.7f, 1.3f)
+                                    (footLengthXZ / referenceFootLength).coerceIn(0.7f, 1.3f)
                                 } else {
-                                    Log.w("FootAnchor", "Unrealistic foot length ${footLengthMeters}m, using 1.0x scale")
+                                    Log.w("FootAnchor", "Unrealistic foot length ${footLengthXZ}m, using 1.0x scale")
                                     1.0f
                                 }
                                 
-                                // Build model matrix with correct transformation order:
-                                // 1. Start at toe anchor position
-                                // 2. Rotate to match foot orientation
-                                // 3. Translate in the rotated coordinate system (up + back toward heel)
-                                // 4. Scale uniformly
+                                // Calculate shoe position: midpoint between heel and toe (sole center)
+                                val rawPosition = floatArrayOf(
+                                    (backPos[0] + frontPos[0]) / 2f,
+                                    (backPos[1] + frontPos[1]) / 2f + soleOffsetMeters,
+                                    (backPos[2] + frontPos[2]) / 2f
+                                )
+                                
+                                // ==== Apply Temporal Smoothing ====
+                                val finalPosition: FloatArray
+                                val finalYaw: Float
+                                
+                                if (smoothedPosition != null && smoothedYaw != null) {
+                                    // Calculate movement distance
+                                    val moveDist = kotlin.math.sqrt(
+                                        (rawPosition[0] - smoothedPosition!![0]).let { it * it } +
+                                        (rawPosition[1] - smoothedPosition!![1]).let { it * it } +
+                                        (rawPosition[2] - smoothedPosition!![2]).let { it * it }
+                                    )
+                                    
+                                    // Calculate rotation difference
+                                    var yawDiff = rawYaw - smoothedYaw!!
+                                    // Normalize to [-PI, PI]
+                                    while (yawDiff > kotlin.math.PI) yawDiff -= (2 * kotlin.math.PI).toFloat()
+                                    while (yawDiff < -kotlin.math.PI) yawDiff += (2 * kotlin.math.PI).toFloat()
+                                    
+                                    // Only update if movement exceeds threshold (hysteresis)
+                                    if (moveDist > minMovementThreshold || kotlin.math.abs(yawDiff) > minRotationThreshold) {
+                                        // Apply EMA smoothing
+                                        finalPosition = floatArrayOf(
+                                            smoothedPosition!![0] + smoothingAlpha * (rawPosition[0] - smoothedPosition!![0]),
+                                            smoothedPosition!![1] + smoothingAlpha * (rawPosition[1] - smoothedPosition!![1]),
+                                            smoothedPosition!![2] + smoothingAlpha * (rawPosition[2] - smoothedPosition!![2])
+                                        )
+                                        finalYaw = smoothedYaw!! + smoothingAlpha * yawDiff
+                                        
+                                        // Update smoothed values
+                                        smoothedPosition = finalPosition.copyOf()
+                                        smoothedYaw = finalYaw
+                                    } else {
+                                        // Use existing smoothed values (no update)
+                                        finalPosition = smoothedPosition!!
+                                        finalYaw = smoothedYaw!!
+                                    }
+                                } else {
+                                    // First detection - initialize smoothed values
+                                    finalPosition = rawPosition
+                                    finalYaw = rawYaw
+                                    smoothedPosition = rawPosition.copyOf()
+                                    smoothedYaw = rawYaw
+                                }
+                                
+                                // ==== Build Model Matrix with Correct Coordinate System ====
+                                // Model coordinate system (from Blender image):
+                                //   - Origin: center of sole
+                                //   - -Y axis: points toward toe
+                                //   - +Z axis: points upward
+                                // 
+                                // ARCore coordinate system:
+                                //   - +Y axis: points upward
+                                //   - -Z axis: typically forward (but we use footYaw to orient)
+                                //
+                                // To align model to ARCore:
+                                // 1. Rotate 90° around X to convert model's +Z-up to ARCore's +Y-up
+                                // 2. The model's -Y (toe direction) becomes -Z after this rotation
+                                // 3. Apply yaw rotation around Y to orient toe direction
                                 
                                 val shoeMatrix = FloatArray(16)
-                                chosen.hitPose.toMatrix(shoeMatrix, 0)
+                                android.opengl.Matrix.setIdentityM(shoeMatrix, 0)
                                 
-                                // First, rotate to match foot orientation (around toe position)
-                                android.opengl.Matrix.rotateM(shoeMatrix, 0, Math.toDegrees(footYaw.toDouble()).toFloat(), 0f, 1f, 0f)
+                                // Step 1: Translate to final position (sole center)
+                                android.opengl.Matrix.translateM(shoeMatrix, 0, 
+                                    finalPosition[0], finalPosition[1], finalPosition[2])
                                 
-                                // Now translate in the ROTATED coordinate system:
-                                // - Y-up to lift shoe above floor
-                                // - Z-back to move shoe origin from toe toward heel (40% of foot length)
-                                val backOffset = footLengthMeters * 0.4f
-                                android.opengl.Matrix.translateM(shoeMatrix, 0, 0f, soleOffsetMeters, -backOffset)
+                                // Step 2: Apply yaw rotation (foot direction)
+                                // We need to rotate the model so its toe points in the foot direction
+                                // Since after the X rotation, model's -Y becomes -Z,
+                                // and ARCore's -Z is forward, we need footYaw + 180° to flip
+                                val yawDegrees = Math.toDegrees(finalYaw.toDouble()).toFloat()
+                                android.opengl.Matrix.rotateM(shoeMatrix, 0, yawDegrees, 0f, 1f, 0f)
                                 
-                                // Finally, apply scale: base model scale * foot-size scale
+                                // Step 3: Apply axis correction rotation
+                                // Rotate 90° around X to convert model +Z-up to ARCore +Y-up
+                                // This makes model's original Y-axis align with ARCore's -Z (forward)
+                                android.opengl.Matrix.rotateM(shoeMatrix, 0, -90f, 1f, 0f, 0f)
+                                
+                                // Step 4: Apply scale
                                 val finalScale = baseModelScale * footScale
                                 android.opengl.Matrix.scaleM(shoeMatrix, 0, finalScale, finalScale, finalScale)
                                 
@@ -763,20 +855,20 @@ class SimpleRenderer(
                                 
                                 Log.d(
                                     "FootAnchor",
-                                    "✅ Anchor($typeName, d=${"%.2f".format(chosen.distance)}) side=${fp.side} " +
-                                    "footLen=${"%.3f".format(footLengthMeters)}m (${if(isRealisticLength) "OK" else "BAD"}) " +
-                                    "footScale=${"%.2f".format(footScale)} baseScale=$baseModelScale finalScale=${"%.4f".format(finalScale)} " +
-                                    "yaw=${"%.1f".format(Math.toDegrees(footYaw.toDouble()))}° " +
-                                    "ankle=${anklePos.contentToString()} toe=${toePos.contentToString()}"
+                                    "✅ Placed($typeName) side=${fp.side} " +
+                                    "footLen=${"%.3f".format(footLengthXZ)}m (${if(isRealisticLength) "OK" else "??"}) " +
+                                    "scale=${"%.3f".format(finalScale)} " +
+                                    "yaw=${"%.1f".format(Math.toDegrees(finalYaw.toDouble()))}° " +
+                                    "pos=[${"%.2f".format(finalPosition[0])}, ${"%.2f".format(finalPosition[1])}, ${"%.2f".format(finalPosition[2])}]"
                                 )
-                                
-                                // Debug: Log the model matrix values
-                                Log.d("FootAnchor", "Model matrix set: [${shoeMatrix[12]}, ${shoeMatrix[13]}, ${shoeMatrix[14]}] (translation)")
                             } else {
                                 // Fallback: simple placement if only one point available
                                 val anchorM = FloatArray(16)
                                 chosen.hitPose.toMatrix(anchorM, 0)
-                                android.opengl.Matrix.translateM(anchorM, 0, 0f, soleOffsetMeters, 0f)
+                                
+                                // Apply axis correction even for single-point placement
+                                android.opengl.Matrix.rotateM(anchorM, 0, -90f, 1f, 0f, 0f)
+                                
                                 // Apply base scale
                                 android.opengl.Matrix.scaleM(anchorM, 0, baseModelScale, baseModelScale, baseModelScale)
                                 shoeModelMatrix = anchorM
@@ -785,7 +877,7 @@ class SimpleRenderer(
                                 
                                 Log.d(
                                     "FootAnchor",
-                                    "✅ Anchor($typeName, d=${"%.2f".format(chosen.distance)}) at ${chosen.hitPose.translation.contentToString()} (simple placement, single point)"
+                                    "✅ Simple placement($typeName) at ${chosen.hitPose.translation.contentToString()}"
                                 )
                             }
                         }
