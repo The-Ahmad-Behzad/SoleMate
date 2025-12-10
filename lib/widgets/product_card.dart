@@ -271,67 +271,116 @@ class ProductCardData {
     required this.title,
     this.subtitle,
     this.isFavorite = false,
+    this.modelUrl,
+    this.price,
+    this.brand,
+    this.category,
   });
 
   final String imagePath;
   final String title;
   final String? subtitle;
   final bool isFavorite;
+  final String? modelUrl;
+  final double? price;
+  final String? brand;
+  final String? category;
+  
+  /// Create a copy with updated values
+  ProductCardData copyWith({
+    String? imagePath,
+    String? title,
+    String? subtitle,
+    bool? isFavorite,
+    String? modelUrl,
+    double? price,
+    String? brand,
+    String? category,
+  }) {
+    return ProductCardData(
+      imagePath: imagePath ?? this.imagePath,
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      isFavorite: isFavorite ?? this.isFavorite,
+      modelUrl: modelUrl ?? this.modelUrl,
+      price: price ?? this.price,
+      brand: brand ?? this.brand,
+      category: category ?? this.category,
+    );
+  }
 }
 
-/// Sample shoe data for the app
-class SampleShoes {
-  static const List<ProductCardData> shoes = [
+/// Database of available shoes with real model paths
+class ShoeDatabase {
+  static const List<ProductCardData> allShoes = [
     ProductCardData(
-      imagePath: 'assets/images/shoes/shoe1.jpg',
-      title: 'Classic Sneakers',
-      subtitle: 'Try-on date: 2024-01-15',
+      imagePath: 'assets/images/shoes/airmax_270.png',
+      title: 'Air Max 270',
+      subtitle: 'Nike',
+      brand: 'Nike',
+      category: 'Running',
+      price: 150.00,
+      modelUrl: 'models/shoes/airmax_270_left.glb',
       isFavorite: true,
     ),
     ProductCardData(
-      imagePath: 'assets/images/shoes/shoe2.jpg',
-      title: 'Running Shoes',
-      subtitle: 'Try-on date: 2024-01-14',
+      imagePath: 'assets/images/shoes/caterpillar_work_boot.png',
+      title: 'Work Boot',
+      subtitle: 'Caterpillar',
+      brand: 'Caterpillar',
+      category: 'Boots',
+      price: 120.00,
+      modelUrl: 'models/shoes/caterpillar_work_boot_left.glb',
       isFavorite: false,
     ),
     ProductCardData(
-      imagePath: 'assets/images/shoes/shoe3.jpg',
-      title: 'Casual Loafers',
-      subtitle: 'Try-on date: 2024-01-13',
+      imagePath: 'assets/images/shoes/nike_journey_run.png',
+      title: 'Journey Run',
+      subtitle: 'Nike',
+      brand: 'Nike',
+      category: 'Running',
+      price: 130.00,
+      modelUrl: 'models/shoes/nike_journey_run_left.glb',
       isFavorite: true,
     ),
     ProductCardData(
-      imagePath: 'assets/images/shoes/shoe4.jpg',
-      title: 'Dress Boots',
-      subtitle: 'Try-on date: 2024-01-12',
-      isFavorite: false,
-    ),
-    ProductCardData(
-      imagePath: 'assets/images/shoes/shoe1.jpg',
-      title: 'Athletic Trainers',
-      subtitle: 'Try-on date: 2024-01-11',
-      isFavorite: true,
-    ),
-    ProductCardData(
-      imagePath: 'assets/images/shoes/shoe2.jpg',
-      title: 'Canvas Sneakers',
-      subtitle: 'Try-on date: 2024-01-10',
-      isFavorite: false,
-    ),
-    ProductCardData(
-      imagePath: 'assets/images/shoes/shoe3.jpg',
-      title: 'Leather Oxfords',
-      subtitle: 'Try-on date: 2024-01-09',
-      isFavorite: true,
-    ),
-    ProductCardData(
-      imagePath: 'assets/images/shoes/shoe4.jpg',
-      title: 'Hiking Boots',
-      subtitle: 'Try-on date: 2024-01-08',
+      imagePath: 'assets/images/shoes/puma_winter_shoe.png',
+      title: 'Winter Shoe',
+      subtitle: 'Puma',
+      brand: 'Puma',
+      category: 'Winter',
+      price: 110.00,
+      modelUrl: 'models/shoes/puma_winter_shoe_left.glb',
       isFavorite: false,
     ),
   ];
+  
+  /// Get all unique brands
+  static List<String> get brands {
+    return allShoes
+        .map((s) => s.brand)
+        .where((b) => b != null)
+        .cast<String>()
+        .toSet()
+        .toList();
+  }
+  
+  /// Get all unique categories
+  static List<String> get categories {
+    return allShoes
+        .map((s) => s.category)
+        .where((c) => c != null)
+        .cast<String>()
+        .toSet()
+        .toList();
+  }
+}
+
+/// Sample shoe data for the app (legacy support)
+class SampleShoes {
+  static List<ProductCardData> get shoes => ShoeDatabase.allShoes;
 
   // Shoe selection for AR Try-On (first 4 shoes)
-  static final List<ProductCardData> arSelection = shoes.take(4).toList();
+  static List<ProductCardData> get arSelection => ShoeDatabase.allShoes.take(4).toList();
 }
+

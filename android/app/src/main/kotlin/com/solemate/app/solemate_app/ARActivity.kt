@@ -893,7 +893,7 @@ class ARActivity : AppCompatActivity() {
     
     /**
      * Open the Image Manager screen (Flutter)
-     * Finishes ARActivity and returns result to Flutter, which then opens Image Manager
+     * Keeps ARActivity alive in background while Flutter shows Image Manager
      */
     private fun openImageManager() {
         val snapCount = screenshotManager.getSnapCount()
@@ -904,15 +904,20 @@ class ARActivity : AppCompatActivity() {
         
         val snapPaths = screenshotManager.getAllSnapPaths()
         
-        // Store paths in MainActivity static variable so Flutter can access after AR closes
-        MainActivity.pendingSnapPaths = snapPaths
-        MainActivity.pendingOpenImageManager = true
-        
         Log.d("ARActivity", "Opening Image Manager with ${snapCount} snaps: $snapPaths")
         Toast.makeText(this, "Opening Image Manager...", Toast.LENGTH_SHORT).show()
         
-        // Finish AR activity to return to Flutter
-        finish()
+        // Notify Flutter to open Image Manager (this calls the method channel)
+        MainActivity.notifyFlutterToOpenImageManager(snapPaths)
+        
+        // Bring MainActivity (Flutter) to foreground WITHOUT finishing this activity
+        // ARActivity stays alive in background and can be resumed
+        val intent = android.content.Intent(this, MainActivity::class.java).apply {
+            flags = android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        }
+        startActivity(intent)
+        
+        // Don't call finish() - keep AR session alive
     }
     
     /**
@@ -953,6 +958,35 @@ class ARActivity : AppCompatActivity() {
     fun clearAllSnaps() {
         screenshotManager.clearAll()
         updateMiniPreview()
+    }
+    
+    /**
+     * Delete a specific snap by path (called from Flutter Image Manager)
+     */
+    fun deleteSnapByPath(path: String): Boolean {
+        val success = screenshotManager.deleteSnapByPath(path)
+        if (success) {
+            updateMiniPreview()
+        }
+        return success
+    }
+    
+    /**
+     * Set filter for a specific snap (called from Flutter Image Manager)
+     */
+    fun setFilter(path: String, filterId: String?) {
+        screenshotManager.setFilter(path, filterId)
+    }
+    
+    /**
+     * Get all applied filters as a map of path -> filterId
+     */
+    fun getFilters(): Map<String, String?> {
+        val filters = mutableMapOf<String, String?>()
+        for (path in screenshotManager.getAllSnapPaths()) {
+            filters[path] = screenshotManager.getFilter(path)
+        }
+        return filters
     }
     
     // ==== Utility methods ====

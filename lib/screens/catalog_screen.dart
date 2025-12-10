@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_config.dart';
 import '../models/product.dart';
-import '../services/local_catalog_service.dart';
+import '../services/catalog_api_service.dart';
 import '../widgets/product_card.dart';
 import 'ar_tryon_screen.dart';
 
@@ -13,7 +13,7 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  final LocalCatalogService _catalog = LocalCatalogService();
+  final CatalogApiService _catalog = CatalogApiService();
   final TextEditingController _searchController = TextEditingController();
 
   late Future<List<Product>> _future;

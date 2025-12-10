@@ -14,9 +14,13 @@ class ARMain {
   /// Initialize the platform channel handler for callbacks from native
   void initMethodCallHandler(BuildContext context) {
     _lastContext = context;
+    debugPrint("✅ ARMain: Setting up method call handler for native callbacks");
     platform.setMethodCallHandler((call) async {
-      if (call.method == 'openImageManager') {
-        final List<dynamic>? paths = call.arguments['snapPaths'];
+      debugPrint("📞 ARMain received method call: ${call.method}");
+      if (call.method == 'onOpenImageManager') {
+        final Map<dynamic, dynamic>? args = call.arguments as Map<dynamic, dynamic>?;
+        final List<dynamic>? paths = args?['snapPaths'];
+        debugPrint("📞 onOpenImageManager called with ${paths?.length ?? 0} paths");
         if (paths != null && paths.isNotEmpty && _lastContext != null && _lastContext!.mounted) {
           _navigateToImageManager(_lastContext!, paths.cast<String>());
         }
@@ -37,6 +41,21 @@ class ARMain {
     );
   }
 
+  /// 🔹 Set the selected shoe model path before opening AR
+  Future<bool> setSelectedShoeModel(String modelPath) async {
+    try {
+      final bool success = await platform.invokeMethod(
+        'setSelectedShoeModel',
+        {'modelPath': modelPath},
+      );
+      debugPrint("👟 setSelectedShoeModel: $modelPath -> $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to set selected shoe model: ${e.message}");
+      return false;
+    }
+  }
+  
   /// 🔹 Opens AR Camera via native Kotlin function
   Future<void> openARView(BuildContext context) async {
     _lastContext = context;
@@ -52,6 +71,14 @@ class ARMain {
         SnackBar(content: Text("Failed to open AR view: ${e.message}")),
       );
     }
+  }
+  
+  /// 🔹 Opens AR Camera with a specific shoe model
+  Future<void> openARViewWithShoe(BuildContext context, String modelPath) async {
+    // First set the selected model
+    await setSelectedShoeModel(modelPath);
+    // Then open AR view
+    await openARView(context);
   }
   
   /// Check if there are snaps to show after AR session ends
@@ -85,6 +112,9 @@ class ARMain {
 
   /// 🔹 Checks for camera permissions before opening AR view
   Future<void> checkPermissionsAndOpenAR(BuildContext context) async {
+    // Initialize handler for native callbacks (must be set up before AR opens)
+    initMethodCallHandler(context);
+    
     final status = await Permission.camera.request();
     if (status.isGranted) {
       await openARView(context);
@@ -92,6 +122,18 @@ class ARMain {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Camera permission denied.")),
       );
+    }
+  }
+  
+  /// 🔙 Returns to AR Activity if it's still alive in background
+  Future<bool> returnToAR() async {
+    try {
+      final bool success = await platform.invokeMethod('returnToAR');
+      debugPrint("✅ returnToAR: $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to return to AR: ${e.message}");
+      return false;
     }
   }
   
@@ -141,6 +183,52 @@ class ARMain {
     }
   }
   
+  /// Delete a snap by its file path (syncs with native ScreenshotManager)
+  Future<bool> deleteSnapByPath(String path) async {
+    try {
+      final bool success = await screenshotChannel.invokeMethod(
+        'deleteSnapByPath',
+        {'path': path},
+      );
+      debugPrint("🗑️ deleteSnapByPath: $path -> $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to delete snap: ${e.message}");
+      return false;
+    }
+  }
+  
+  /// Set filter for a specific snap path (persists to native)
+  Future<bool> setFilter(String path, String? filterId) async {
+    try {
+      final bool success = await screenshotChannel.invokeMethod(
+        'setFilter',
+        {'path': path, 'filterId': filterId},
+      );
+      debugPrint("🎨 setFilter: $path -> $filterId");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to set filter: ${e.message}");
+      return false;
+    }
+  }
+  
+  /// Get all applied filters as a map of path -> filterId
+  Future<Map<String, String?>> getFilters() async {
+    try {
+      final Map<dynamic, dynamic> result = await screenshotChannel.invokeMethod('getFilters');
+      final filters = <String, String?>{};
+      result.forEach((key, value) {
+        filters[key.toString()] = value?.toString();
+      });
+      debugPrint("🎨 getFilters: ${filters.length} filters");
+      return filters;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to get filters: ${e.message}");
+      return {};
+    }
+  }
+  
   /// Open the Image Manager screen with current snaps
   Future<void> openImageManager(BuildContext context) async {
     try {
@@ -171,6 +259,66 @@ class ARMain {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to open Image Manager: ${e.message}")),
       );
+    }
+  }
+  
+  /// Save image to device gallery using MediaStore API
+  Future<String?> saveToGallery(String imagePath) async {
+    try {
+      final String? result = await screenshotChannel.invokeMethod(
+        'saveToGallery',
+        {'imagePath': imagePath},
+      );
+      debugPrint("💾 saveToGallery: $imagePath -> $result");
+      return result;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to save to gallery: ${e.message}");
+      return null;
+    }
+  }
+  
+  /// Share image to Instagram
+  Future<bool> shareToInstagram(String imagePath) async {
+    try {
+      final bool success = await screenshotChannel.invokeMethod(
+        'shareToInstagram',
+        {'imagePath': imagePath},
+      );
+      debugPrint("📸 shareToInstagram: $imagePath -> $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to share to Instagram: ${e.message}");
+      throw e;
+    }
+  }
+  
+  /// Share image to Facebook
+  Future<bool> shareToFacebook(String imagePath) async {
+    try {
+      final bool success = await screenshotChannel.invokeMethod(
+        'shareToFacebook',
+        {'imagePath': imagePath},
+      );
+      debugPrint("📘 shareToFacebook: $imagePath -> $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to share to Facebook: ${e.message}");
+      throw e;
+    }
+  }
+  
+  /// Share image using native share dialog
+  Future<bool> nativeShare(String imagePath) async {
+    try {
+      final bool success = await screenshotChannel.invokeMethod(
+        'nativeShare',
+        {'imagePath': imagePath},
+      );
+      debugPrint("📤 nativeShare: $imagePath -> $success");
+      return success;
+    } on PlatformException catch (e) {
+      debugPrint("⚠️ Failed to native share: ${e.message}");
+      throw e;
     }
   }
 }

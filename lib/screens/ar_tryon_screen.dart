@@ -4,10 +4,12 @@ import '../widgets/custom_button.dart';
 import '../widgets/product_card.dart';
 import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
+import '../services/tryon_api_service.dart';
 import '../ar/ar_main.dart';
 import '../models/product.dart';
 import 'auth/login_screen.dart';
 import 'catalog_screen.dart';
+import 'outfit_match_screen.dart';
 
 /// AR Try-On screen with camera preview and shoe selection
 class ARTryOnScreen extends StatefulWidget {
@@ -21,9 +23,11 @@ class ARTryOnScreen extends StatefulWidget {
 
 class _ARTryOnScreenState extends State<ARTryOnScreen> {
   final AuthService _authService = AuthService();
+  final TryOnApiService _tryOnService = TryOnApiService();
   final ARMain _arMain = ARMain();
   int _selectedShoeIndex = 0;
   bool _isARActive = false;
+  bool _isSaving = false;
   Product? _selectedProduct;
 
   @override
@@ -46,11 +50,56 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
     );
   }
 
-  /// Save AR session
+  /// Save AR session to backend
   Future<void> _saveAR() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('AR session saved to closet')),
-    );
+    // Need a selected product to save
+    if (_selectedProduct == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a shoe first')),
+      );
+      return;
+    }
+
+    setState(() => _isSaving = true);
+
+    try {
+      final result = await _tryOnService.saveTryOn(
+        shoeId: _selectedProduct!.id,
+        snapshotUrl: null, // TODO: Add actual snapshot URL when AR capture is implemented
+        customSkinApplied: false,
+      );
+
+      if (mounted) {
+        if (result != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Try-on saved to your closet!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to save. Please log in and try again.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
   }
 
   @override
@@ -484,22 +533,14 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
               children: [
                 PrimaryButton(
                   text: 'Add to Closet',
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Added to closet!')),
-                    );
-                  },
+                  onPressed: _saveAR,
                   icon: Icons.add_shopping_cart,
                   isFullWidth: true,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 SecondaryButton(
                   text: 'View in 3D',
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('3D view coming soon!')),
-                    );
-                  },
+                  onPressed: () => _openARView(),
                   icon: Icons.view_in_ar,
                   isFullWidth: true,
                 ),
@@ -507,8 +548,11 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
                 OutlineButton(
                   text: 'Match with Outfit',
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Outfit matching coming soon!')),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const OutfitMatchScreen(),
+                      ),
                     );
                   },
                   icon: Icons.auto_awesome,

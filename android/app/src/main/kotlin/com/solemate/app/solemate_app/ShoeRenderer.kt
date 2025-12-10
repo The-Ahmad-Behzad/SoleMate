@@ -84,8 +84,8 @@ class ShoeRenderer(private val context: Context) {
                 // Initialize Filament on its own thread
                 renderHandler?.post {
                     init(width, height, Surface(surfaceTexture))
-                    // Load model after surface is ready
-                    loadGlbFromAssets("models/shoes/nike_journey_run_left.glb")
+                    // Load model after surface is ready - use dynamically selected model
+                    loadGlbFromAssets(SelectedShoeManager.getSelectedModel())
                     // Don't set model scale here - it will be part of the model matrix from SimpleRenderer
                     
                     // Start rendering loop

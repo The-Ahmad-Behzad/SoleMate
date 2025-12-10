@@ -4,7 +4,11 @@ import '../widgets/custom_button.dart';
 import '../widgets/product_card.dart';
 import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
+import '../services/outfit_api_service.dart';
+import '../models/product.dart';
+import '../ar/ar_main.dart';
 import 'auth/login_screen.dart';
+import 'ar_tryon_screen.dart';
 
 /// Outfit Match screen with current shoe and outfit suggestions
 class OutfitMatchScreen extends StatefulWidget {
@@ -16,8 +20,11 @@ class OutfitMatchScreen extends StatefulWidget {
 
 class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   final AuthService _authService = AuthService();
+  final OutfitApiService _outfitService = OutfitApiService();
   int _selectedShoeIndex = 0;
   int _selectedOutfitIndex = 0;
+  bool _isGenerating = false;
+  List<Product> _recommendedShoes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -305,14 +312,11 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
                     top: AppSpacing.lg,
                     right: AppSpacing.lg,
                     child: PrimaryButton(
-                      text: 'Generate',
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Generating outfit...')),
-                        );
-                      },
+                      text: _isGenerating ? 'Generating...' : 'Generate',
+                      onPressed: _isGenerating ? null : _generateOutfitRecommendations,
                       size: CustomButtonSize.small,
                       icon: Icons.auto_awesome,
+                      isLoading: _isGenerating,
                     ),
                   ),
                 ],
@@ -357,11 +361,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
                 Expanded(
                   child: OutlineButton(
                     text: 'Try On',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Try-on coming soon!')),
-                      );
-                    },
+                    onPressed: () => _navigateToARTryOn(),
                     icon: Icons.camera_alt,
                   ),
                 ),
@@ -588,6 +588,74 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Generates outfit recommendations using the API
+  Future<void> _generateOutfitRecommendations() async {
+    setState(() => _isGenerating = true);
+
+    try {
+      // Use some sample colors for demonstration
+      // In production, this would come from image analysis
+      final colors = ['black', 'white', 'blue'];
+      
+      final recommendations = await _outfitService.getRecommendations(colors);
+      
+      if (mounted) {
+        setState(() {
+          _recommendedShoes = recommendations;
+        });
+        
+        if (recommendations.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Found ${recommendations.length} matching shoes!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No matching shoes found. Try different colors.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error generating recommendations: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isGenerating = false);
+      }
+    }
+  }
+
+  /// Navigate to AR Try-On screen with the current selected shoe
+  void _navigateToARTryOn() {
+    final selectedShoe = SampleShoes.arSelection[_selectedShoeIndex];
+    
+    // Get model URL from shoe data with fallback
+    final modelUrl = selectedShoe.modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+    
+    // Use ARMain to open AR with the specific shoe model
+    final arMain = ARMain();
+    arMain.openARViewWithShoe(context, modelUrl);
+    
+    // Show which shoe is being loaded
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Loading ${selectedShoe.title} in AR...'),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
