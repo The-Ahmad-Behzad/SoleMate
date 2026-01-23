@@ -13,7 +13,7 @@ def test_pipeline():
     
     # 1. Colors
     print("\n--- 1. Extracting Colors ---")
-    colors = extract_outfit_colors(image_path, num_colors=3, shirt_only=True)
+    colors = extract_outfit_colors(image_path, num_colors=3)
     if not colors:
         print("ERROR: No colors found or no person detected.")
     else:

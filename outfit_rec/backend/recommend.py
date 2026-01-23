@@ -34,8 +34,18 @@ def recommend_shoes(outfit_colors, outfit_style):
     if not outfit_colors:
         return [{"type": "Generic Sneakers", "color": "White", "hex": "#FFFFFF", "reason": "No outfit colors detected."}]
 
-    primary_color = outfit_colors[0]['rgb'] # Tuple (r,g,b)
-    r, g, b = [x/255.0 for x in primary_color]
+    # Segregate colors
+    upper_colors = [c for c in outfit_colors if c.get('source') == 'shirt']
+    lower_colors = [c for c in outfit_colors if c.get('source') == 'pant']
+    
+    # Default to first color available if specific regions missing or generic
+    primary_color_obj = upper_colors[0] if upper_colors else (lower_colors[0] if lower_colors else outfit_colors[0])
+    primary_rgb = primary_color_obj['rgb']
+    
+    # Secondary color (e.g. pants) for context
+    secondary_color_obj = lower_colors[0] if lower_colors else None
+
+    r, g, b = [x/255.0 for x in primary_rgb]
     h, l, s = colorsys.rgb_to_hls(r, g, b)
     
     cat = get_color_category_hls(h, l, s)
@@ -48,20 +58,22 @@ def recommend_shoes(outfit_colors, outfit_style):
         "name": "White", "hex": "#FFFFFF", "reason": "Universal match for any outfit."
     })
     
-    # Strategy 2: Contrast/Complementary
+    # Strategy 2: Contrast/Complementary based on Main Top Color
+    # If outfit is dark -> Suggest Light
+    # Strategy 2: Contrast/Complementary based on Main Top Color
     # If outfit is dark -> Suggest Light
     if cat in ['black', 'dark', 'gray']:
-        suggested_colors.append({"name": "White", "hex": "#FFFFFF", "reason": "Contrast significantly with dark outfit."})
+        suggested_colors.append({"name": "White", "hex": "#FFFFFF", "reason": f"Contrast with dark {primary_color_obj.get('name', 'outfit')} (SHIRT)."})
         suggested_colors.append({"name": "Light Gray", "hex": "#D3D3D3", "reason": "Subtle contrast."})
     
     # If outfit is light/white -> Suggest Dark/Contrast
     elif cat in ['white', 'light']:
-        suggested_colors.append({"name": "Black", "hex": "#000000", "reason": "Grounds the light outfit."})
+        suggested_colors.append({"name": "Black", "hex": "#000000", "reason": f"Grounds the light {primary_color_obj.get('name', 'outfit')} (SHIRT)."})
         suggested_colors.append({"name": "Navy", "hex": "#000080", "reason": "Classic contrast."})
         
     # If outfit is colorful (Warm/Cool) -> Neutral is best, OR Color Block
     else:
-        suggested_colors.append({"name": "Black", "hex": "#000000", "reason": "Neutral base for colorful outfit."})
+        suggested_colors.append({"name": "Black", "hex": "#000000", "reason": "Neutral base for colorful SHIRT."})
         suggested_colors.append({"name": "Beige/Cream", "hex": "#F5F5DC", "reason": "Soft neutral that doesn't clash."})
         
         # Complementary Logic
@@ -70,6 +82,14 @@ def recommend_shoes(outfit_colors, outfit_style):
         c_r, c_g, c_b = colorsys.hls_to_rgb(comp_h, 0.5, 0.5) 
         comp_hex = "#{:02x}{:02x}{:02x}".format(int(c_r*255), int(c_g*255), int(c_b*255))
         suggested_colors.append({"name": "Complementary Pop", "hex": comp_hex, "reason": "Bold complementary color choice."})
+
+    # Strategy 3: Match the Pants (Extension effect)
+    if secondary_color_obj:
+        suggested_colors.append({
+            "name": secondary_color_obj.get('name', 'Pant Color'),
+            "hex": secondary_color_obj.get('hex', '#000000'),
+            "reason": f"Matches PANT ({secondary_color_obj.get('name', 'Secondary')}) for seamless look."
+        })
 
     # Style Strategy
     shoe_types = []
@@ -82,12 +102,20 @@ def recommend_shoes(outfit_colors, outfit_style):
 
     # Combine
     final_recs = []
+    
+    # Deduplicate suggested colors based on Name or Hex
+    # Using a dict to keep insertion order (prefer earlier strategies)
+    unique_suggestions = {}
+    for s in suggested_colors:
+        key = s['hex']
+        if key not in unique_suggestions:
+            unique_suggestions[key] = s
+            
+    sorted_suggestions = list(unique_suggestions.values())
+
     for st in shoe_types:
-        # Pick 2 suitable colors for this shoe type
-        # E.g. Formal shoes shouldn't usually be "Complementary Pop" (Green/Purple) unless very fashion forward
-        # Keep it simple for now
-        
-        for sc in suggested_colors[:2]: # Top 2 color suggestions
+        # Pick top 3 suitable colors
+        for sc in sorted_suggestions[:3]: 
             final_recs.append({
                 "type": st,
                 "color_name": sc['name'],
