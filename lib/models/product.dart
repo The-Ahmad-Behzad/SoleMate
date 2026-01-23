@@ -53,8 +53,11 @@ class Product {
   }
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    // Handle MongoDB _id field mapping to id
+    final String productId = (json['_id'] as String?) ?? (json['id'] as String);
+    
     return Product(
-      id: json['id'] as String,
+      id: productId,
       name: json['name'] as String,
       brand: json['brand'] as String,
       price: (json['price'] as num).toDouble(),

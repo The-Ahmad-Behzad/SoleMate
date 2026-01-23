@@ -3,6 +3,7 @@ import '../theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
+import '../services/skin_api_service.dart';
 import 'auth/login_screen.dart';
 
 /// Customize screen with 3D preview and customization options
@@ -15,9 +16,11 @@ class CustomizeScreen extends StatefulWidget {
 
 class _CustomizeScreenState extends State<CustomizeScreen> {
   final AuthService _authService = AuthService();
+  final SkinApiService _skinService = SkinApiService();
   int _selectedColorIndex = 0;
   int _selectedTextureIndex = 0;
   double _shineValue = 50.0;
+  bool _isSaving = false;
 
   // Predefined colors
   final List<Color> _colors = [
@@ -246,14 +249,11 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
             
             // Save Button
             PrimaryButton(
-              text: 'Save Custom Design',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Custom design saved!')),
-                );
-              },
+              text: _isSaving ? 'Saving...' : 'Save Custom Design',
+              onPressed: _isSaving ? null : _saveCustomDesign,
               icon: Icons.save,
               isFullWidth: true,
+              isLoading: _isSaving,
             ),
           ],
         ),
@@ -525,6 +525,67 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
     if (_shineValue < 25) return 'Matte';
     if (_shineValue < 75) return 'Semi-Gloss';
     return 'Glossy';
+  }
+
+  /// Save the custom design to the backend
+  Future<void> _saveCustomDesign() async {
+    setState(() => _isSaving = true);
+
+    try {
+      // Build skin name from selected options
+      final colorName = _getColorName(_colors[_selectedColorIndex]);
+      final textureName = _textures[_selectedTextureIndex].name;
+      final skinName = '$colorName $textureName - ${_getShineLabel()}';
+
+      final result = await _skinService.createSkin(
+        shoeId: 'default', // Would come from product selection in full implementation
+        skinName: skinName,
+        textureUrl: null, // Would be texture file URL in full implementation
+      );
+
+      if (mounted) {
+        if (result != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Custom design "$skinName" saved!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to save. Please log in and try again.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving design: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  String _getColorName(Color color) {
+    if (color == const Color(0xFF000000)) return 'Black';
+    if (color == const Color(0xFF8B4513)) return 'Brown';
+    if (color == const Color(0xFFDC143C)) return 'Red';
+    if (color == const Color(0xFF0000FF)) return 'Blue';
+    if (color == const Color(0xFF228B22)) return 'Green';
+    if (color == const Color(0xFF800080)) return 'Purple';
+    if (color == const Color(0xFFFFFFFF)) return 'White';
+    if (color == const Color(0xFFC0C0C0)) return 'Silver';
+    return 'Custom';
   }
 
   Future<void> _handleLogout() async {
