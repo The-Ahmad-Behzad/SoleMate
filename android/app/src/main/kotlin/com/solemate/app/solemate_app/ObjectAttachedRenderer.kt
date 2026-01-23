@@ -1,5 +1,6 @@
 package com.solemate.app.solemate_app
 
+import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
@@ -211,6 +212,9 @@ class ObjectAttachedRenderer(
 
             // === Update shoe rendering using anchor ===
             updateShoeFromAnchor(viewMatrix, projMatrix, frame)
+            
+            // === Process any pending screenshot capture ===
+            processPendingCapture()
 
         } catch (e: CameraNotAvailableException) {
             Log.e(TAG, "Camera not available: ${e.message}")
@@ -565,5 +569,53 @@ class ObjectAttachedRenderer(
         val leftTracking = leftFootAnchor?.trackingState == TrackingState.TRACKING
         val rightTracking = rightFootAnchor?.trackingState == TrackingState.TRACKING
         return leftTracking || rightTracking
+    }
+    
+    // === Screenshot Capture ===
+    private var pendingCaptureCallback: ((Bitmap?) -> Unit)? = null
+    
+    /**
+     * Request a screenshot capture of the current GL frame.
+     * The callback will be invoked on the UI thread with the captured Bitmap.
+     */
+    fun requestCapture(callback: (Bitmap?) -> Unit) {
+        pendingCaptureCallback = callback
+    }
+    
+    /**
+     * Call this at the end of onDrawFrame to perform pending captures.
+     * Must be called from GL thread.
+     */
+    private fun processPendingCapture() {
+        val callback = pendingCaptureCallback ?: return
+        pendingCaptureCallback = null
+        
+        try {
+            // Read pixels from the GL framebuffer
+            val buffer = ByteBuffer.allocateDirect(surfaceWidth * surfaceHeight * 4)
+            buffer.order(ByteOrder.nativeOrder())
+            GLES20.glReadPixels(0, 0, surfaceWidth, surfaceHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, buffer)
+            buffer.rewind()
+            
+            // Create bitmap from buffer
+            val bitmap = Bitmap.createBitmap(surfaceWidth, surfaceHeight, Bitmap.Config.ARGB_8888)
+            bitmap.copyPixelsFromBuffer(buffer)
+            
+            // OpenGL has origin at bottom-left, need to flip vertically
+            val matrix = android.graphics.Matrix()
+            matrix.postScale(1f, -1f, surfaceWidth / 2f, surfaceHeight / 2f)
+            val flippedBitmap = Bitmap.createBitmap(bitmap, 0, 0, surfaceWidth, surfaceHeight, matrix, true)
+            bitmap.recycle()
+            
+            // Invoke callback on UI thread
+            activity.runOnUiThread {
+                callback(flippedBitmap)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Screenshot capture failed: ${e.message}")
+            activity.runOnUiThread {
+                callback(null)
+            }
+        }
     }
 }
