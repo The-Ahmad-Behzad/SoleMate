@@ -43,10 +43,16 @@ class ObjectAttachedRenderer(
         private const val FRAME_SKIP = 3  // Process every Nth frame
         
         // Instant placement settings
-        private const val ESTIMATED_DEPTH = 1.2f  // Estimated distance to feet (meters)
+        private const val DEFAULT_DEPTH = 1.2f  // Fallback distance to feet (meters)
         
         // Shoe model settings
         private const val SHOE_SCALE = 0.08f  // Scale for shoe model
+        
+        // Smoothing settings
+        private const val POSITION_MIN_CUTOFF = 1.0f  // Lower = more smoothing
+        private const val POSITION_BETA = 0.5f  // Higher = less lag when fast
+        private const val ANCHOR_UPDATE_THRESHOLD = 0.15f  // Min distance (m) to update anchor
+        private const val POSITION_BLEND_FACTOR = 0.3f  // Interpolation speed
     }
 
     // Rendering components
@@ -94,6 +100,24 @@ class ObjectAttachedRenderer(
     // Recalibration flag
     @Volatile
     private var recalibrationRequested = false
+    
+    // === Temporal Smoothing Filters ===
+    private val leftPositionFilter = OneEuroFilter2D(POSITION_MIN_CUTOFF, POSITION_BETA)
+    private val rightPositionFilter = OneEuroFilter2D(POSITION_MIN_CUTOFF, POSITION_BETA)
+    private val leftTiltFilter = OneEuroFilter(POSITION_MIN_CUTOFF, POSITION_BETA)
+    private val rightTiltFilter = OneEuroFilter(POSITION_MIN_CUTOFF, POSITION_BETA)
+    private val leftRollFilter = OneEuroFilter(POSITION_MIN_CUTOFF, POSITION_BETA)
+    private val rightRollFilter = OneEuroFilter(POSITION_MIN_CUTOFF, POSITION_BETA)
+    
+    // Smoothed detection positions (normalized 0-1)
+    private var smoothedLeftX: Float = 0f
+    private var smoothedLeftY: Float = 0f
+    private var smoothedRightX: Float = 0f
+    private var smoothedRightY: Float = 0f
+    
+    // Track if initial anchor has been placed
+    private var leftAnchorPlaced = false
+    private var rightAnchorPlaced = false
     
     // === Depth Occlusion ===
     private var depthTextureHandler: DepthTextureHandler? = null
@@ -227,15 +251,15 @@ class ObjectAttachedRenderer(
                                 // foot.orientation is computed from principal axis of foot pixels
                                 val rollAngle = foot.orientation
                                 
-                                // Store per-foot angles
+                                // Store per-foot angles WITH smoothing
                                 when (foot.label) {
                                     "left_foot" -> {
-                                        leftTiltAngle = tiltAngle
-                                        leftRollAngle = rollAngle
+                                        leftTiltAngle = leftTiltFilter.filter(tiltAngle)
+                                        leftRollAngle = leftRollFilter.filter(rollAngle)
                                     }
                                     "right_foot" -> {
-                                        rightTiltAngle = tiltAngle
-                                        rightRollAngle = rollAngle
+                                        rightTiltAngle = rightTiltFilter.filter(tiltAngle)
+                                        rightRollAngle = rightRollFilter.filter(rollAngle)
                                     }
                                 }
                                 
@@ -263,76 +287,162 @@ class ObjectAttachedRenderer(
     }
 
     /**
-     * Handle recalibration - detach current anchor
+     * Handle recalibration - detach current anchor and reset filters
      */
     private fun handleRecalibration() {
         recalibrationRequested = false
         leftFootAnchor?.detach()
         leftFootAnchor = null
         leftFootId = null
+        leftAnchorPlaced = false
         rightFootAnchor?.detach()
         rightFootAnchor = null
         rightFootId = null
-        Log.d(TAG, "✅ Recalibration complete - both anchors detached")
+        rightAnchorPlaced = false
+        
+        // Reset all filters
+        leftPositionFilter.reset()
+        rightPositionFilter.reset()
+        leftTiltFilter.reset()
+        rightTiltFilter.reset()
+        leftRollFilter.reset()
+        rightRollFilter.reset()
+        
+        Log.d(TAG, "✅ Recalibration complete - anchors detached, filters reset")
     }
 
     /**
-     * Process detected feet using ARCore Instant Placement
+     * Process detected feet using ARCore Instant Placement.
      * 
-     * This replaces manual 3D position computation with ARCore's hitTestInstantPlacement
+     * KEY FIX: Only create anchor once per foot. Let ARCore SLAM handle tracking.
+     * Only update anchor if:
+     * 1. No anchor exists yet
+     * 2. Anchor tracking is lost
+     * 3. Detection moves significantly (threshold exceeded)
      */
     private fun processDetectionsWithInstantPlacement(detections: List<DetectedFoot>, frame: Frame) {
-        // Process ALL detected feet, not just the first one
         for (foot in detections) {
             try {
                 // Use HEEL position (top-center of bounding box)
-                val heelX = foot.centerX
-                val heelY = foot.boundingBox.top + foot.height * 0.1f
+                val rawX = foot.centerX
+                val rawY = foot.boundingBox.top + foot.height * 0.1f
                 
-                // Convert normalized heel position to IMAGE_PIXELS coordinates
-                val imageX = heelX * lastImageWidth
-                val imageY = heelY * lastImageHeight
+                // Apply temporal smoothing to reduce jitter
+                val isLeft = foot.label == "left_foot"
+                val (smoothX, smoothY) = if (isLeft) {
+                    leftPositionFilter.filter(rawX, rawY)
+                } else {
+                    rightPositionFilter.filter(rawX, rawY)
+                }
                 
-                // Transform from IMAGE_PIXELS to VIEW coordinates
-                val inputCoords = floatArrayOf(imageX, imageY)
-                val viewCoords = FloatArray(2)
+                // Store smoothed positions
+                if (isLeft) {
+                    smoothedLeftX = smoothX
+                    smoothedLeftY = smoothY
+                } else {
+                    smoothedRightX = smoothX
+                    smoothedRightY = smoothY
+                }
                 
-                frame.transformCoordinates2d(
-                    Coordinates2d.IMAGE_PIXELS,
-                    inputCoords,
-                    Coordinates2d.VIEW,
-                    viewCoords
-                )
+                // Check if we need to create/update anchor
+                val currentAnchor = if (isLeft) leftFootAnchor else rightFootAnchor
+                val anchorPlaced = if (isLeft) leftAnchorPlaced else rightAnchorPlaced
+                val needsNewAnchor = !anchorPlaced || 
+                                     currentAnchor == null || 
+                                     currentAnchor.trackingState != TrackingState.TRACKING
                 
-                // Use Instant Placement hit test
-                val hits = frame.hitTestInstantPlacement(viewCoords[0], viewCoords[1], ESTIMATED_DEPTH)
-                
-                if (hits.isNotEmpty()) {
-                    val hit = hits[0]
-                    val newAnchor = hit.createAnchor()
-                    val pose = newAnchor.pose
+                if (needsNewAnchor) {
+                    // Convert normalized coords to IMAGE_PIXELS then to VIEW
+                    val imageX = smoothX * lastImageWidth
+                    val imageY = smoothY * lastImageHeight
                     
-                    // Assign anchor to appropriate foot
-                    when (foot.label) {
-                        "left_foot" -> {
+                    val inputCoords = floatArrayOf(imageX, imageY)
+                    val viewCoords = FloatArray(2)
+                    
+                    frame.transformCoordinates2d(
+                        Coordinates2d.IMAGE_PIXELS,
+                        inputCoords,
+                        Coordinates2d.VIEW,
+                        viewCoords
+                    )
+                    
+                    // Try to get actual depth from ARCore depth image
+                    val estimatedDepth = getDepthAtPoint(frame, viewCoords[0].toInt(), viewCoords[1].toInt())
+                    
+                    // Use Instant Placement hit test
+                    val hits = frame.hitTestInstantPlacement(viewCoords[0], viewCoords[1], estimatedDepth)
+                    
+                    if (hits.isNotEmpty()) {
+                        val hit = hits[0]
+                        val newAnchor = hit.createAnchor()
+                        val pose = newAnchor.pose
+                        
+                        // Detach old anchor and assign new one
+                        if (isLeft) {
                             leftFootAnchor?.detach()
                             leftFootAnchor = newAnchor
                             leftFootId = foot.id
-                            Log.i(TAG, "👟 LEFT foot anchor at pos=[${pose.tx()}, ${pose.ty()}, ${pose.tz()}]")
-                        }
-                        "right_foot" -> {
+                            leftAnchorPlaced = true
+                            Log.i(TAG, "👟 LEFT anchor CREATED at [${"%.2f".format(pose.tx())}, ${"%.2f".format(pose.ty())}, ${"%.2f".format(pose.tz())}] depth=${"%.2f".format(estimatedDepth)}m")
+                        } else {
                             rightFootAnchor?.detach()
                             rightFootAnchor = newAnchor
                             rightFootId = foot.id
-                            Log.i(TAG, "👟 RIGHT foot anchor at pos=[${pose.tx()}, ${pose.ty()}, ${pose.tz()}]")
+                            rightAnchorPlaced = true
+                            Log.i(TAG, "👟 RIGHT anchor CREATED at [${"%.2f".format(pose.tx())}, ${"%.2f".format(pose.ty())}, ${"%.2f".format(pose.tz())}] depth=${"%.2f".format(estimatedDepth)}m")
                         }
                     }
                 }
+                // ELSE: Anchor exists and is tracking - let ARCore SLAM handle it!
+                // This is the KEY FIX - we don't recreate anchors every frame
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Instant placement failed for ${foot.label}: ${e.message}")
             }
         }
+    }
+    
+    /**
+     * Try to get actual depth from ARCore depth image at a screen point.
+     * Falls back to DEFAULT_DEPTH if depth not available.
+     */
+    private fun getDepthAtPoint(frame: Frame, screenX: Int, screenY: Int): Float {
+        if (!isDepthSupported) return DEFAULT_DEPTH
+        
+        try {
+            val depthImage = frame.acquireDepthImage16Bits()
+            try {
+                val width = depthImage.width
+                val height = depthImage.height
+                
+                // Map screen coords to depth image coords
+                val depthX = (screenX * width / surfaceWidth).coerceIn(0, width - 1)
+                val depthY = (screenY * height / surfaceHeight).coerceIn(0, height - 1)
+                
+                val plane = depthImage.planes[0]
+                val buffer = plane.buffer
+                val rowStride = plane.rowStride
+                
+                // Read 16-bit depth value (in millimeters)
+                val offset = depthY * rowStride + depthX * 2
+                if (offset + 1 < buffer.capacity()) {
+                    buffer.position(offset)
+                    val depthMm = (buffer.get().toInt() and 0xFF) or ((buffer.get().toInt() and 0xFF) shl 8)
+                    val depthM = depthMm / 1000f
+                    
+                    // Validate depth range (0.2m to 3m typical for feet)
+                    if (depthM in 0.2f..3.0f) {
+                        return depthM
+                    }
+                }
+            } finally {
+                depthImage.close()
+            }
+        } catch (e: Exception) {
+            // Depth not available, use default
+        }
+        
+        return DEFAULT_DEPTH
     }
 
     /**
