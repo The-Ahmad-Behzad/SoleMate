@@ -75,19 +75,7 @@ class MainActivity : FlutterActivity() {
             // Call Flutter method channel
             nativeChannel?.invokeMethod("onOpenImageManager", mapOf("snapPaths" to paths))
         }
-        
-        init {
-            try {
-                System.loadLibrary("native-lib")
-                Log.i("SoleMateNative", "native-lib loaded successfully")
-            } catch (e: UnsatisfiedLinkError) {
-                Log.e("SoleMateNative", "Failed to load native-lib: ${e.message}")
-            }
-        }
     }
-
-    // JNI (native) function – optional
-    external fun startARSessionNative(): String
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -106,17 +94,6 @@ class MainActivity : FlutterActivity() {
                         val intent = Intent(this, ARActivity::class.java)
                         startActivity(intent)
                         result.success("Opened AR View")
-                    }
-
-                    // Optional JNI function
-                    "startARSession" -> {
-                        try {
-                            val response = startARSessionNative()
-                            result.success(response)
-                        } catch (e: Exception) {
-                            Log.e("SoleMateNative", "Error calling native-lib: ${e.message}")
-                            result.error("NATIVE_ERROR", e.message, null)
-                        }
                     }
                     
                     // 🔙 Flutter calls this to return to AR Activity (if it's still alive)

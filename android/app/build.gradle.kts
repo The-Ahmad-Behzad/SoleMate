@@ -43,14 +43,15 @@ android {
     }
 
     // If you have native code built via CMake, configure it here
-    externalNativeBuild {
-        cmake {
-            // update the path if your CMakeLists is elsewhere
-            path = file("CMakeLists.txt")
-            // version is optional: only include if the SDK Manager has this CMake version installed
-            // version = "3.22.1"
-        }
-    }
+    // If you have native code built via CMake, configure it here
+    // externalNativeBuild {
+    //    cmake {
+    //        // update the path if your CMakeLists is elsewhere
+    //        path = file("CMakeLists.txt")
+    //        // version is optional: only include if the SDK Manager has this CMake version installed
+    //        // version = "3.22.1"
+    //    }
+    // }
 
     // Optional: produce per-ABI APKs instead of one fat APK.
     // Use either this (splits) or the ndk.abiFilters above for packaging control.
@@ -90,38 +91,22 @@ android {
 }
 
 dependencies {
-    // Firebase, ARCore, Filament, TFLite etc.
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.ar:core:1.46.0")
-    implementation("com.google.android.filament:filament-android:1.65.2")
-    implementation("com.google.android.filament:filament-utils-android:1.65.2")
-    implementation("com.google.android.filament:gltfio-android:1.65.2")   // <– loads .glb/.gltf
-
-    implementation("org.tensorflow:tensorflow-lite:2.16.1")
-    implementation("org.tensorflow:tensorflow-lite-gpu:2.16.1")
     implementation("com.google.android.gms:play-services-auth:21.4.0")
-
-    implementation("com.google.mediapipe:tasks-vision:0.10.14")
-
-    // ML Kit Object Detection - for tracking with persistent IDs
-    implementation("com.google.mlkit:object-detection:17.0.0")
-    implementation("com.google.mlkit:object-detection-custom:17.0.0")
-    
-    // TFLite Support Library - for model metadata and image processing
-    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
     // AndroidX AppCompat and UI components
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.material:material:1.12.0")
 
-   // implementation("com.gorisse.thomas.sceneform:sceneform:1.19.5")
-
-    // ✅ Modern ARCore + Sceneform (SceneView) SDK
-//    implementation("com.google.ar:core:1.41.0")
-//    implementation("io.github.sceneview:arsceneview:1.2.3")
+    // Snap Camera Kit
+    implementation("com.snap.camerakit:camerakit:1.35.0")
+    implementation("com.snap.camerakit:camerakit-kotlin:1.35.0")
+    implementation("com.snap.camerakit:support-camerax:1.35.0")
 
     // Exclude Play Core duplicates if they appear transitively
     // (you can remove these if you explicitly add a single play-core dependency)

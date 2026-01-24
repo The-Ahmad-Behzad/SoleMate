@@ -5,10 +5,18 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
+        <!-- Snap Camera Kit API Token -->
+        <!-- TODO: Paste your Snap Kit API Token here -->
+        <meta-data
+            android:name="com.snap.camerakit.api.token"
+            android:value="eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzY5MTY2OTEzLCJzdWIiOiJhMjBjNWYyYS0yY2FkLTQxNDAtOTVlZC1jZGNlNGY1YWQwYjF-U1RBR0lOR343ZGExMGU0Ni0zNzRhLTQxZDktOWFmYS00OWFmNDc1YmYzOWMifQ.hOalDSA0aYTH_dbBMdCBMuUeOr4ukyx_q63WhJf_KF8" />
+
+        <!--
         <meta-data
             android:name="com.google.ar.core"
             android:value="required"
             tools:replace="android:value" />
+        -->
 
 
         <activity

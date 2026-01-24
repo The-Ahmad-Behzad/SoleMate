@@ -9,6 +9,7 @@ allprojects {
         google()
         mavenCentral()
         maven { url = uri("https://maven.google.com") }
+        maven { url = uri("https://storage.googleapis.com/snap-kit-build/maven") }
     }
 }
 
