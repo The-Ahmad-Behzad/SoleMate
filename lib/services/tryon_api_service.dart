@@ -51,28 +51,44 @@ class TryOnApiService {
 
   /// Saves a try-on session to the backend.
   /// Returns the created TryOnEntry on success, null on failure.
+  /// Saves a try-on session to the backend.
+  /// Returns the created TryOnEntry on success, null on failure.
   Future<TryOnEntry?> saveTryOn({
     required String shoeId,
     String? snapshotUrl,
+    Uint8List? snapshotBytes,
     bool customSkinApplied = false,
   }) async {
     try {
-      final response = await _api.post(
+      List<http.MultipartFile>? files;
+      if (snapshotBytes != null) {
+        files = [
+          http.MultipartFile.fromBytes(
+            'snapshot',
+            snapshotBytes,
+            filename: 'snapshot_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          ),
+        ];
+      }
+
+      final response = await _api.postMultipart(
         '/tryon/save',
-        {
+        fields: {
           'shoeId': shoeId,
-          'snapshotUrl': snapshotUrl,
-          'customSkinApplied': customSkinApplied,
+          if (snapshotUrl != null) 'snapshotUrl': snapshotUrl,
+          'customSkinApplied': customSkinApplied.toString(),
         },
+        files: files,
         requiresAuth: true,
       );
 
       if (response.statusCode == 201) {
+        final responseBody = await response.stream.bytesToString();
         final Map<String, dynamic> data =
-            json.decode(response.body) as Map<String, dynamic>;
+            json.decode(responseBody) as Map<String, dynamic>;
         return TryOnEntry.fromJson(data);
       } else {
-        debugPrint('Save try-on failed: ${response.statusCode} - ${response.body}');
+        debugPrint('Save try-on failed: ${response.statusCode}');
         return null;
       }
     } catch (e) {

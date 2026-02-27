@@ -28,7 +28,10 @@ async function seed() {
       colors: ['black', 'white'],
       sizes: [39, 40, 41, 42, 43],
       category: 'running',
-      thumbnailUrl: '/assets/images/shoes/shoe1.jpg'
+      thumbnailUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/shoes/shoe1.jpg',
+      modelUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/models/shoe1.glb',
+      arLensId: 'placeholder_lens_id_1',
+      arLensGroupId: 'placeholder_group_id_1'
     },
     {
       name: 'Street Classic',
@@ -37,7 +40,10 @@ async function seed() {
       colors: ['blue', 'white'],
       sizes: [40, 41, 42, 43, 44],
       category: 'casual',
-      thumbnailUrl: '/assets/images/shoes/shoe2.jpg'
+      thumbnailUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/shoes/shoe2.jpg',
+      modelUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/models/shoe2.glb',
+      arLensId: 'placeholder_lens_id_2',
+      arLensGroupId: 'placeholder_group_id_1'
     },
     {
       name: 'Court Pro',
@@ -46,7 +52,10 @@ async function seed() {
       colors: ['red', 'black'],
       sizes: [39, 40, 41, 42, 43, 44],
       category: 'sports',
-      thumbnailUrl: '/assets/images/shoes/shoe3.jpg'
+      thumbnailUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/shoes/shoe3.jpg',
+      modelUrl: 'https://solemate-assets-placeholder.s3.amazonaws.com/models/shoe3.glb',
+      arLensId: 'placeholder_lens_id_3',
+      arLensGroupId: 'placeholder_group_id_1'
     }
   ];
 

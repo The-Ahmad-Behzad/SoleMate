@@ -58,21 +58,38 @@ class SkinApiService {
     required String shoeId,
     required String skinName,
     String? textureUrl,
+    Uint8List? textureFileBytes,
+    String? textureFileName,
   }) async {
     try {
-      final response = await _api.post(
+      List<http.MultipartFile>? files;
+      if (textureFileBytes != null) {
+        files = [
+          http.MultipartFile.fromBytes(
+            'texture',
+            textureFileBytes,
+            filename: textureFileName ?? 'texture.png',
+          ),
+        ];
+      }
+
+      final response = await _api.postMultipart(
         '/skins',
-        {
+        fields: {
           'shoeId': shoeId,
           'skinName': skinName,
-          'textureUrl': textureUrl,
+          // If textureUrl is provided instead of file, backend handles it? 
+          // Current backend logic prefers file > textureUrl.
+          if (textureUrl != null) 'textureUrl': textureUrl,
         },
+        files: files,
         requiresAuth: true,
       );
 
       if (response.statusCode == 201) {
+        final responseBody = await response.stream.bytesToString();
         final Map<String, dynamic> data =
-            json.decode(response.body) as Map<String, dynamic>;
+            json.decode(responseBody) as Map<String, dynamic>;
         return CustomSkin.fromJson(data);
       } else {
         debugPrint('Create skin failed: ${response.statusCode}');

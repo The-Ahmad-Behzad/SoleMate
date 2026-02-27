@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { OutfitMatchModel } from '../models/OutfitMatch.js';
 import { ProductModel } from '../models/Product.js';
 import { Types } from 'mongoose';
+import { AIService } from '../services/aiService.js';
 
 export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -36,11 +37,11 @@ export async function getRecommendations(req: AuthRequest, res: Response): Promi
 
     const { colors } = req.body;
 
-    const shoes = await ProductModel.find({
-      colors: { $in: colors }
-    }).limit(5).lean();
+    // Use the AI Service to get recommendations
+    const aiService = AIService.getInstance();
+    const recommendations = await aiService.getRecommendations(colors || []);
 
-    res.json(shoes);
+    res.json(recommendations);
   } catch (err) {
     console.error('Get recommendations error:', err);
     res.status(500).json({ error: 'Failed to get recommendations' });

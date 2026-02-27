@@ -68,5 +68,32 @@ class ApiClient {
 
     return http.delete(uri, headers: headers).timeout(ApiConfig.timeout);
   }
+
+  Future<http.StreamedResponse> postMultipart(
+    String endpoint, {
+    Map<String, String>? fields,
+    List<http.MultipartFile>? files,
+    bool requiresAuth = false,
+  }) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}$endpoint');
+    final request = http.MultipartRequest('POST', uri);
+
+    if (requiresAuth) {
+      final token = await _getAuthToken();
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+    }
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    if (files != null) {
+      request.files.addAll(files);
+    }
+
+    return request.send().timeout(ApiConfig.timeout);
+  }
 }
 

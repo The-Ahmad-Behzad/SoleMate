@@ -2,6 +2,7 @@ import { AuthRequest } from '../middleware/authMiddleware.js';
 import { Response } from 'express';
 import { CustomSkinModel } from '../models/CustomSkin.js';
 import { Types } from 'mongoose';
+import { s3Service } from '../services/s3Service.js';
 
 export async function createSkin(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -10,7 +11,17 @@ export async function createSkin(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    const { shoeId, skinName, textureUrl } = req.body;
+    const { shoeId, skinName } = req.body;
+    let textureUrl = req.body.textureUrl;
+
+    if (req.file) {
+      // Upload file to S3
+      const key = `skins/${req.user.uid}/${Date.now()}_${req.file.originalname}`;
+      textureUrl = await s3Service.uploadFile(key, req.file.buffer, req.file.mimetype);
+    } else if (!textureUrl) {
+      res.status(400).json({ error: 'Texture image or URL is required' });
+      return;
+    }
 
     const skin = await CustomSkinModel.create({
       userId: new Types.ObjectId(req.user.uid),

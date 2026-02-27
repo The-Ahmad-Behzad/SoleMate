@@ -91,7 +91,15 @@ class MainActivity : FlutterActivity() {
 
                     // 🚀 Flutter calls this to open AR Activity
                     "openARView" -> {
-                        val intent = Intent(this, ARActivity::class.java)
+                        val lensId = call.argument<String>("lensId")
+                        val groupId = call.argument<String>("groupId")
+                        
+                        val intent = Intent(this, ARActivity::class.java).apply {
+                            if (lensId != null && groupId != null) {
+                                putExtra("LENS_ID", lensId)
+                                putExtra("GROUP_ID", groupId)
+                            }
+                        }
                         startActivity(intent)
                         result.success("Opened AR View")
                     }

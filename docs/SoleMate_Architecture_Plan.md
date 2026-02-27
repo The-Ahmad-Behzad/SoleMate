@@ -34,7 +34,7 @@ Key solution capabilities:
 
 | Feature                    | Description                                              |
 | -------------------------- | -------------------------------------------------------- |
-| **AR Real-Time Try-On**    | Use ARCore to overlay 3D shoe models on the user’s feet. |
+| **AR Real-Time Try-On**    | Use Snap Camera Kit (Lens Studio) for high-fidelity 3D shoe overlays. |
 | **Outfit Matching Engine** | Suggest footwear based on clothing colors and styles.    |
 | **Custom Shoe Skins**      | Users design and preview personalized shoe textures.     |
 | **Digital Try-On Closet**  | Store and revisit previously tried shoes.                |
@@ -76,7 +76,7 @@ The app is designed to be **integrable with existing e-commerce platforms** in t
 
 | Module                      | Features                                                       |
 | --------------------------- | -------------------------------------------------------------- |
-| **AR Try-On**               | Static shoe overlay → Scaling & alignment → Real-time tracking |
+| **AR Try-On**               | Snap Camera Kit integration → Lens Loading → 3D Shoe Tracking  |
 | **Outfit Matching**         | Extract dominant colors → Recommend complementary shoes        |
 | **Personalized Shoe Skins** | Editable shoe templates → Custom textures → Live AR preview    |
 | **Try-On Closet**           | Saves last 5 try-ons → Reapply custom skins                    |
@@ -102,8 +102,8 @@ Figure 2.1: Feature diagram of the proposed AR footwear try-on system.
 
 | Category           | Tools / Frameworks                            |
 | ------------------ | --------------------------------------------- |
-| AR Framework       | Google ARCore, optionally Unity AR Foundation |
-| Computer Vision    | OpenCV, MediaPipe, TensorFlow Lite            |
+| AR Framework       | Snap Camera Kit SDK (built on ARCore technology) |
+| Computer Vision    | Snap AR Engine (Lens Studio Lenses)           |
 | Mobile Development | Android Studio (Kotlin/Java)                  |
 | 3D Modeling        | Blender, Sketchfab/TurboSquid models          |
 | Database / Storage | Firebase Firestore + SQLite (local caching)   |
@@ -115,7 +115,7 @@ Figure 2.1: Feature diagram of the proposed AR footwear try-on system.
 
 | Member       | Responsibilities                                                   |
 | ------------ | ------------------------------------------------------------------ |
-| **Tashfeen** | AR try-on + multi-shoe comparison + AR optimization                |
+| **Tashfeen** | AR try-on (Snap Camera Kit) + multi-shoe comparison + AR optimization |
 | **Tariq**    | Outfit matching engine + save/share features + catalog integration |
 | **Umer**     | Shoe skin customization + try-on history + data storage security   |
 
@@ -177,8 +177,8 @@ This approach ensures:
 ┌───────────────────────────────────────────────────────────────────────────────────┐
 │                             Presentation Layer (Client)                            │
 │-----------------------------------------------------------------------------------│
-│  • ARCore Interface                                                                │
-│  • Camera & Foot Tracking UI                                                       │
+│  • Snap Camera Kit Interface                                                       │
+│  • Lens Engine & Tracking UI                                                       │
 │  • Gesture / Touch Controls                                                        │
 │  • ViewModels (MVVM)                                                               │
 └───────────────────────────────────────────────────────────────────────────────────┘
@@ -188,7 +188,7 @@ This approach ensures:
 ┌───────────────────────────────────────────────────────────────────────────────────┐
 │                         Application / Business Logic Layer                          │
 │-------------------------------------------------------------------------------------│
-│  • AR Try-On Engine (alignment, scaling, real-time rendering)                        │
+│  • AR Try-On Engine (Snap Lens execution)                                            │
 │  • Outfit Matching Engine (color detection + rule-based recommendations)             │
 │  • Personalized Shoe Skin Designer (2D → 3D texture mapping)                         │
 │  • Try-On History & Cache Manager                                                    │
@@ -224,8 +224,8 @@ This approach ensures:
 
 | **Layer**                              | **Key Components**                                                                                           | **Responsibilities**                                                                                              |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| **Presentation Layer (Client)**        | Android App (Kotlin, MVVM), ARCore Interface, Gesture & Tap Input                                            | Handles user interaction, AR rendering, and triggers operations via ViewModels.                                   |
-| **Application / Business Logic Layer** | AR Try-On Engine, Outfit Matching Engine, Skin Designer, Try-On History Closet, Multi-Shoe Comparison Engine | Performs core domain logic such as foot alignment, scaling, color analysis, texture mapping, and catalog queries. |
+| **Presentation Layer (Client)**        | Android App (Kotlin, MVVM), Snap Camera Kit Interface, Gesture & Tap Input    | Handles user interaction, AR rendering via Snap Lenses, and triggers operations via ViewModels.                   |
+| **Application / Business Logic Layer** | AR Try-On Engine (Snap), Outfit Matching Engine, Skin Designer, Try-On History | Performs core domain logic such as Lens ID selection, color analysis, and simple catalog queries.                 |
 | **Service / Integration Layer**        | Node.js Backend-for-Frontend (BFF), Firebase Auth (hosted), Redis Cache, Cloud Functions (ML/AI processing)  | Validates authentication, aggregates APIs, manages caching, and executes AI workloads.                            |
 | **Data Layer**                         | MongoDB Atlas, Firebase Firestore, Cloud Storage (AWS S3 / Firebase Storage)                                 | Stores structured metadata, user session logs, and large binary assets (3D models, textures, media).              |
 

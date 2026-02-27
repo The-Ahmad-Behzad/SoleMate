@@ -3,6 +3,8 @@ import { Response } from 'express';
 import { TryOnHistoryModel } from '../models/TryOnHistory.js';
 import { Types } from 'mongoose';
 
+import { s3Service } from '../services/s3Service.js';
+
 export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {
@@ -10,7 +12,13 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
       return;
     }
 
-    const { shoeId, snapshotUrl, customSkinApplied } = req.body;
+    const { shoeId, customSkinApplied } = req.body;
+    let snapshotUrl = req.body.snapshotUrl;
+
+    if (req.file) {
+      const key = `snapshots/${req.user.uid}/${Date.now()}_${req.file.originalname}`;
+      snapshotUrl = await s3Service.uploadFile(key, req.file.buffer, req.file.mimetype);
+    }
 
     const tryOn = await TryOnHistoryModel.create({
       userId: new Types.ObjectId(req.user.uid),
@@ -56,7 +64,7 @@ export async function deleteTryOn(req: AuthRequest, res: Response): Promise<void
 
     const { id } = req.params;
     await TryOnHistoryModel.deleteOne({ _id: id, userId: req.user.uid });
-    
+
     res.status(204).send();
   } catch (err) {
     console.error('Delete try-on error:', err);

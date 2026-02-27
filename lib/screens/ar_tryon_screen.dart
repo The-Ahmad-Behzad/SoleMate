@@ -39,7 +39,9 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
   /// Opens AR Camera using ARMain widget
   Future<void> _openARView() async {
     setState(() => _isARActive = true);
-    await _arMain.checkPermissionsAndOpenAR(context);
+    final lensId = _selectedProduct?.arLensId;
+    final groupId = _selectedProduct?.arLensGroupId;
+    await _arMain.checkPermissionsAndOpenAR(context, lensId: lensId, groupId: groupId);
     setState(() => _isARActive = false);
   }
 

@@ -11,6 +11,8 @@ class Product {
     this.thumbnailUrl,
     this.modelUrl,
     this.textureUrl,
+    this.arLensId,
+    this.arLensGroupId,
     this.isPopular = false,
     this.lastTriedAt,
   });
@@ -23,6 +25,8 @@ class Product {
   final String? thumbnailUrl;
   final String? modelUrl;
   final String? textureUrl;
+  final String? arLensId;
+  final String? arLensGroupId;
   final bool isPopular;
   final DateTime? lastTriedAt;
 
@@ -35,6 +39,8 @@ class Product {
     String? thumbnailUrl,
     String? modelUrl,
     String? textureUrl,
+    String? arLensId,
+    String? arLensGroupId,
     bool? isPopular,
     DateTime? lastTriedAt,
   }) {
@@ -47,6 +53,8 @@ class Product {
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       modelUrl: modelUrl ?? this.modelUrl,
       textureUrl: textureUrl ?? this.textureUrl,
+      arLensId: arLensId ?? this.arLensId,
+      arLensGroupId: arLensGroupId ?? this.arLensGroupId,
       isPopular: isPopular ?? this.isPopular,
       lastTriedAt: lastTriedAt ?? this.lastTriedAt,
     );
@@ -65,6 +73,8 @@ class Product {
       thumbnailUrl: json['thumbnailUrl'] as String?,
       modelUrl: json['modelUrl'] as String?,
       textureUrl: json['textureUrl'] as String?,
+      arLensId: json['arLensId'] as String?,
+      arLensGroupId: json['arLensGroupId'] as String?,
       isPopular: (json['isPopular'] as bool?) ?? false,
       lastTriedAt: json['lastTriedAt'] != null
           ? DateTime.tryParse(json['lastTriedAt'] as String)
@@ -82,6 +92,8 @@ class Product {
       'thumbnailUrl': thumbnailUrl,
       'modelUrl': modelUrl,
       'textureUrl': textureUrl,
+      'arLensId': arLensId,
+      'arLensGroupId': arLensGroupId,
       'isPopular': isPopular,
       'lastTriedAt': lastTriedAt?.toIso8601String(),
     };
