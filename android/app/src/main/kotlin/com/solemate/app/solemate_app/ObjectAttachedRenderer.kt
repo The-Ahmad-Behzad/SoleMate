@@ -1,5 +1,6 @@
 package com.solemate.app.solemate_app
 
+import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
@@ -15,6 +16,7 @@ import com.google.ar.core.exceptions.CameraNotAvailableException
 import com.google.ar.core.exceptions.NotYetAvailableException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.IntBuffer
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
@@ -98,6 +100,12 @@ class ObjectAttachedRenderer(
     // === Depth Occlusion ===
     private var depthTextureHandler: DepthTextureHandler? = null
     private var isDepthSupported = false
+    
+    // === Screenshot capture ===
+    private var screenshotCallback: ((Bitmap?) -> Unit)? = null
+    private var captureRequested = false
+    private var viewportWidth = 0
+    private var viewportHeight = 0
 
     fun release() {
         try {
@@ -152,6 +160,8 @@ class ObjectAttachedRenderer(
         rotationHelper.onSurfaceChanged(width, height)
         surfaceWidth = width
         surfaceHeight = height
+        viewportWidth = width
+        viewportHeight = height
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -187,6 +197,16 @@ class ObjectAttachedRenderer(
 
             // === Update shoe rendering using anchor ===
             updateShoeFromAnchor(viewMatrix, projMatrix, frame)
+            
+            // === Handle screenshot capture if requested ===
+            if (captureRequested) {
+                captureRequested = false
+                val bitmap = captureFrame()
+                activity.runOnUiThread {
+                    screenshotCallback?.invoke(bitmap)
+                    screenshotCallback = null
+                }
+            }
 
         } catch (e: CameraNotAvailableException) {
             Log.e(TAG, "Camera not available: ${e.message}")
@@ -455,5 +475,63 @@ class ObjectAttachedRenderer(
         val leftTracking = leftFootAnchor?.trackingState == TrackingState.TRACKING
         val rightTracking = rightFootAnchor?.trackingState == TrackingState.TRACKING
         return leftTracking || rightTracking
+    }
+    
+    /**
+     * Request a screenshot capture of the current AR frame.
+     * The capture happens on the next frame render.
+     * @param callback Called with the captured Bitmap (or null on failure)
+     */
+    fun requestCapture(callback: (Bitmap?) -> Unit) {
+        screenshotCallback = callback
+        captureRequested = true
+        Log.d(TAG, "📸 Screenshot capture requested")
+    }
+    
+    /**
+     * Capture the current OpenGL frame as a Bitmap.
+     * Must be called from the GL thread during onDrawFrame.
+     */
+    private fun captureFrame(): Bitmap? {
+        if (viewportWidth <= 0 || viewportHeight <= 0) {
+            Log.e(TAG, "Invalid viewport dimensions: ${viewportWidth}x${viewportHeight}")
+            return null
+        }
+        
+        return try {
+            // Allocate buffer for pixel data
+            val pixelBuffer = IntBuffer.allocate(viewportWidth * viewportHeight)
+            pixelBuffer.position(0)
+            
+            // Read pixels from OpenGL framebuffer
+            GLES20.glReadPixels(
+                0, 0, viewportWidth, viewportHeight,
+                GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, pixelBuffer
+            )
+            
+            // Check for GL errors
+            val glError = GLES20.glGetError()
+            if (glError != GLES20.GL_NO_ERROR) {
+                Log.e(TAG, "glReadPixels error: $glError")
+                return null
+            }
+            
+            // Create bitmap from pixel data
+            val bitmap = Bitmap.createBitmap(viewportWidth, viewportHeight, Bitmap.Config.ARGB_8888)
+            pixelBuffer.position(0)
+            bitmap.copyPixelsFromBuffer(pixelBuffer)
+            
+            // OpenGL reads from bottom-left, so we need to flip vertically
+            val matrix = android.graphics.Matrix()
+            matrix.preScale(1f, -1f)
+            val flippedBitmap = Bitmap.createBitmap(bitmap, 0, 0, viewportWidth, viewportHeight, matrix, false)
+            bitmap.recycle()
+            
+            Log.d(TAG, "📸 Frame captured: ${viewportWidth}x${viewportHeight}")
+            flippedBitmap
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to capture frame: ${e.message}")
+            null
+        }
     }
 }
