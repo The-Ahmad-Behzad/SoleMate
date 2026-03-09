@@ -14,8 +14,8 @@ Key features include:
 ---
 
 ## Tech Stack
-- **AR Frameworks**: ARCore (Android), Unity (optional with AR Foundation)
-- **Computer Vision**: OpenCV, MediaPipe
+- **AR Frameworks**: Snap Lens Studio
+- **Computer Vision**: OpenCV, MediaPipe, YOLOv8 Fashionpedia, OpenAI CLIP
 - **Machine Learning**: TensorFlow Lite (on-device lightweight models)
 - **3D Assets**: Blender (custom models), Sketchfab/TurboSquid (sourced models)
 - **Mobile Development**: Android Studio (Java/Kotlin)
