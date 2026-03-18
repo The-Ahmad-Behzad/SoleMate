@@ -15,6 +15,11 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
     const { shoeId, customSkinApplied } = req.body;
     let snapshotUrl = req.body.snapshotUrl;
 
+    if (!shoeId) {
+      res.status(400).json({ error: 'shoeId is required' });
+      return;
+    }
+
     if (req.file) {
       const key = `snapshots/${req.user.uid}/${Date.now()}_${req.file.originalname}`;
       snapshotUrl = await s3Service.uploadFile(key, req.file.buffer, req.file.mimetype);

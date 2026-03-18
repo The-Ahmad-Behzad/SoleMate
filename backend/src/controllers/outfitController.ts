@@ -14,6 +14,11 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
 
     const { outfitImageUrl, dominantColors } = req.body;
 
+    if (!outfitImageUrl && (!dominantColors || !dominantColors.length)) {
+      res.status(400).json({ error: 'outfitImageUrl or dominantColors are required' });
+      return;
+    }
+
     const match = await OutfitMatchModel.create({
       userId: new Types.ObjectId(req.user.uid),
       outfitImageUrl,
@@ -36,6 +41,11 @@ export async function getRecommendations(req: AuthRequest, res: Response): Promi
     }
 
     const { colors } = req.body;
+
+    if (!colors || !Array.isArray(colors)) {
+      res.status(400).json({ error: 'A valid colors array is required' });
+      return;
+    }
 
     // Use the AI Service to get recommendations
     const aiService = AIService.getInstance();

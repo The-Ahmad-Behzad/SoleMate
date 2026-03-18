@@ -14,6 +14,11 @@ export async function createSkin(req: AuthRequest, res: Response): Promise<void>
     const { shoeId, skinName } = req.body;
     let textureUrl = req.body.textureUrl;
 
+    if (!shoeId || !skinName) {
+      res.status(400).json({ error: 'shoeId and skinName are required' });
+      return;
+    }
+
     if (req.file) {
       // Upload file to S3
       const key = `skins/${req.user.uid}/${Date.now()}_${req.file.originalname}`;

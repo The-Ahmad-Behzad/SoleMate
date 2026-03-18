@@ -20,10 +20,12 @@ const app = express();
 
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false })); // allow static files (images) to be served cross-origin
 app.use(cors({ origin: '*'}));
 app.use(express.json({ limit: '2mb' }));
 app.use(pinoHttp({ logger: logger as any }));
+
+app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
 app.get('/health', async (_req, res) => {
   try {
@@ -39,7 +41,25 @@ app.get('/health', async (_req, res) => {
   }
 });
 
-app.use('/api', apiRoutes);
+app.get('/api/health/storage', (_req, res) => {
+  const isMockS3 = (process.env.AWS_ACCESS_KEY_ID || 'PLACEHOLDER_KEY') === 'PLACEHOLDER_KEY';
+  res.status(200).json({
+    ok: true,
+    storageType: isMockS3 ? 'local_mock' : 'aws_s3'
+  });
+});
+
+import rateLimit from 'express-rate-limit';
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { error: 'Too many requests, please try again later.' }
+});
+
+app.use('/api', apiLimiter, apiRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

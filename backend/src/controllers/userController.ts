@@ -33,6 +33,16 @@ export async function updateUserProfile(req: AuthRequest, res: Response): Promis
 
     const { name, preferences } = req.body;
 
+    if (name && typeof name !== 'string') {
+      res.status(400).json({ error: 'Name must be a string' });
+      return;
+    }
+    
+    if (preferences && typeof preferences !== 'object') {
+       res.status(400).json({ error: 'Preferences must be an object' });
+       return;
+    }
+
     const user = await UserModel.findOneAndUpdate(
       { uid: req.user.uid },
       { name, preferences },

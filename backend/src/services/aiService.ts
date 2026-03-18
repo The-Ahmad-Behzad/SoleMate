@@ -1,5 +1,4 @@
-import { Product } from '../models/Product';
-import { OutfitMatch } from '../models/OutfitMatch';
+
 
 export class AIService {
     private static instance: AIService;
@@ -13,50 +12,90 @@ export class AIService {
         return AIService.instance;
     }
 
-    /**
-     * Placeholder method to get shoe recommendations based on outfit colors.
-     * This simulates an AI model inference call.
-     * 
-     * @param colors List of dominant colors extracted from the outfit
-     * @returns List of recommended Products
-     */
     public async getRecommendations(colors: string[]): Promise<any[]> {
-        // START PLACEHOLDER IMPLEMENTATION
+        console.log(`[AIService] Requesting AI recommendations for colors: ${colors.join(', ')}`);
 
-        // In a real implementation, this would:
-        // 1. Call an external AI service (e.g., Python Flask API, Cloud Function)
-        // 2. Pass colors/image data
-        // 3. Receive list of shoe IDs/scores
-        // 4. Query DB for those products
+        try {
+            // Using native fetch to call the Render API.
+            // Using AbortController to handle timeouts (Render free tier wakes up slowly).
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-        // For now, return mock products
-        console.log(`[AIService] Generating recommendations for colors: ${colors.join(', ')}`);
+            const response = await fetch('https://solemate-outfit-recommendation.onrender.com/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ colors }),
+                signal: controller.signal
+            });
 
-        // Simulating network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
+            clearTimeout(timeoutId);
 
-        // Mock response matching Product model structure
-        return [
-            {
-                _id: 'mock_shoe_1',
-                name: 'Air Zoom Runner',
-                brand: 'SoleMate',
-                price: 129.99,
-                imageUrl: 'assets/shoes/nike_journey_run.png', // Ensure this path exists in frontend assets or use remote URL
-                description: 'Perfect match for your outfit.',
-                colors: ['black', 'white']
-            },
-            {
-                _id: 'mock_shoe_2',
-                name: 'Classic Leather',
-                brand: 'SoleMate',
-                price: 89.99,
-                imageUrl: 'assets/shoes/nike_pegasus_41.png',
-                description: 'Stylish and comfortable choice.',
-                colors: ['white', 'beige']
+            if (!response.ok) {
+                console.error(`[AIService] AI API Error: ${response.status} ${response.statusText}`);
+                throw new Error(`AI API Error: ${response.status}`);
             }
-        ];
-        // END PLACEHOLDER IMPLEMENTATION
+
+            const data: any = await response.json();
+            console.log('[AIService] AI API Response received successfully.');
+            
+            // Map the returned objects into our Product format.
+            // Assuming the python api returns a list of shoes in `data.recommendations` or `data` directly.
+            let recommendationsList: any[] = [];
+            if (Array.isArray(data)) {
+                recommendationsList = data;
+            } else if (data && Array.isArray(data.recommendations)) {
+                recommendationsList = data.recommendations;
+            } else if (data && Array.isArray(data.result)) {
+                recommendationsList = data.result;
+            } else if (data && typeof data === 'object') {
+                recommendationsList = [data]; // Last resort wrap
+            }
+
+            if (!recommendationsList.length) {
+                throw new Error('AI Response empty or unparseable array format');
+            }
+
+            // Map AI fields to Flutter Product shape
+            return recommendationsList.map(shoe => ({
+                _id: shoe.id || shoe._id || `ai_mock_${Math.random()}`,
+                name: shoe.name || shoe.title || 'AI Recommended Shoe',
+                brand: shoe.brand || 'SoleMate',
+                price: shoe.price || 129.99,
+                category: shoe.category || 'Casual',
+                thumbnailUrl: shoe.image_url || shoe.thumbnailUrl || shoe.imagePath || 'assets/images/shoes/nike_journey_run.png',
+                modelUrl: shoe.model_url || shoe.modelUrl || 'models/shoes/nike_journey_run_left.glb',
+                colors: shoe.colors || colors
+            }));
+
+        } catch (error) {
+            console.warn('[AIService] Call to deployed AI endpoint failed or timed out. Falling back to local mock.', error);
+            
+            // Simulating a minor delay
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            return [
+                {
+                    _id: 'mock_shoe_1',
+                    name: 'Air Zoom Runner',
+                    brand: 'SoleMate',
+                    price: 129.99,
+                    category: 'Running', 
+                    thumbnailUrl: 'assets/images/shoes/nike_journey_run.png', 
+                    modelUrl: 'models/shoes/nike_journey_run_left.glb', 
+                    colors: colors.length ? colors : ['black', 'white']
+                },
+                {
+                    _id: 'mock_shoe_2',
+                    name: 'Classic Leather',
+                    brand: 'SoleMate',
+                    category: 'Casual', 
+                    price: 89.99,
+                    thumbnailUrl: 'assets/images/shoes/puma_winter_shoe.png',
+                    modelUrl: 'models/shoes/puma_winter_shoe_left.glb',
+                    colors: ['white', 'beige']
+                }
+            ];
+        }
     }
 
     /**
