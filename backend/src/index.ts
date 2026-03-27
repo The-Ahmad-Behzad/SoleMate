@@ -66,6 +66,12 @@ app.use(errorHandler);
 
 const port = Number(process.env.PORT || 8080);
 
-app.listen(port, () => {
+app.listen(port, async () => {
   logger.info({ port }, 'BFF listening');
+  try {
+    await connectToDatabase();
+    logger.info('Connected to MongoDB');
+  } catch (err) {
+    logger.error({ err }, 'Failed to connect to MongoDB at startup');
+  }
 });

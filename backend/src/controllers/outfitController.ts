@@ -26,7 +26,7 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
       recommendedShoeIds: [],
     });
 
-    res.json(match);
+    res.status(201).json(match);
   } catch (err) {
     console.error('Analyze outfit error:', err);
     res.status(500).json({ error: 'Failed to analyze outfit' });

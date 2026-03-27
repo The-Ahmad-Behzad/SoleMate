@@ -19,8 +19,11 @@ export async function getUserProfile(req: AuthRequest, res: Response): Promise<v
 
     res.json(user);
   } catch (err) {
-    console.error('Get profile error:', err);
-    res.status(500).json({ error: 'Failed to fetch profile' });
+    console.error('[userController] getUserProfile error:', err);
+    res.status(500).json({ 
+      error: 'Failed to fetch profile',
+      message: process.env.NODE_ENV === 'development' ? (err as Error).message : undefined
+    });
   }
 }
 
@@ -45,13 +48,13 @@ export async function updateUserProfile(req: AuthRequest, res: Response): Promis
 
     const user = await UserModel.findOneAndUpdate(
       { uid: req.user.uid },
-      { name, preferences },
+      { name, preferences, email: req.user.email },
       { new: true, upsert: true }
     ).lean();
 
     res.json(user);
   } catch (err) {
-    console.error('Update profile error:', err);
+    console.error('[userController] updateUserProfile error:', err);
     res.status(500).json({ error: 'Failed to update profile' });
   }
 }
@@ -70,8 +73,11 @@ export async function getUserStats(req: AuthRequest, res: Response): Promise<voi
       userId: req.user.uid,
     });
   } catch (err) {
-    console.error('Get stats error:', err);
-    res.status(500).json({ error: 'Failed to fetch stats' });
+    console.error('[userController] getUserStats error:', err);
+    res.status(500).json({ 
+      error: 'Failed to fetch stats',
+      message: process.env.NODE_ENV === 'development' ? (err as Error).message : undefined
+    });
   }
 }
 
