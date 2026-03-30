@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_config.dart';
 import '../models/product.dart';
-import '../services/catalog_api_service.dart';
+import '../repositories/catalog_repository.dart';
 import '../widgets/product_card.dart';
 import 'ar_tryon_screen.dart';
 
@@ -13,7 +13,7 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  final CatalogApiService _catalog = CatalogApiService();
+  final CatalogRepository _catalog = CatalogRepository();
   final TextEditingController _searchController = TextEditingController();
 
   late Future<List<Product>> _future;
@@ -35,25 +35,27 @@ class _CatalogScreenState extends State<CatalogScreen> {
   }
 
   Future<List<Product>> _load({bool refresh = false}) async {
-    final products = await _catalog.loadProducts(forceRefresh: refresh);
+    final products = await _catalog.getProducts();
     _all = products;
     _shown = products;
     return products;
   }
 
-  void _onSearchChanged() {
+  Future<void> _onSearchChanged() async {
     final text = _searchController.text.trim().toLowerCase();
-    setState(() {
-      if (text.isEmpty) {
-        _shown = _all;
-      } else {
-        _shown = _all.where((p) {
-          return p.name.toLowerCase().contains(text) ||
-              p.brand.toLowerCase().contains(text) ||
-              p.category.toLowerCase().contains(text);
-        }).toList(growable: false);
-      }
-    });
+    
+    if (text.isEmpty) {
+      if (mounted) setState(() => _shown = _all);
+      return;
+    }
+    
+    // Call backend API for search
+    final results = await _catalog.searchProducts(text);
+    if (mounted) {
+      setState(() {
+        _shown = results;
+      });
+    }
   }
 
   Future<void> _onRefresh() async {

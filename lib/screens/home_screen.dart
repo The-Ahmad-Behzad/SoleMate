@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../services/catalog_api_service.dart';
-import '../services/tryon_api_service.dart';
+import '../repositories/catalog_repository.dart';
+import '../repositories/closet_repository.dart';
 import '../models/product.dart';
+import '../models/try_on_history.dart';
 import '../widgets/product_card.dart';
 import '../theme/theme_config.dart';
 import 'auth/login_screen.dart';
@@ -19,12 +20,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AuthService _authService = AuthService();
-  final CatalogApiService _catalog = CatalogApiService();
-  final TryOnApiService _tryOnHistory = TryOnApiService();
+  final CatalogRepository _catalog = CatalogRepository();
+  final ClosetRepository _closet = ClosetRepository();
   final ARMain _arMain = ARMain();
 
   late Future<List<Product>> _popularFuture;
-  late Future<List<TryOnEntry>> _historyFuture;
+  late Future<List<TryOnHistory>> _historyFuture;
 
   @override
   void initState() {
@@ -34,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _refreshData() {
     setState(() {
-      _popularFuture = _catalog.popular();
-      _historyFuture = _tryOnHistory.getHistory();
+      _popularFuture = _catalog.getProducts().then((list) => list.where((p) => p.isPopular).toList());
+      _historyFuture = _closet.getTryOnHistory();
     });
   }
 
@@ -121,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       padding: AppSpacing.paddingLarge,
       decoration: BoxDecoration(
-        gradient: AppGradients.primaryGradient,
+        gradient: isDark ? AppGradients.heroDark : AppGradients.heroLight,
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -232,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHistoryList(BuildContext context, bool isDark) {
-    return FutureBuilder<List<TryOnEntry>>(
+    return FutureBuilder<List<TryOnHistory>>(
       future: _historyFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -259,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: history.length > 3 ? 3 : history.length,
           itemBuilder: (context, index) {
             final entry = history[index];
-            final shoeName = entry.shoe != null ? entry.shoe!['name'] : 'Unknown Shoe';
+            final shoeName = entry.shoe.name;
             
             return Card(
               margin: const EdgeInsets.only(bottom: AppSpacing.sm),

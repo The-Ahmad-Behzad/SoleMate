@@ -71,7 +71,7 @@ class OutfitApiService {
         requiresAuth: true,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data =
             json.decode(response.body) as Map<String, dynamic>;
         return OutfitMatch.fromJson(data);

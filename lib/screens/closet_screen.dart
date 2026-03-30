@@ -25,8 +25,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
   final TextEditingController _searchController = TextEditingController();
   
   ClosetFilter _currentFilter = ClosetFilter.all;
-  List<ProductCardData> _shoes = List.from(ShoeDatabase.allShoes);
   List<TryOnEntry> _apiShoes = [];
+  Set<String> _favoriteIds = {};
   bool _isLoading = false;
   String _searchQuery = '';
   
@@ -243,7 +243,21 @@ class _ClosetScreenState extends State<ClosetScreen> {
   }
 
   List<ProductCardData> _getFilteredShoes() {
-    List<ProductCardData> result = List.from(_shoes);
+    List<ProductCardData> result = _apiShoes
+        .where((e) => e.shoe != null)
+        .map((e) {
+          final product = Product.fromJson(e.shoe!);
+          return ProductCardData(
+            imagePath: product.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png',
+            title: product.name,
+            subtitle: product.category,
+            price: product.price,
+            brand: product.brand,
+            category: product.category,
+            modelUrl: product.modelUrl,
+            isFavorite: _favoriteIds.contains(product.id),
+          );
+        }).toList();
     
     // Apply tab filter
     switch (_currentFilter) {
@@ -360,12 +374,14 @@ class _ClosetScreenState extends State<ClosetScreen> {
       },
       onFavoriteToggle: (index) {
         setState(() {
-          final shoe = filteredShoes[index];
-          final originalIndex = _shoes.indexWhere((s) => s.title == shoe.title);
-          if (originalIndex != -1) {
-            _shoes[originalIndex] = _shoes[originalIndex].copyWith(
-              isFavorite: !_shoes[originalIndex].isFavorite,
-            );
+          // Find the corresponding TryOnEntry
+          if (index < _apiShoes.length && _apiShoes[index].shoe != null) {
+            final productId = Product.fromJson(_apiShoes[index].shoe!).id;
+            if (_favoriteIds.contains(productId)) {
+              _favoriteIds.remove(productId);
+            } else {
+              _favoriteIds.add(productId);
+            }
           }
         });
       },

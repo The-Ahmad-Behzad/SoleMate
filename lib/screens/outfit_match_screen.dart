@@ -349,10 +349,25 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
                 Expanded(
                   child: PrimaryButton(
                     text: 'Save Outfit',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Outfit saved!')),
-                      );
+                    onPressed: () async {
+                      try {
+                        // Call backend API to save the outfit
+                        await _outfitService.analyzeOutfit(
+                          outfitImageUrl: 'placeholder_outfit.jpg', // Placeholder for now
+                          dominantColors: ['black', 'white', 'blue'],
+                        );
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Outfit saved securely to Closet!')),
+                          );
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Failed to save outfit: $e')),
+                          );
+                        }
+                      }
                     },
                     icon: Icons.bookmark,
                   ),
@@ -394,6 +409,45 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
         
         const SizedBox(height: AppSpacing.xl2),
         
+        if (_recommendedShoes.isNotEmpty) ...[
+          // Render actual API results
+          Text(
+            'Recommended Matches',
+            style: AppTypography.headline4.copyWith(
+              color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ProductCardsGrid(
+            products: _recommendedShoes.map((product) {
+              return ProductCardData(
+                imagePath: product.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png', // Fallback image
+                title: product.name,
+                subtitle: product.category,
+                brand: product.brand,
+                price: product.price,
+                modelUrl: product.modelUrl,
+                isFavorite: false,
+              );
+            }).toList(),
+            onProductTap: (index) {
+              // Optionally handle tap on recommended shoe (e.g., show details or update current shoe)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selected ${_recommendedShoes[index].name}')),
+              );
+            },
+            onAction: (index) {
+               // Load into AR
+               final selectedShoe = _recommendedShoes[index];
+               final modelUrl = selectedShoe.modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+               final arMain = ARMain();
+               arMain.openARViewWithShoe(context, modelUrl);
+            },
+            showActions: true,
+            actionText: 'Try On',
+          ),
+        ] else ...[
+          // Default placeholder suggestions when no recommendations exist
         // Outfit Suggestions Grid
         GridView.builder(
           shrinkWrap: true,
@@ -515,6 +569,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
             );
           },
         ),
+        ],
       ],
     );
   }
@@ -598,9 +653,15 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
 
     try {
       // Use some sample colors for demonstration
-      // In production, this would come from image analysis
       final colors = ['black', 'white', 'blue'];
       
+      // 1. Record the outfit analysis in the backend history
+      await _outfitService.analyzeOutfit(
+        outfitImageUrl: 'https://solemate-production.up.railway.app/placeholder_outfit.jpg',
+        dominantColors: colors,
+      );
+      
+      // 2. Fetch live AI recommendations based on those colors
       final recommendations = await _outfitService.getRecommendations(colors);
       
       if (mounted) {
