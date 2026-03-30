@@ -18,6 +18,9 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
+// Required for express-rate-limit to work correctly behind reverse proxies (Railway, Heroku, etc.)
+app.set('trust proxy', 1);
+
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow static files (images) to be served cross-origin

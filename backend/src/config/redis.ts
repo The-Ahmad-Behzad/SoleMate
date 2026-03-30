@@ -23,7 +23,7 @@ function initializeRedis() {
         const delay = Math.min(times * 50, 2000);
         return delay;
       },
-      enableOfflineQueue: false,
+      enableOfflineQueue: true, // Allow commands to be queued while connecting
       lazyConnect: true,
     });
 
