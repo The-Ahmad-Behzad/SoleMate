@@ -73,9 +73,18 @@ export async function getOutfitHistory(req: AuthRequest, res: Response): Promise
       .lean();
 
     res.json(history);
-  } catch (err) {
-    console.error('Get outfit history error:', err);
-    res.status(500).json({ error: 'Failed to fetch history' });
+  } catch (err: any) {
+    console.error('Get outfit history error details:', {
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      userId: req.user?.uid
+    });
+    res.status(500).json({
+      error: 'Failed to fetch history',
+      details: err.message,
+      code: err.name
+    });
   }
 }
 

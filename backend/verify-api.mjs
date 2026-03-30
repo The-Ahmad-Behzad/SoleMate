@@ -1,4 +1,4 @@
-import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 
@@ -27,7 +27,7 @@ async function makeRequest(path, method, body, isMultipart = false) {
         if (isMultipart) {
             const boundary = `----WebKitFormBoundary${Math.random().toString(36).substring(2)}`;
             headers['Content-Type'] = `multipart/form-data; boundary=${boundary}`;
-            
+
             let data = '';
             for (const key in body) {
                 data += `--${boundary}\r\n`;
@@ -49,21 +49,26 @@ async function makeRequest(path, method, body, isMultipart = false) {
         }
 
         const options = {
-            hostname: 'localhost',
-            port: 8080,
+            hostname: 'solemate-production.up.railway.app',
             path,
             method,
             headers
         };
 
-        const req = http.request(options, (res) => {
+        const req = https.request(options, (res) => {
             let resBody = '';
             res.on('data', (chunk) => resBody += chunk);
             res.on('end', () => {
                 let parsedBody = resBody;
                 try {
                     parsedBody = JSON.parse(resBody);
-                } catch (e) {}
+                } catch (e) { }
+
+                if (res.statusCode === 500) {
+                    console.log(`${colors.red}!!! 500 ERROR DETAIL !!!${colors.reset}`);
+                    console.log(JSON.stringify(parsedBody, null, 2));
+                }
+
                 resolve({ statusCode: res.statusCode, body: parsedBody });
             });
         });
@@ -124,8 +129,8 @@ async function runTests() {
 
     // 4. Custom Skins
     printSubHeader('4. Custom Skins');
-    const s1 = await makeRequest('/api/skins/create', 'POST', { 
-        shoeId: sharedShoeId, 
+    const s1 = await makeRequest('/api/skins/create', 'POST', {
+        shoeId: sharedShoeId,
         skinName: 'Automated Test Skin',
         textureFile: 'binary_placeholder'
     }, true);
