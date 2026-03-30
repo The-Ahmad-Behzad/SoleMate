@@ -21,7 +21,7 @@ const app = express();
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow static files (images) to be served cross-origin
-app.use(cors({ origin: '*'}));
+app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '2mb' }));
 app.use(pinoHttp({ logger: logger as any }));
 
