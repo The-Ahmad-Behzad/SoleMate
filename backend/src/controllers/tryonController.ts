@@ -26,7 +26,7 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
     }
 
     const tryOn = await TryOnHistoryModel.create({
-      userId: new Types.ObjectId(req.user.uid),
+      userId: req.user.uid,
       shoeId: new Types.ObjectId(shoeId),
       snapshotUrl,
       customSkinApplied,

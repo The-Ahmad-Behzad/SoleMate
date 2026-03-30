@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface CustomSkinDoc {
-  userId: Types.ObjectId;
+  userId: string;
   shoeId: Types.ObjectId;
   skinName: string;
   textureUrl?: string;
@@ -11,7 +11,7 @@ export interface CustomSkinDoc {
 
 const customSkinSchema = new Schema<CustomSkinDoc>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    userId: { type: String, required: true, index: true },
     shoeId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     skinName: { type: String, required: true },
     textureUrl: { type: String }

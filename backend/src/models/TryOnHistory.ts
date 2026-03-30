@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface TryOnHistoryDoc {
-  userId: Types.ObjectId;
+  userId: string;
   shoeId: Types.ObjectId;
   snapshotUrl?: string;
   customSkinApplied?: boolean;
@@ -11,7 +11,7 @@ export interface TryOnHistoryDoc {
 
 const tryOnHistorySchema = new Schema<TryOnHistoryDoc>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    userId: { type: String, required: true, index: true },
     shoeId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     snapshotUrl: { type: String },
     customSkinApplied: { type: Boolean, default: false }

@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 
 export interface OutfitMatchDoc {
-  userId: Types.ObjectId;
+  userId: string;
   outfitImageUrl?: string;
   dominantColors: string[];
   recommendedShoeIds: Types.ObjectId[];
@@ -11,7 +11,7 @@ export interface OutfitMatchDoc {
 
 const outfitMatchSchema = new Schema<OutfitMatchDoc>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    userId: { type: String, required: true, index: true },
     outfitImageUrl: { type: String },
     dominantColors: { type: [String], default: [] },
     recommendedShoeIds: [{ type: Schema.Types.ObjectId, ref: 'Product' }]

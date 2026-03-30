@@ -29,7 +29,7 @@ export async function createSkin(req: AuthRequest, res: Response): Promise<void>
     }
 
     const skin = await CustomSkinModel.create({
-      userId: new Types.ObjectId(req.user.uid),
+      userId: req.user.uid,
       shoeId: new Types.ObjectId(shoeId),
       skinName,
       textureUrl,

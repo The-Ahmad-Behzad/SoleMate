@@ -20,7 +20,7 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
     }
 
     const match = await OutfitMatchModel.create({
-      userId: new Types.ObjectId(req.user.uid),
+      userId: req.user.uid,
       outfitImageUrl,
       dominantColors: dominantColors || [],
       recommendedShoeIds: [],
