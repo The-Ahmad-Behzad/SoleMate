@@ -65,10 +65,13 @@ export default {
     }
   },
 
-  async set(key: string, value: string, ...args: unknown[]): Promise<string | null> {
+  async set(key: string, value: string, ...args: any[]): Promise<any> {
     const client = initializeRedis();
     if (!client) return null;
     try {
+      if (args.length > 0) {
+        return await client.set(key, value, ...(args as [any, any]));
+      }
       return await client.set(key, value);
     } catch (err) {
       console.error('Redis set error:', err);

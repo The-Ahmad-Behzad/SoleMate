@@ -18,6 +18,8 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
+app.set('trust proxy', 1); // Trust the first proxy (Railway)
+
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow static files (images) to be served cross-origin
