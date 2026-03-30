@@ -11,7 +11,7 @@ export interface CustomSkinDoc {
 
 const customSkinSchema = new Schema<CustomSkinDoc>(
   {
-    userId: { type: String, required: true, index: true },
+    userId: { type: Schema.Types.Mixed, required: true, index: true },
     shoeId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     skinName: { type: String, required: true },
     textureUrl: { type: String }

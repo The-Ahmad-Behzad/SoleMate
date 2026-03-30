@@ -11,7 +11,7 @@ export interface OutfitMatchDoc {
 
 const outfitMatchSchema = new Schema<OutfitMatchDoc>(
   {
-    userId: { type: String, required: true, index: true },
+    userId: { type: Schema.Types.Mixed, required: true, index: true },
     outfitImageUrl: { type: String },
     dominantColors: { type: [String], default: [] },
     recommendedShoeIds: [{ type: Schema.Types.ObjectId, ref: 'Product' }]
