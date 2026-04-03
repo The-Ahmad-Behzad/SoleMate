@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/feature_card.dart';
@@ -7,6 +8,7 @@ import '../services/local_catalog_service.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import 'catalog_screen.dart';
+import 'auth/login_screen.dart';
 
 /// Landing/Welcome screen with hero section and features
 class LandingScreen extends StatelessWidget {
@@ -371,6 +373,14 @@ class LandingScreen extends StatelessWidget {
   }
 
   void _navigateToMainApp(BuildContext context, {int initialTab = 0}) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+      return;
+    }
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

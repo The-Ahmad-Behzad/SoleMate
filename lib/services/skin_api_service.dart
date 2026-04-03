@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'api_client.dart';
 
 /// Model representing a custom skin from the backend.
@@ -58,23 +59,23 @@ class SkinApiService {
     required String shoeId,
     required String skinName,
     String? textureUrl,
-    Uint8List? textureFileBytes,
+    Uint8List? imageBytes,
     String? textureFileName,
   }) async {
     try {
       List<http.MultipartFile>? files;
-      if (textureFileBytes != null) {
+      if (imageBytes != null) {
         files = [
           http.MultipartFile.fromBytes(
-            'texture',
-            textureFileBytes,
+            'textureFile',
+            imageBytes,
             filename: textureFileName ?? 'texture.png',
           ),
         ];
       }
 
       final response = await _api.postMultipart(
-        '/skins',
+        '/skins/create',
         fields: {
           'shoeId': shoeId,
           'skinName': skinName,

@@ -5,6 +5,8 @@ import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
 import '../services/skin_api_service.dart';
 import 'auth/login_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 
 /// Customize screen with 3D preview and customization options
 class CustomizeScreen extends StatefulWidget {
@@ -21,6 +23,8 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   int _selectedTextureIndex = 0;
   double _shineValue = 50.0;
   bool _isSaving = false;
+  Uint8List? _pickedImageBytes;
+  final ImagePicker _picker = ImagePicker();
 
   // Predefined colors
   final List<Color> _colors = [
@@ -169,29 +173,42 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 120,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            color: _colors[_selectedColorIndex],
-                            borderRadius: AppRadius.radiusLarge,
-                            boxShadow: [
-                              BoxShadow(
-                                color: _colors[_selectedColorIndex].withOpacity(0.3),
-                                blurRadius: 20,
-                                spreadRadius: 5,
-                              ),
-                            ],
+                        if (_pickedImageBytes != null)
+                           Container(
+                             width: 150,
+                             height: 150,
+                             decoration: BoxDecoration(
+                               image: DecorationImage(
+                                 image: MemoryImage(_pickedImageBytes!),
+                                 fit: BoxFit.cover,
+                               ),
+                               borderRadius: AppRadius.radiusLarge,
+                             ),
+                           )
+                        else
+                          Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: _colors[_selectedColorIndex],
+                              borderRadius: AppRadius.radiusLarge,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _colors[_selectedColorIndex].withOpacity(0.3),
+                                  blurRadius: 20,
+                                  spreadRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.shopping_bag,
+                              size: 60,
+                              color: Colors.white,
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.shopping_bag,
-                            size: 60,
-                            color: Colors.white,
-                          ),
-                        ),
                         const SizedBox(height: AppSpacing.lg),
                         Text(
-                          '3D Preview',
+                          _pickedImageBytes != null ? 'Custom Texture' : '3D Preview',
                           style: AppTypography.bodyLarge.copyWith(
                             color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
                           ),
@@ -254,6 +271,15 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               icon: Icons.save,
               isFullWidth: true,
               isLoading: _isSaving,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            OutlinedButton.icon(
+              onPressed: _pickTextureImage,
+              icon: const Icon(Icons.image),
+              label: const Text('Pick Image Texture'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
             ),
           ],
         ),
@@ -538,9 +564,9 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
       final skinName = '$colorName $textureName - ${_getShineLabel()}';
 
       final result = await _skinService.createSkin(
-        shoeId: 'default', // Would come from product selection in full implementation
+        shoeId: '6900f235777b45b41bafff9a', // Using a valid product ID from catalog
         skinName: skinName,
-        textureUrl: null, // Would be texture file URL in full implementation
+        imageBytes: _pickedImageBytes,
       );
 
       if (mounted) {
@@ -572,6 +598,24 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  Future<void> _pickTextureImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        setState(() {
+          _pickedImageBytes = bytes;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error picking image: $e')),
+        );
       }
     }
   }

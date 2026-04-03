@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'api_client.dart';
 
 /// Model representing a try-on history entry from the backend.
