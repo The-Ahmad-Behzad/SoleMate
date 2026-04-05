@@ -192,12 +192,27 @@ import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'screens/landing_screen.dart';
 import 'screens/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'services/voice_service.dart';
+import 'services/tts_service.dart';
+import 'services/voice_command_router.dart';
+import 'services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _requestCameraPermission();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => VoiceService()),
+        ChangeNotifierProvider(create: (_) => NavigationService()),
+        Provider(create: (_) => TtsService()),
+        Provider(create: (_) => VoiceCommandRouter()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 Future<void> _requestCameraPermission() async {

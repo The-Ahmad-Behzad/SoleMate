@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_config.dart';
 import 'custom_button.dart';
+import 'voice_mic_button.dart';
 
 /// Bottom navigation items for the main app
 enum AppTab {
@@ -61,6 +62,7 @@ class _AppScaffoldState extends State<AppScaffold> {
         index: _currentIndex,
         children: widget.children,
       ),
+      floatingActionButton: const VoiceMicButton(),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : AppColors.lightCard,

@@ -3,6 +3,8 @@ import '../theme/theme_config.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/custom_button.dart';
 import '../services/auth_service.dart';
+import '../services/navigation_service.dart';
+import 'package:provider/provider.dart';
 import 'auth/login_screen.dart';
 import 'ar_tryon_screen.dart';
 import 'closet_screen.dart';
@@ -18,7 +20,6 @@ class MainAppShell extends StatefulWidget {
 }
 
 class _MainAppShellState extends State<MainAppShell> {
-  int _currentIndex = 0;
   late List<Widget> _screens;
   final AuthService _authService = AuthService();
 
@@ -37,11 +38,7 @@ class _MainAppShellState extends State<MainAppShell> {
     ];
   }
 
-  void _onTabChanged(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+
 
   Future<void> _handleLogout() async {
     try {
@@ -63,10 +60,11 @@ class _MainAppShellState extends State<MainAppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final navService = Provider.of<NavigationService>(context);
     return AppScaffold(
       children: _screens,
-      currentIndex: _currentIndex,
-      onTabChanged: _onTabChanged,
+      currentIndex: navService.currentIndex,
+      onTabChanged: (index) => navService.setIndex(index),
     );
   }
 }

@@ -1,5 +1,6 @@
 package com.solemate.app.solemate_app
 
+import com.snap.camerakit.lenses.LensesLaunchData
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,14 @@ import android.util.Log
 import android.view.PixelCopy
 import android.view.View
 import android.view.ViewStub
+import android.view.MotionEvent
+import android.os.SystemClock
+import android.view.InputDevice
+import android.view.ViewGroup
+import android.view.SurfaceView
+import android.view.TextureView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -35,6 +44,14 @@ class ARActivity : AppCompatActivity() {
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var screenshotManager: ScreenshotManager
     
+    // Lens Cache for Voice Launch Data Push
+    private var activeLens: com.snap.camerakit.lenses.LensesComponent.Lens? = null
+    
+    // Voice Services
+    private lateinit var voiceService: NativeVoiceService
+    private lateinit var ttsService: NativeTtsService
+    private var isListening = false
+    
     // UI Components
     private lateinit var bottomPanel: CardView
     private lateinit var galleryPreviewCard: CardView
@@ -43,7 +60,7 @@ class ARActivity : AppCompatActivity() {
     private lateinit var captureButtonContainer: FrameLayout
     private lateinit var captureRing: View
     private lateinit var captureInner: View
-    private lateinit var shoeCarouselContainer: LinearLayout
+    private lateinit var btnMicAr: ImageButton
 
     companion object {
         // TODO: Paste your Lens IDs here
@@ -59,6 +76,15 @@ class ARActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Camera permission required", Toast.LENGTH_LONG).show()
                 finish()
+            }
+        }
+
+    private val requestAudioPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                voiceService.startListening()
+            } else {
+                Toast.makeText(this, "Microphone permission required for voice commands", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -92,14 +118,41 @@ class ARActivity : AppCompatActivity() {
         captureButtonContainer = findViewById(R.id.btn_capture_container)
         captureRing = findViewById(R.id.capture_ring)
         captureInner = findViewById(R.id.capture_inner)
-        shoeCarouselContainer = findViewById(R.id.shoe_carousel_container)
+        btnMicAr = findViewById(R.id.btn_mic_ar)
         
+        // Voice Setup
+        ttsService = NativeTtsService(this)
+        voiceService = NativeVoiceService(this, { command ->
+            handleVoiceCommand(command)
+        }, { active ->
+            isListening = active
+            runOnUiThread {
+                if (active) {
+                    btnMicAr.setColorFilter(android.graphics.Color.RED)
+                } else {
+                    btnMicAr.setColorFilter(android.graphics.Color.WHITE)
+                }
+            }
+        })
+
         // Listeners
         findViewById<ImageButton>(R.id.btn_back).setOnClickListener { onBackPressed() }
         findViewById<ImageButton>(R.id.btn_settings).setOnClickListener { 
             Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show() 
         }
         findViewById<ImageButton>(R.id.btn_share).setOnClickListener { shareLatestSnap() }
+        
+        btnMicAr.setOnClickListener {
+            if (isListening) {
+                voiceService.stopListening()
+            } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    voiceService.startListening()
+                } else {
+                    requestAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
+            }
+        }
         
         galleryPreviewCard.setOnClickListener { openImageManager() }
         
@@ -112,9 +165,6 @@ class ARActivity : AppCompatActivity() {
             Toast.makeText(this, "Video recording coming soon", Toast.LENGTH_SHORT).show()
             true
         }
-        
-        // Populate Shoe Carousel (Mock data for now)
-        populateShoeCarousel()
     }
 
     private fun setupCameraKit() {
@@ -145,6 +195,7 @@ class ARActivity : AppCompatActivity() {
             LensesComponent.Repository.QueryCriteria.ById(LENS_ID, LENS_GROUP_ID)
         ) { result ->
             result.whenHasFirst { requestedLens ->
+                activeLens = requestedLens
                 cameraKitSession.lenses.processor.apply(requestedLens)
                 Log.d(TAG, "Lens applied: ${requestedLens.id}")
             }
@@ -222,14 +273,12 @@ class ARActivity : AppCompatActivity() {
         bottomPanel.visibility = View.INVISIBLE
         findViewById<View>(R.id.btn_back).visibility = View.INVISIBLE
         findViewById<View>(R.id.btn_settings).visibility = View.INVISIBLE
-        findViewById<View>(R.id.shoe_carousel_scroll).visibility = View.INVISIBLE
     }
     
     private fun showUI() {
         bottomPanel.visibility = View.VISIBLE
         findViewById<View>(R.id.btn_back).visibility = View.VISIBLE
         findViewById<View>(R.id.btn_settings).visibility = View.VISIBLE
-        findViewById<View>(R.id.shoe_carousel_scroll).visibility = View.VISIBLE
     }
     
     private fun animateCapture() {
@@ -283,39 +332,117 @@ class ARActivity : AppCompatActivity() {
         val paths = screenshotManager.getAllSnapPaths()
         if (paths.isNotEmpty()) {
             val lastPath = paths.last()
-            // Trigger generic share
-            // TODO: Implement cleaner share via FileProvider
-            Toast.makeText(this, "Sharing latest snap...", Toast.LENGTH_SHORT).show()
-            // Actual share logic would go here (Intent.ACTION_SEND)
+            val file = File(lastPath)
+            if (file.exists()) {
+                try {
+                    val uri = FileProvider.getUriForFile(this, "${applicationContext.packageName}.fileprovider", file)
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "image/jpeg"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, "Share Look"))
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error sharing: ${e.message}")
+                    Toast.makeText(this, "Failed to share snap", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                 Toast.makeText(this, "Snap file not found", Toast.LENGTH_SHORT).show()
+            }
         } else {
             Toast.makeText(this, "No snaps to share", Toast.LENGTH_SHORT).show()
         }
     }
     
-    private fun populateShoeCarousel() {
-        // Add dummy items
-        val shoes = listOf(
-            android.graphics.Color.RED, 
-            android.graphics.Color.BLUE, 
-            android.graphics.Color.GREEN,
-            android.graphics.Color.YELLOW,
-            android.graphics.Color.CYAN
-        )
-        
-        shoes.forEach { color ->
-            val item = CardView(this).apply {
-                radius = 40f 
-                cardElevation = 4f
-                setCardBackgroundColor(color)
-                layoutParams = LinearLayout.LayoutParams(160, 160).apply {
-                    marginEnd = 32
-                }
+
+
+    private fun findCameraKitSurfaceView(viewGroup: ViewGroup): View? {
+        for (i in 0 until viewGroup.childCount) {
+            val child = viewGroup.getChildAt(i)
+            if (child is SurfaceView || child is TextureView) {
+                return child
             }
-            shoeCarouselContainer.addView(item)
+            if (child is ViewGroup) {
+                val result = findCameraKitSurfaceView(child)
+                if (result != null) return result
+            }
+        }
+        return null
+    }
+
+    private fun pushLaunchData(command: String) {
+        val lens = activeLens
+        if (lens == null) {
+            Log.e(TAG, "Cannot push voice command: activeLens is null")
+            return
+        }
+        
+        val launchData = LensesLaunchData.newBuilder()
+            .putString("voice_command", command)
+            .build()
+            
+        Log.d(TAG, "Pushing Native Voice Command through Launch Data: $command")
+        cameraKitSession.lenses.processor.apply(lens, launchData)
+    }
+
+    private fun handleVoiceCommand(commandRaw: String) {
+        val command = commandRaw.lowercase().trim()
+
+        if (command.contains("take snap") || command.contains("save") || command.contains("capture")) {
+            ttsService.speak("Saving Look")
+            captureScreenshot()
+        } else if (command.contains("share")) {
+            ttsService.speak("Ready to share")
+            shareLatestSnap()
+        } else if (command.contains("go back") || command.contains("exit") || command.contains("close ar")) {
+            ttsService.speak("Closing Camera")
+            onBackPressed()
+        } else if (command.contains("gallery") || command.contains("show snaps")) {
+            ttsService.speak("Opening Gallery")
+            openImageManager()
+        } else if (command.contains("help") || command.contains("what can i say")) {
+            ttsService.speak("Here are the available voice commands.")
+            runOnUiThread {
+                AlertDialog.Builder(this)
+                    .setTitle("AR Voice Commands")
+                    .setMessage(
+                        "Try saying:\n" +
+                        "- Take snap / Save / Capture\n" +
+                        "- Share / Share this\n" +
+                        "- Next left shoe / Change left\n" +
+                        "- Previous left shoe\n" +
+                        "- Next right shoe / Change right\n" +
+                        "- Previous right shoe\n" +
+                        "- Go back / Exit"
+                    )
+                    .setPositiveButton("Got it") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
+        } else if (command.contains("next left") || command.contains("change left") || command.contains("left")) {
+            ttsService.speak("Changing left shoe")
+            pushLaunchData("next_left")
+        } else if (command.contains("previous left")) {
+            ttsService.speak("Previous left shoe")
+            pushLaunchData("prev_left")
+        } else if (command.contains("next right") || command.contains("change right") || command.contains("right")) {
+            ttsService.speak("Changing right shoe")
+            pushLaunchData("next_right")
+        } else if (command.contains("previous right")) {
+            ttsService.speak("Previous right shoe")
+            pushLaunchData("prev_right")
+        } else if (command.contains("change shoe") || command.contains("change both")) {
+            ttsService.speak("Changing shoes")
+            pushLaunchData("change_both")
+        } else {
+            ttsService.speak("Didn't catch that. Please say help or try again.")
         }
     }
 
+
+
     override fun onDestroy() {
+        voiceService.destroy()
+        ttsService.shutdown()
         cameraKitSession.close()
         if (MainActivity.currentARActivity == this) {
             MainActivity.currentARActivity = null

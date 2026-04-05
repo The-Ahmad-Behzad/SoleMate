@@ -36,9 +36,19 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin firebase_storage, io.flutter.plugins.firebase.storage.FlutterFirebaseStoragePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.eyedeadevelopment.fluttertts.FlutterTtsPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin flutter_tts, com.eyedeadevelopment.fluttertts.FlutterTtsPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new com.baseflow.permissionhandler.PermissionHandlerPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin permission_handler_android, com.baseflow.permissionhandler.PermissionHandlerPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new com.csdcorp.speech_to_text.SpeechToTextPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin speech_to_text, com.csdcorp.speech_to_text.SpeechToTextPlugin", e);
     }
   }
 }

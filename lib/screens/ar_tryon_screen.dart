@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:provider/provider.dart';
+import '../services/navigation_service.dart';
 import '../theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/product_card.dart';
@@ -29,11 +32,30 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
   bool _isARActive = false;
   bool _isSaving = false;
   Product? _selectedProduct;
+  StreamSubscription<String>? _voiceSubscription;
 
   @override
   void initState() {
     super.initState();
     _selectedProduct = widget.selectedProduct;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _voiceSubscription = Provider.of<NavigationService>(context, listen: false).voiceEventStream.listen((event) {
+        if (!mounted) return;
+        if (event == 'save') {
+          _saveAR();
+        } else if (event == 'open_ar') {
+          _openARView();
+        } else if (event == 'share') {
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sharing functionality not fully implemented yet.')));
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _voiceSubscription?.cancel();
+    super.dispose();
   }
 
   /// Opens AR Camera using ARMain widget

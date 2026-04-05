@@ -46,29 +46,20 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@android:drawable/ic_menu_preferences" />
 
-
-    <!-- Shoe Carousel (Floating above bottom panel) -->
-    <HorizontalScrollView
-        android:id="@+id/shoe_carousel_scroll"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="16dp"
-        android:clipToPadding="false"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
+    <ImageButton
+        android:id="@+id/btn_mic_ar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_circle_glass"
+        android:contentDescription="Voice Command Mic"
+        android:padding="12dp"
+        android:src="@android:drawable/ic_btn_speak_now"
+        android:tint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/btn_settings" />
 
-        <LinearLayout
-            android:id="@+id/shoe_carousel_container"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" />
-
-    </HorizontalScrollView>
 
 
     <!-- Bottom Glass Panel -->
