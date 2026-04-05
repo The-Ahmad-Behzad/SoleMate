@@ -1,0 +1,115 @@
+{
+    "1667584362764829:65789": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "41520",
+                "compressedSize": "28173",
+                "extension": "mesh",
+                "originalRAM": "41520",
+                "originalSize": "28173",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849862:1922"
+        }
+    },
+    "1674231915849520:1625": {
+        "IResourceController": {
+            "name": "laces_l",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584362764829:65789",
+            "fileId": "1674231915849861:1921",
+            "publicId": "1674231915850094:2177",
+            "expected_hash": "5b2bbed8059adbf96ee57bb5c29eb5f5",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584362764829:65789",
+            "name": "Files/File_1674231915849861_1921.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849861:1921": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849861_1921.mesh"
+        }
+    },
+    "1674231915849862:1922": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849862_1922.mesh"
+        }
+    },
+    "1674231915850094:2177": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Meshes/shoe_010/Meshes/laces_l.mesh",
+                "hash": "5b2bbed8059adbf96ee57bb5c29eb5f5"
+            }
+        }
+    }
+}

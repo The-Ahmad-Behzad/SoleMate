@@ -1,0 +1,43 @@
+{
+    "1674231915849516:1591": {
+        "IResourceController": {
+            "name": "General_AO",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584354950799:64516",
+            "fileId": "1674231915849771:1852",
+            "originalId": "1674231915849772:1853",
+            "publicId": "1674231915850082:2139",
+            "expected_hash": "4ef7d5c9a9e1a6dd368ec9c28272bdfe",
+            "additional": {
+                "originHash": "4ef7d5c9a9e1a6dd368ec9c28272bdfe",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584354950799:64516",
+            "name": "Files/File1916.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849771:1852": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849771_1852.webp"
+        }
+    },
+    "1674231915849772:1853": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849772_1853.webp"
+        }
+    },
+    "1674231915850082:2139": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/General_AO.webp",
+                "hash": "4ef7d5c9a9e1a6dd368ec9c28272bdfe"
+            }
+        }
+    }
+}

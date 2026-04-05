@@ -1,0 +1,51 @@
+{
+    "1775248591793231:18640": {
+        "IFileManager": {
+            "path": "Files/File_1775248591793231_18640.mesh"
+        }
+    },
+    "1775248591796083:18641": {
+        "IResourceController": {
+            "name": "occluder_right",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248591812374:18643",
+            "fileId": "1775248591793231:18640",
+            "expected_hash": "93558605358df9bbbdf4f97022bf7602",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1775248591812374:18643",
+            "name": "Files/File_1775248591793231_18640.mesh",
+            "flags": 1
+        }
+    }
+}

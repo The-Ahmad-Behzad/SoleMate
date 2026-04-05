@@ -1,0 +1,38 @@
+{
+    "1772641227195615:12122": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/Shoe Controller backup.js",
+                "hash": "2ccb9c21c019ec7ddf744c36bff7522d"
+            }
+        }
+    },
+    "1772641227196636:12123": {
+        "IFileManager": {
+            "path": "Files/File_1772641227196636_12123.js"
+        }
+    },
+    "1772641227201519:12124": {
+        "IResourceController": {
+            "name": "Shoe Controller backup",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1772641227201555:12125",
+            "fileId": "1772641227196636:12123",
+            "publicId": "1772641227195615:12122",
+            "expected_hash": "2ccb9c21c019ec7ddf744c36bff7522d"
+        },
+        "IResourceManager": {
+            "uid": "1772641227201555:12125",
+            "name": "Files/File_1772641227196636_12123.js",
+            "flags": 1
+        }
+    },
+    "1772641227201555:12125": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

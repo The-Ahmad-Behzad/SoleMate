@@ -1,0 +1,43 @@
+{
+    "1674231915849511:1553": {
+        "IResourceController": {
+            "name": "shoe_mat_base",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584349210672:63077",
+            "fileId": "1674231915849664:1767",
+            "originalId": "1674231915849665:1768",
+            "publicId": "1674231915850069:2097",
+            "expected_hash": "023a4f35caa7be09e08704ce1bb2cf2a",
+            "additional": {
+                "originHash": "023a4f35caa7be09e08704ce1bb2cf2a",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584349210672:63077",
+            "name": "Files/File1826.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849664:1767": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849664_1767.webp"
+        }
+    },
+    "1674231915849665:1768": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849665_1768.webp"
+        }
+    },
+    "1674231915850069:2097": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Textures/shoe_mat_base.webp",
+                "hash": "023a4f35caa7be09e08704ce1bb2cf2a"
+            }
+        }
+    }
+}

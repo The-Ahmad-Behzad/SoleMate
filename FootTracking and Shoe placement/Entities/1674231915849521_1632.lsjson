@@ -1,0 +1,43 @@
+{
+    "1674231915849521:1632": {
+        "IResourceController": {
+            "name": "Try on feet hint",
+            "type": 1,
+            "subtype": 5,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1670176909959843:19359",
+            "fileId": "1674231915849959:1994",
+            "originalId": "1674231915849960:1995",
+            "publicId": "1674231915850097:2184",
+            "expected_hash": "16947ebea017d80c7792eae1d407ae95",
+            "additional": {
+                "subtype": "5"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1670176909959843:19359",
+            "name": "Files/File_1674231915849959_1994",
+            "flags": 1
+        }
+    },
+    "1674231915849959:1994": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849959_1994"
+        }
+    },
+    "1674231915849960:1995": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849960_1995"
+        }
+    },
+    "1674231915850097:2184": {
+        "IResourceController": {
+            "public": {
+                "path": "Textures/Try on feet hint",
+                "hash": "16947ebea017d80c7792eae1d407ae95",
+                "complexResourceHash": "06a2f94189f96e00fc33eba24232a90f"
+            }
+        }
+    }
+}

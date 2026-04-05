@@ -1,0 +1,30 @@
+{
+    "1774868940335582:21367340": {
+        "IResourceController": {
+            "name": "girl_sandal1",
+            "type": 12,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": false,
+            "uid": "1774868940335476:21367309",
+            "fileId": "1774868940383944:21367367",
+            "originalId": "1774874535479025:23800962",
+            "expected_hash": "9ddc49011b9af2d119b4f098bbf21a64"
+        },
+        "IResourceManager": {
+            "uid": "1774868940335476:21367309",
+            "name": "GltfImport_0",
+            "flags": 0
+        }
+    },
+    "1774868940383944:21367367": {
+        "IFileManager": {
+            "path": "Files/File_1774868940383944_21367367.oprfb"
+        }
+    },
+    "1774874535479025:23800962": {
+        "IFileManager": {
+            "path": "Files/File_1774874535479025_23800962.oprfb"
+        }
+    }
+}

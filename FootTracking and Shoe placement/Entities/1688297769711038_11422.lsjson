@@ -1,0 +1,23 @@
+{
+    "1688297769710327:11421": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/foot_occluder_high",
+                "hash": "32bc96549c9ef7e0cc5b455092ba2f30"
+            }
+        }
+    },
+    "1688297769711038:11422": {
+        "IResourceController": {
+            "name": "foot_occluder_high",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1688297769710327:11421",
+            "resources": [
+                "1775425021841624:17522"
+            ]
+        }
+    }
+}

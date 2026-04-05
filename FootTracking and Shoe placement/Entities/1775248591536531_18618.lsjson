@@ -1,0 +1,30 @@
+{
+    "1775248591534793:18617": {
+        "IFileManager": {
+            "path": "Files/File_1775248591534793_18617"
+        }
+    },
+    "1775248591536531:18618": {
+        "IResourceController": {
+            "name": "Default Foot Occluder Material",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248591536537:18619",
+            "fileId": "1775248591534793:18617",
+            "originalId": "1775248591574673:18623",
+            "expected_hash": "3af46b0f32d263d8b4c05d7133272956"
+        },
+        "IResourceManager": {
+            "uid": "1775248591536537:18619",
+            "name": "Files/File_1775248591534793_18617",
+            "flags": 1
+        }
+    },
+    "1775248591574673:18623": {
+        "IFileManager": {
+            "path": "Files/File_1775248591574673_18623.lsmat"
+        }
+    }
+}

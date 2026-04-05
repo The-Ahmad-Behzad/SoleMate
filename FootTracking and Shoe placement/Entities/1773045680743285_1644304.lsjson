@@ -1,0 +1,33 @@
+{
+    "1773045680740913:1644303": {
+        "IFileManager": {
+            "path": "Files/File_1773045680740913_1644303.lspkg"
+        }
+    },
+    "1773045680743285:1644304": {
+        "IResourceController": {
+            "name": "Cloud_Storage_Wrapper_Example",
+            "type": 7,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1773045680744393:1644305",
+            "fileId": "1773045680740913:1644303",
+            "publicId": "1773045680746241:1644310",
+            "expected_hash": "39a756f59431a0df8b39085cb13618e3"
+        },
+        "IResourceManager": {
+            "uid": "1773045680744393:1644305",
+            "name": "Files/File_1773045680740913_1644303.lspkg",
+            "flags": 1
+        }
+    },
+    "1773045680746241:1644310": {
+        "IResourceController": {
+            "public": {
+                "path": "Cloud Storage Wrapper Example/Cloud_Storage_Wrapper_Example.lspkg",
+                "hash": "39a756f59431a0df8b39085cb13618e3"
+            }
+        }
+    }
+}

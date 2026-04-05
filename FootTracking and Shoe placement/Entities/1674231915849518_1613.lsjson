@@ -1,0 +1,115 @@
+{
+    "1667584361140547:65542": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "4632",
+                "compressedSize": "4255",
+                "extension": "mesh",
+                "originalRAM": "4632",
+                "originalSize": "4255",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849828:1898"
+        }
+    },
+    "1674231915849518:1613": {
+        "IResourceController": {
+            "name": "heel_stitch_2",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584361140547:65542",
+            "fileId": "1674231915849827:1897",
+            "publicId": "1674231915850090:2165",
+            "expected_hash": "e20a1fc41ff96bd99b106725f661d55b",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584361140547:65542",
+            "name": "Files/File_1674231915849827_1897.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849827:1897": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849827_1897.mesh"
+        }
+    },
+    "1674231915849828:1898": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849828_1898.mesh"
+        }
+    },
+    "1674231915850090:2165": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Meshes/shoe_010/Meshes/heel_stitch_2.mesh",
+                "hash": "e20a1fc41ff96bd99b106725f661d55b"
+            }
+        }
+    }
+}

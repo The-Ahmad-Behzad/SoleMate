@@ -1,0 +1,79 @@
+{
+    "1667914025309794:514668": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "2049",
+                        "uncompressed_hash": "d1fa03deab4642cb0bbca0c9a9e24bfc"
+                    },
+                    "v": "1674231915849899:1946"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "8192",
+                "compressedSize": "7549",
+                "extension": "png",
+                "originalRAM": "65536",
+                "originalSize": "17378",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "2",
+                    "subtype": "9",
+                    "type": "1"
+                }
+            },
+            "uncompressed_file": "1674231915849886:1941"
+        }
+    },
+    "1674231915849520:1630": {
+        "IResourceController": {
+            "name": "Normals Fabric",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667914025309794:514668",
+            "fileId": "1674231915849884:1939",
+            "originalId": "1674231915849885:1940",
+            "publicId": "1674231915850096:2182",
+            "expected_hash": "25a87504e84e8f3cc54a8dbe62230223",
+            "additional": {
+                "originHash": "d1fa03deab4642cb0bbca0c9a9e24bfc"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667914025309794:514668",
+            "name": "Files/File2068.png",
+            "flags": 1
+        }
+    },
+    "1674231915849884:1939": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849884_1939.pvr"
+        }
+    },
+    "1674231915849885:1940": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849885_1940.png"
+        }
+    },
+    "1674231915849886:1941": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849886_1941.png"
+        }
+    },
+    "1674231915849899:1946": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849899_1946.pvr"
+        }
+    },
+    "1674231915850096:2182": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Normals Fabric.png",
+                "hash": "d1fa03deab4642cb0bbca0c9a9e24bfc"
+            }
+        }
+    }
+}

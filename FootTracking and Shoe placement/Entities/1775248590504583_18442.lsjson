@@ -1,0 +1,37 @@
+{
+    "1775248590502144:18441": {
+        "IFileManager": {
+            "path": "Files/File_1775248590502144_18441.js"
+        }
+    },
+    "1775248590504583:18442": {
+        "IResourceController": {
+            "name": "KeypointTrackingController",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590504619:18443",
+            "fileId": "1775248590502144:18441",
+            "expected_hash": "3f3b66fa38f2b7598ff58e90c45554e0"
+        },
+        "IResourceManager": {
+            "uid": "1775248590504619:18443",
+            "name": "Files/File_1775248590502144_18441.js",
+            "flags": 1
+        }
+    },
+    "1775248590504619:18443": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "Solver",
+                "OpticalFlow",
+                "NewJSMathLibrary",
+                "Annotator",
+                "EventModule",
+                "SceneObjectHelpersModule",
+                "GenericHelperScript"
+            ]
+        }
+    }
+}

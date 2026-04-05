@@ -1,0 +1,49 @@
+{
+    "1774868930742752:21363252": {
+        "IResourceController": {
+            "name": "girl_sandal1",
+            "type": 18,
+            "subtype": -1,
+            "dependency": 2,
+            "hidden": false,
+            "fileId": "1774868940391657:21367393",
+            "publicId": "1774868940557624:21367461",
+            "expected_hash": "be5e6309bb3472cd1630f224e5df39ac",
+            "resources": [
+                "1774868939301122:21366845",
+                "1774868939388052:21366908",
+                "1774868939720198:21367040",
+                "1774868940335582:21367340"
+            ],
+            "additional": {
+                "ImportParams": {
+                    "animationCurveOptimization": "true",
+                    "convertMetersToCentimeters": "true",
+                    "importMorphTargetAnimation": "true",
+                    "importTangents": "true",
+                    "importVertexColor": "true",
+                    "recalculateTangents": "false"
+                },
+                "materialMapping": [
+                    {
+                        "k": "material_0",
+                        "v": "1774868939723300:21367043"
+                    }
+                ]
+            }
+        }
+    },
+    "1774868940391657:21367393": {
+        "IFileManager": {
+            "path": "Files/File_1774868940391657_21367393.glb"
+        }
+    },
+    "1774868940557624:21367461": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sandal 1/girl_sandal1.glb",
+                "hash": "be5e6309bb3472cd1630f224e5df39ac"
+            }
+        }
+    }
+}

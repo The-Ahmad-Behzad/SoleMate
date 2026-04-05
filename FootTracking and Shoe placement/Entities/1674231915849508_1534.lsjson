@@ -1,0 +1,39 @@
+{
+    "1674231915849508:1534": {
+        "IResourceController": {
+            "name": "Mocassins Stitches",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584345109348:61541",
+            "fileId": "1674231915849618:1728",
+            "originalId": "1674231915849620:1729",
+            "publicId": "1674231915850063:2075",
+            "expected_hash": "08fc132728234aaed801d35ca99c04f9"
+        },
+        "IResourceManager": {
+            "uid": "1667584345109348:61541",
+            "name": "Files/File_1674231915849618_1728",
+            "flags": 1
+        }
+    },
+    "1674231915849618:1728": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849618_1728"
+        }
+    },
+    "1674231915849620:1729": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849620_1729.lsmat"
+        }
+    },
+    "1674231915850063:2075": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Stitches.lsmat",
+                "hash": "05802913520f18208d9ca5af6ad81217"
+            }
+        }
+    }
+}

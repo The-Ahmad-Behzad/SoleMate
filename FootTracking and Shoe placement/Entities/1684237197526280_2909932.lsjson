@@ -1,0 +1,39 @@
+{
+    "1684237197524422:2909931": {
+        "IFileManager": {
+            "path": "Files/File_1684237197524422_2909931"
+        }
+    },
+    "1684237197526280:2909932": {
+        "IResourceController": {
+            "name": "Device Camera Occluder",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1684237197526301:2909933",
+            "fileId": "1684237197524422:2909931",
+            "originalId": "1684237197549058:2909937",
+            "publicId": "1684237197717698:2909965",
+            "expected_hash": "831baa5fd9633b114498c4b47f3fae81"
+        },
+        "IResourceManager": {
+            "uid": "1684237197526301:2909933",
+            "name": "Files/File_1684237197524422_2909931",
+            "flags": 1
+        }
+    },
+    "1684237197549058:2909937": {
+        "IFileManager": {
+            "path": "Files/File_1684237197549058_2909937.lsmat"
+        }
+    },
+    "1684237197717698:2909965": {
+        "IResourceController": {
+            "public": {
+                "path": "Materials/Device Camera Occluder.lsmat",
+                "hash": "4fb040c49cf98b969b7af065cb2e940b"
+            }
+        }
+    }
+}

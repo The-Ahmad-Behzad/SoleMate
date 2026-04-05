@@ -1,0 +1,22 @@
+{
+    "1774868880695415:21341755": {
+        "IResourceController": {
+            "name": "Sandal 1",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1774868880695659:21341756",
+            "resources": [
+                "1774868930742752:21363252"
+            ]
+        }
+    },
+    "1774868880695659:21341756": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sandal 1"
+            }
+        }
+    }
+}

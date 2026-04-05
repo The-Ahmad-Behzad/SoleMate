@@ -1,0 +1,38 @@
+{
+    "1772641227140072:12106": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/LeftShoeController.js",
+                "hash": "c8f299e85c931b9e0d608d97663886af"
+            }
+        }
+    },
+    "1772641227142230:12107": {
+        "IFileManager": {
+            "path": "Files/File_1772641227142230_12107.js"
+        }
+    },
+    "1772641227147629:12108": {
+        "IResourceController": {
+            "name": "LeftShoeController",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1772641227147671:12109",
+            "fileId": "1772641227142230:12107",
+            "publicId": "1772641227140072:12106",
+            "expected_hash": "c8f299e85c931b9e0d608d97663886af"
+        },
+        "IResourceManager": {
+            "uid": "1772641227147671:12109",
+            "name": "Files/File_1772641227142230_12107.js",
+            "flags": 1
+        }
+    },
+    "1772641227147671:12109": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

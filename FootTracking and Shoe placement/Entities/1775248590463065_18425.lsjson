@@ -1,0 +1,30 @@
+{
+    "1775248590463065:18425": {
+        "IResourceController": {
+            "name": "ShoeRemoval",
+            "type": 12,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590462607:18422",
+            "fileId": "1775248590497790:18429",
+            "originalId": "1775248597980006:19939",
+            "expected_hash": "f2c9aba53eb1d6e26b3234a67acf8a71"
+        },
+        "IResourceManager": {
+            "uid": "1775248590462607:18422",
+            "name": "sceneObject_0",
+            "flags": 0
+        }
+    },
+    "1775248590497790:18429": {
+        "IFileManager": {
+            "path": "Files/File_1775248590497790_18429.oprfb"
+        }
+    },
+    "1775248597980006:19939": {
+        "IFileManager": {
+            "path": "Files/File_1775248597980006_19939.oprfb"
+        }
+    }
+}

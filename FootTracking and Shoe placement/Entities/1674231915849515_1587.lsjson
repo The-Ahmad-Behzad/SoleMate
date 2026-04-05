@@ -1,0 +1,43 @@
+{
+    "1674231915849515:1587": {
+        "IResourceController": {
+            "name": "laces_normal",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584354582889:64448",
+            "fileId": "1674231915849760:1843",
+            "originalId": "1674231915849762:1844",
+            "publicId": "1674231915850081:2135",
+            "expected_hash": "95a92417a7cf240c3c71488cf2ea69ae",
+            "additional": {
+                "originHash": "95a92417a7cf240c3c71488cf2ea69ae",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584354582889:64448",
+            "name": "Files/File1907.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849760:1843": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849760_1843.webp"
+        }
+    },
+    "1674231915849762:1844": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849762_1844.webp"
+        }
+    },
+    "1674231915850081:2135": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/laces_normal.webp",
+                "hash": "95a92417a7cf240c3c71488cf2ea69ae"
+            }
+        }
+    }
+}

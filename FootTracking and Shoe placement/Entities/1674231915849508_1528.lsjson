@@ -1,0 +1,67 @@
+{
+    "1667499026330530:22389": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "16384",
+                "compressedSize": "4342",
+                "extension": "png",
+                "originalRAM": "16384",
+                "originalSize": "4342",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849602:1715"
+        }
+    },
+    "1674231915849508:1528": {
+        "IResourceController": {
+            "name": "Normals Dots",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667499026330530:22389",
+            "fileId": "1674231915849600:1713",
+            "originalId": "1674231915849601:1714",
+            "publicId": "1674231915850060:2065",
+            "expected_hash": "e29e608409417ebcf5df38fb5eb0356d",
+            "additional": {
+                "originHash": "e29e608409417ebcf5df38fb5eb0356d",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667499026330530:22389",
+            "name": "Files/File1597.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849600:1713": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849600_1713.png"
+        }
+    },
+    "1674231915849601:1714": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849601_1714.png"
+        }
+    },
+    "1674231915849602:1715": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849602_1715.png"
+        }
+    },
+    "1674231915850060:2065": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Normals Dots.png",
+                "hash": "e29e608409417ebcf5df38fb5eb0356d"
+            }
+        }
+    }
+}

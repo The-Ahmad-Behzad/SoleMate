@@ -1,0 +1,115 @@
+{
+    "1667584347282053:62382": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "5040",
+                "compressedSize": "4235",
+                "extension": "mesh",
+                "originalRAM": "5040",
+                "originalSize": "4235",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849634:1741"
+        }
+    },
+    "1674231915849509:1540": {
+        "IResourceController": {
+            "name": "elastic",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584347282053:62382",
+            "fileId": "1674231915849633:1740",
+            "publicId": "1674231915850065:2083",
+            "expected_hash": "b22b3dcd92c3fe038ae6462100a2402f",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584347282053:62382",
+            "name": "Files/File_1674231915849633_1740.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849633:1740": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849633_1740.mesh"
+        }
+    },
+    "1674231915849634:1741": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849634_1741.mesh"
+        }
+    },
+    "1674231915850065:2083": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/elastic.mesh",
+                "hash": "b22b3dcd92c3fe038ae6462100a2402f"
+            }
+        }
+    }
+}

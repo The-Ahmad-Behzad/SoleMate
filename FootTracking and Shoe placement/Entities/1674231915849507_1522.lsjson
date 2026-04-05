@@ -1,0 +1,66 @@
+{
+    "1666621660663279:1088861": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "7403200",
+                "compressedSize": "14234",
+                "extension": "png",
+                "originalRAM": "7403200",
+                "originalSize": "14234",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849580:1698"
+        }
+    },
+    "1674231915849507:1522": {
+        "IResourceController": {
+            "name": "Shoe Icon 3",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1666621660663279:1088861",
+            "fileId": "1674231915849578:1696",
+            "originalId": "1674231915849579:1697",
+            "publicId": "1674231915850058:2059",
+            "expected_hash": "1f1c4b2f9840e26e1718dac9f851698c",
+            "additional": {
+                "originHash": "1f1c4b2f9840e26e1718dac9f851698c"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1666621660663279:1088861",
+            "name": "Files/File_1674231915849578_1696.png",
+            "flags": 1
+        }
+    },
+    "1674231915849578:1696": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849578_1696.png"
+        }
+    },
+    "1674231915849579:1697": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849579_1697.png"
+        }
+    },
+    "1674231915849580:1698": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849580_1698.png"
+        }
+    },
+    "1674231915850058:2059": {
+        "IResourceController": {
+            "public": {
+                "path": "Textures/ShoeIcons/Shoe Icon 3.png",
+                "hash": "1f1c4b2f9840e26e1718dac9f851698c"
+            }
+        }
+    }
+}

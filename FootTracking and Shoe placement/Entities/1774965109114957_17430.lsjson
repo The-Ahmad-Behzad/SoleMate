@@ -1,0 +1,40 @@
+{
+    "1774965109111734:17428": {
+        "IResourceController": {
+            "public": {
+                "path": "Public In-Lens Creation API.js",
+                "hash": "5a5de9a1001dda2b9933d1da5298ead8"
+            }
+        }
+    },
+    "1774965109112360:17429": {
+        "IFileManager": {
+            "path": "Files/File_1774965109112360_17429.js"
+        }
+    },
+    "1774965109114957:17430": {
+        "IResourceController": {
+            "name": "Public In-Lens Creation API",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774965109114979:17431",
+            "fileId": "1774965109112360:17429",
+            "publicId": "1774965109111734:17428",
+            "expected_hash": "5a5de9a1001dda2b9933d1da5298ead8"
+        },
+        "IResourceManager": {
+            "uid": "1774965109114979:17431",
+            "name": "Files/File_1774965109112360_17429.js",
+            "flags": 1
+        }
+    },
+    "1774965109114979:17431": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "Public In-Lens Creation API Module"
+            ]
+        }
+    }
+}

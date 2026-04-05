@@ -1,0 +1,39 @@
+{
+    "1674231915849512:1561": {
+        "IResourceController": {
+            "name": "Sneakers",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584350442374:63571",
+            "fileId": "1674231915849690:1789",
+            "originalId": "1674231915849691:1790",
+            "publicId": "1674231915850072:2107",
+            "expected_hash": "c1b22ccb3a2fe61d024b052c505e911d"
+        },
+        "IResourceManager": {
+            "uid": "1667584350442374:63571",
+            "name": "Files/File_1674231915849690_1789",
+            "flags": 1
+        }
+    },
+    "1674231915849690:1789": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849690_1789"
+        }
+    },
+    "1674231915849691:1790": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849691_1790.lsmat"
+        }
+    },
+    "1674231915850072:2107": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Materials/Sneakers.lsmat",
+                "hash": "b6be8e420d015c771e438428d243037f"
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "1772189007869795:11127": {
+        "IFileManager": {
+            "path": "Files/File_1772189007869795_11127.js"
+        }
+    },
+    "1772189007873050:11128": {
+        "IResourceController": {
+            "name": "UI Toggle",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1772189007873074:11129",
+            "fileId": "1772189007869795:11127",
+            "expected_hash": "c4f5282998df5ddba273b6aded0ac888"
+        },
+        "IResourceManager": {
+            "uid": "1772189007873074:11129",
+            "name": "Files/File_1772189007869795_11127.js",
+            "flags": 1
+        }
+    },
+    "1772189007873074:11129": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "EventModule_100",
+                "UIWidgetsModule_120",
+                "DestructionHelper_120"
+            ]
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "1674231915849508:1535": {
+        "IResourceController": {
+            "name": "Mocassins Braided Lace",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584345462331:61570",
+            "fileId": "1674231915849621:1730",
+            "originalId": "1674231915849622:1731",
+            "publicId": "1674231915850063:2076",
+            "expected_hash": "803331f63213f04c69b9cf6931442b17"
+        },
+        "IResourceManager": {
+            "uid": "1667584345462331:61570",
+            "name": "Files/File_1674231915849621_1730",
+            "flags": 1
+        }
+    },
+    "1674231915849621:1730": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849621_1730"
+        }
+    },
+    "1674231915849622:1731": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849622_1731.lsmat"
+        }
+    },
+    "1674231915850063:2076": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Braided Lace.lsmat",
+                "hash": "1a8dbb0de7f0e24db13ebf25d66d74ad"
+            }
+        }
+    }
+}

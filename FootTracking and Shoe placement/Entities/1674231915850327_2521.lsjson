@@ -1,0 +1,22 @@
+{
+    "1674231915850064:2080": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes"
+            }
+        }
+    },
+    "1674231915850327:2521": {
+        "IResourceController": {
+            "name": "Meshes",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1674231915850064:2080",
+            "resources": [
+                "1674231915850327:2520"
+            ]
+        }
+    }
+}

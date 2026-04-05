@@ -1,0 +1,39 @@
+{
+    "1674231915849509:1537": {
+        "IResourceController": {
+            "name": "Mocassins Leather Cord",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584346214855:61953",
+            "fileId": "1674231915849626:1734",
+            "originalId": "1674231915849627:1735",
+            "publicId": "1674231915850064:2078",
+            "expected_hash": "0f0eb096b21d9f4fc2e0c4a3a6fd358d"
+        },
+        "IResourceManager": {
+            "uid": "1667584346214855:61953",
+            "name": "Files/File_1674231915849626_1734",
+            "flags": 1
+        }
+    },
+    "1674231915849626:1734": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849626_1734"
+        }
+    },
+    "1674231915849627:1735": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849627_1735.lsmat"
+        }
+    },
+    "1674231915850064:2078": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Leather Cord.lsmat",
+                "hash": "b05cec8a967934d8acc40c7607bb6201"
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "1674231915849509:1536": {
+        "IResourceController": {
+            "name": "Mocassins Elastic Top",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584345840192:61924",
+            "fileId": "1674231915849623:1732",
+            "originalId": "1674231915849625:1733",
+            "publicId": "1674231915850063:2077",
+            "expected_hash": "9533b8900c0103e7a81962e90e5d8be2"
+        },
+        "IResourceManager": {
+            "uid": "1667584345840192:61924",
+            "name": "Files/File_1674231915849623_1732",
+            "flags": 1
+        }
+    },
+    "1674231915849623:1732": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849623_1732"
+        }
+    },
+    "1674231915849625:1733": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849625_1733.lsmat"
+        }
+    },
+    "1674231915850063:2077": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Elastic Top.lsmat",
+                "hash": "9863946079ad2853366e54f17344863f"
+            }
+        }
+    }
+}

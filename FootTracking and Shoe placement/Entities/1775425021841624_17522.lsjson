@@ -1,0 +1,21 @@
+{
+    "1775425021838521:17521": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/foot_occluder_high/Meshes",
+                "hash": "2ed51057f3fcf0daf2f45089eb67c72e"
+            }
+        }
+    },
+    "1775425021841624:17522": {
+        "IResourceController": {
+            "name": "Meshes",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1775425021838521:17521",
+            "resources": []
+        }
+    }
+}

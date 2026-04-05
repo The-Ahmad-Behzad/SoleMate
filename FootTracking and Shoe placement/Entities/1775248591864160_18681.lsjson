@@ -1,0 +1,17 @@
+{
+    "1775248591864160:18681": {
+        "IResourceController": {
+            "name": "Footwear Segmentation",
+            "type": 1,
+            "subtype": 14,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248591863754:18678"
+        },
+        "IResourceManager": {
+            "uid": "1775248591863754:18678",
+            "name": "Portrait Background Segmentation",
+            "flags": 0
+        }
+    }
+}

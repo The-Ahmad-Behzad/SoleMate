@@ -1,0 +1,39 @@
+{
+    "1674231915849516:1597": {
+        "IResourceController": {
+            "name": "Shoe Fabric",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584356798905:64865",
+            "fileId": "1674231915849787:1865",
+            "originalId": "1674231915849788:1866",
+            "publicId": "1674231915850084:2146",
+            "expected_hash": "da57aa59c58b94f1e8a10432ff70a443"
+        },
+        "IResourceManager": {
+            "uid": "1667584356798905:64865",
+            "name": "Files/File_1674231915849787_1865",
+            "flags": 1
+        }
+    },
+    "1674231915849787:1865": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849787_1865"
+        }
+    },
+    "1674231915849788:1866": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849788_1866.lsmat"
+        }
+    },
+    "1674231915850084:2146": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Fabric.lsmat",
+                "hash": "c151d9dab45ccde51f8e005cacea1738"
+            }
+        }
+    }
+}

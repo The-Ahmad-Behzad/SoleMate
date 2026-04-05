@@ -1,0 +1,67 @@
+{
+    "1667584351477389:63674": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "1048576",
+                "compressedSize": "92221",
+                "extension": "jpg",
+                "originalRAM": "1048576",
+                "originalSize": "92221",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849699:1796"
+        }
+    },
+    "1674231915849512:1563": {
+        "IResourceController": {
+            "name": "Sneakers Diffuse",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584351477389:63674",
+            "fileId": "1674231915849697:1794",
+            "originalId": "1674231915849698:1795",
+            "publicId": "1674231915850073:2109",
+            "expected_hash": "4841dfda7b830cee5cbca48ed79ff3fe",
+            "additional": {
+                "originHash": "4841dfda7b830cee5cbca48ed79ff3fe",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584351477389:63674",
+            "name": "Files/File_1674231915849697_1794.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849697:1794": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849697_1794.jpg"
+        }
+    },
+    "1674231915849698:1795": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849698_1795.jpg"
+        }
+    },
+    "1674231915849699:1796": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849699_1796.jpg"
+        }
+    },
+    "1674231915850073:2109": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Sneakers Diffuse.jpg",
+                "hash": "4841dfda7b830cee5cbca48ed79ff3fe"
+            }
+        }
+    }
+}

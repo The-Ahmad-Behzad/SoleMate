@@ -1,0 +1,30 @@
+{
+    "1772189008032836:11237": {
+        "IResourceController": {
+            "name": "Toggle Background",
+            "type": 12,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1772189008032780:11234",
+            "fileId": "1772189008086572:11241",
+            "originalId": "1772189020507412:13410",
+            "expected_hash": "639301f6b510768dddedb42a7edec89a"
+        },
+        "IResourceManager": {
+            "uid": "1772189008032780:11234",
+            "name": "sceneObject_1",
+            "flags": 0
+        }
+    },
+    "1772189008086572:11241": {
+        "IFileManager": {
+            "path": "Files/File_1772189008086572_11241.oprfb"
+        }
+    },
+    "1772189020507412:13410": {
+        "IFileManager": {
+            "path": "Files/File_1772189020507412_13410.oprfb"
+        }
+    }
+}

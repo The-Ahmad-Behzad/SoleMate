@@ -1,0 +1,39 @@
+{
+    "1674231915849517:1603": {
+        "IResourceController": {
+            "name": "Shoe Sole",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584359787088:65336",
+            "fileId": "1674231915849802:1877",
+            "originalId": "1674231915849803:1878",
+            "publicId": "1674231915850086:2152",
+            "expected_hash": "8a2e64cb4402c5068085934f89e239ed"
+        },
+        "IResourceManager": {
+            "uid": "1667584359787088:65336",
+            "name": "Files/File_1674231915849802_1877",
+            "flags": 1
+        }
+    },
+    "1674231915849802:1877": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849802_1877"
+        }
+    },
+    "1674231915849803:1878": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849803_1878.lsmat"
+        }
+    },
+    "1674231915850086:2152": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Sole.lsmat",
+                "hash": "bbcbffb87485ee485241ee7ebf50bd90"
+            }
+        }
+    }
+}

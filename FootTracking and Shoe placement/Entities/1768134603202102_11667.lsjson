@@ -1,0 +1,33 @@
+{
+    "1768134603198286:11665": {
+        "IResourceController": {
+            "public": {
+                "path": "Textures/Resource.ds_store",
+                "hash": "e6982f7a5ca3212a2d57504c14bd5518"
+            }
+        }
+    },
+    "1768134603198797:11666": {
+        "IFileManager": {
+            "path": "Files/File_1768134603198797_11666.ds_store"
+        }
+    },
+    "1768134603202102:11667": {
+        "IResourceController": {
+            "name": "Resource",
+            "type": 7,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1768134603202132:11668",
+            "fileId": "1768134603198797:11666",
+            "publicId": "1768134603198286:11665",
+            "expected_hash": "e6982f7a5ca3212a2d57504c14bd5518"
+        },
+        "IResourceManager": {
+            "uid": "1768134603202132:11668",
+            "name": "Files/File_1768134603198797_11666.ds_store",
+            "flags": 1
+        }
+    }
+}

@@ -1,0 +1,79 @@
+{
+    "1667914025330076:514672": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "2049",
+                        "uncompressed_hash": "242730f203ffb7fa388645a750ad39a2"
+                    },
+                    "v": "1674231915849901:1947"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "32768",
+                "compressedSize": "31608",
+                "extension": "png",
+                "originalRAM": "262144",
+                "originalSize": "66401",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "2",
+                    "subtype": "9",
+                    "type": "1"
+                }
+            },
+            "uncompressed_file": "1674231915849897:1944"
+        }
+    },
+    "1674231915849520:1631": {
+        "IResourceController": {
+            "name": "Normals Leather",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667914025330076:514672",
+            "fileId": "1674231915849890:1942",
+            "originalId": "1674231915849896:1943",
+            "publicId": "1674231915850096:2183",
+            "expected_hash": "6aeceb37720f2c04313211a900396fa6",
+            "additional": {
+                "originHash": "242730f203ffb7fa388645a750ad39a2"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667914025330076:514672",
+            "name": "Files/File2071.png",
+            "flags": 1
+        }
+    },
+    "1674231915849890:1942": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849890_1942.pvr"
+        }
+    },
+    "1674231915849896:1943": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849896_1943.png"
+        }
+    },
+    "1674231915849897:1944": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849897_1944.png"
+        }
+    },
+    "1674231915849901:1947": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849901_1947.pvr"
+        }
+    },
+    "1674231915850096:2183": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Normals Leather.png",
+                "hash": "242730f203ffb7fa388645a750ad39a2"
+            }
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "1674231915849515:1588": {
+        "IResourceController": {
+            "name": "laces_color",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584354673686:64465",
+            "fileId": "1674231915849763:1845",
+            "originalId": "1674231915849764:1846",
+            "publicId": "1674231915850081:2136",
+            "expected_hash": "ac8bd36dafc0cc467ce5ea36395ff457",
+            "additional": {
+                "originHash": "ac8bd36dafc0cc467ce5ea36395ff457",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584354673686:64465",
+            "name": "Files/File1909.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849763:1845": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849763_1845.webp"
+        }
+    },
+    "1674231915849764:1846": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849764_1846.webp"
+        }
+    },
+    "1674231915850081:2136": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/laces_color.webp",
+                "hash": "ac8bd36dafc0cc467ce5ea36395ff457"
+            }
+        }
+    }
+}

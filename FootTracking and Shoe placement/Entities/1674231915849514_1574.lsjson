@@ -1,0 +1,115 @@
+{
+    "1667584353296304:64199": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "323676",
+                "compressedSize": "178846",
+                "extension": "mesh",
+                "originalRAM": "323676",
+                "originalSize": "178846",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849727:1818"
+        }
+    },
+    "1674231915849514:1574": {
+        "IResourceController": {
+            "name": "top1_2 2",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584353296304:64199",
+            "fileId": "1674231915849725:1817",
+            "publicId": "1674231915850076:2120",
+            "expected_hash": "bc71274fde96340763b2d440e08e837b",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584353296304:64199",
+            "name": "Files/File_1674231915849725_1817.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849725:1817": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849725_1817.mesh"
+        }
+    },
+    "1674231915849727:1818": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849727_1818.mesh"
+        }
+    },
+    "1674231915850076:2120": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Meshes/top1_2 2.mesh",
+                "hash": "bc71274fde96340763b2d440e08e837b"
+            }
+        }
+    }
+}

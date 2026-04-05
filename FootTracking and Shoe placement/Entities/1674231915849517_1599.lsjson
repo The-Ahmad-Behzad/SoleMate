@@ -1,0 +1,39 @@
+{
+    "1674231915849517:1599": {
+        "IResourceController": {
+            "name": "Shoe Rubber",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584357674624:64967",
+            "fileId": "1674231915849792:1869",
+            "originalId": "1674231915849793:1870",
+            "publicId": "1674231915850085:2148",
+            "expected_hash": "bccb48fa41bf99c8b5decd84c09c2623"
+        },
+        "IResourceManager": {
+            "uid": "1667584357674624:64967",
+            "name": "Files/File_1674231915849792_1869",
+            "flags": 1
+        }
+    },
+    "1674231915849792:1869": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849792_1869"
+        }
+    },
+    "1674231915849793:1870": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849793_1870.lsmat"
+        }
+    },
+    "1674231915850085:2148": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Rubber.lsmat",
+                "hash": "46f5833947e11c4ec723040e5f4d9c36"
+            }
+        }
+    }
+}

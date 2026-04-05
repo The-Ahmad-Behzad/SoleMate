@@ -1,0 +1,39 @@
+{
+    "1674231915849508:1531": {
+        "IResourceController": {
+            "name": "Mocassins Top",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584344035328:61129",
+            "fileId": "1674231915849610:1722",
+            "originalId": "1674231915849611:1723",
+            "publicId": "1674231915850062:2072",
+            "expected_hash": "b4b689e70e3f5e533ecc31abef50f14c"
+        },
+        "IResourceManager": {
+            "uid": "1667584344035328:61129",
+            "name": "Files/File_1674231915849610_1722",
+            "flags": 1
+        }
+    },
+    "1674231915849610:1722": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849610_1722"
+        }
+    },
+    "1674231915849611:1723": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849611_1723.lsmat"
+        }
+    },
+    "1674231915850062:2072": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Top.lsmat",
+                "hash": "cf3a30fffd249cb63ea8b4216e5f2c22"
+            }
+        }
+    }
+}

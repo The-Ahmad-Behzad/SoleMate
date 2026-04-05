@@ -1,0 +1,22 @@
+{
+    "1773045680338323:1643596": {
+        "IResourceController": {
+            "name": "Cloud Storage Wrapper Example",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1773045680338619:1643597",
+            "resources": [
+                "1773045680743285:1644304"
+            ]
+        }
+    },
+    "1773045680338619:1643597": {
+        "IResourceController": {
+            "public": {
+                "path": "Cloud Storage Wrapper Example"
+            }
+        }
+    }
+}

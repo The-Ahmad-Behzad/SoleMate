@@ -1,0 +1,33 @@
+{
+    "1772189007895676:11175": {
+        "IFileManager": {
+            "path": "Files/File_1772189007895676_11175.png"
+        }
+    },
+    "1772189007901207:11176": {
+        "IResourceController": {
+            "name": "Toggle Bg",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1772189007903319:11177",
+            "fileId": "1772189007895676:11175",
+            "originalId": "1772189007903988:11182",
+            "expected_hash": "b1dfae0d21374be8139b5309e8d9cd68",
+            "additional": {
+                "originHash": "b1dfae0d21374be8139b5309e8d9cd68"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1772189007903319:11177",
+            "name": "Files/File_1772189007895676_11175.jpg",
+            "flags": 1
+        }
+    },
+    "1772189007903988:11182": {
+        "IFileManager": {
+            "path": "Files/File_1772189007903988_11182.png"
+        }
+    }
+}

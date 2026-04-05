@@ -1,0 +1,39 @@
+{
+    "1674231915849508:1533": {
+        "IResourceController": {
+            "name": "Mocassins Rubber Pattern",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584344743572:61512",
+            "fileId": "1674231915849616:1726",
+            "originalId": "1674231915849617:1727",
+            "publicId": "1674231915850062:2074",
+            "expected_hash": "68c24d71ff359e2d2440a616d35d7e7b"
+        },
+        "IResourceManager": {
+            "uid": "1667584344743572:61512",
+            "name": "Files/File_1674231915849616_1726",
+            "flags": 1
+        }
+    },
+    "1674231915849616:1726": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849616_1726"
+        }
+    },
+    "1674231915849617:1727": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849617_1727.lsmat"
+        }
+    },
+    "1674231915850062:2074": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Rubber Pattern.lsmat",
+                "hash": "a0e14144100552b47036cfff063fa30e"
+            }
+        }
+    }
+}

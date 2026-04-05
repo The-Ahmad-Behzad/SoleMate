@@ -1,0 +1,39 @@
+{
+    "1674231915849517:1600": {
+        "IResourceController": {
+            "name": "Shoe Stiches 2",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584358524621:65108",
+            "fileId": "1674231915849795:1871",
+            "originalId": "1674231915849796:1872",
+            "publicId": "1674231915850085:2149",
+            "expected_hash": "52f0784a36d3335fa0173a00dac1f314"
+        },
+        "IResourceManager": {
+            "uid": "1667584358524621:65108",
+            "name": "Files/File_1674231915849795_1871",
+            "flags": 1
+        }
+    },
+    "1674231915849795:1871": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849795_1871"
+        }
+    },
+    "1674231915849796:1872": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849796_1872.lsmat"
+        }
+    },
+    "1674231915850085:2149": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Stiches 2.lsmat",
+                "hash": "2aeb51f5c928573e6ed7d345de77c2a1"
+            }
+        }
+    }
+}

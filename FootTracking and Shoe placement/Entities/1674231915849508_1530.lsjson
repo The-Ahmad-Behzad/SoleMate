@@ -1,0 +1,43 @@
+{
+    "1674231915849508:1530": {
+        "IResourceController": {
+            "name": "Element",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667499026781581:22491",
+            "fileId": "1674231915849606:1719",
+            "originalId": "1674231915849607:1720",
+            "publicId": "1674231915850061:2068",
+            "expected_hash": "2cb4d4a2673943620b46e85ce39aa8b6",
+            "additional": {
+                "originHash": "2cb4d4a2673943620b46e85ce39aa8b6",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667499026781581:22491",
+            "name": "Files/File_1674231915849606_1719.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849606:1719": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849606_1719.jpg"
+        }
+    },
+    "1674231915849607:1720": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849607_1720.jpg"
+        }
+    },
+    "1674231915850061:2068": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Element.jpg",
+                "hash": "2cb4d4a2673943620b46e85ce39aa8b6"
+            }
+        }
+    }
+}

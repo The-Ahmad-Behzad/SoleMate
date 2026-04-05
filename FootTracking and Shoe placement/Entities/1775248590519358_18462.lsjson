@@ -1,0 +1,29 @@
+{
+    "1775248590517067:18461": {
+        "IFileManager": {
+            "path": "Files/File_1775248590517067_18461.js"
+        }
+    },
+    "1775248590519358:18462": {
+        "IResourceController": {
+            "name": "Eraser",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590519381:18463",
+            "fileId": "1775248590517067:18461",
+            "expected_hash": "955762e059ee95408433893ce368f946"
+        },
+        "IResourceManager": {
+            "uid": "1775248590519381:18463",
+            "name": "Files/File_1775248590517067_18461.js",
+            "flags": 1
+        }
+    },
+    "1775248590519381:18463": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

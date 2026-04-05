@@ -1,0 +1,67 @@
+{
+    "1667584351364449:63657": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "1048576",
+                "compressedSize": "76236",
+                "extension": "jpg",
+                "originalRAM": "1048576",
+                "originalSize": "76236",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849695:1793"
+        }
+    },
+    "1674231915849512:1562": {
+        "IResourceController": {
+            "name": "Material Params",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584351364449:63657",
+            "fileId": "1674231915849692:1791",
+            "originalId": "1674231915849694:1792",
+            "publicId": "1674231915850073:2108",
+            "expected_hash": "e148d39bda23dc4019d03d6757ab872d",
+            "additional": {
+                "originHash": "e148d39bda23dc4019d03d6757ab872d",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584351364449:63657",
+            "name": "Files/File_1674231915849692_1791.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849692:1791": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849692_1791.jpg"
+        }
+    },
+    "1674231915849694:1792": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849694_1792.jpg"
+        }
+    },
+    "1674231915849695:1793": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849695_1793.jpg"
+        }
+    },
+    "1674231915850073:2108": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Textures/Material Params.jpg",
+                "hash": "e148d39bda23dc4019d03d6757ab872d"
+            }
+        }
+    }
+}

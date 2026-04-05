@@ -1,0 +1,115 @@
+{
+    "1667584347659768:62439": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "2352",
+                "compressedSize": "2435",
+                "extension": "mesh",
+                "originalRAM": "2352",
+                "originalSize": "2435",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849641:1747"
+        }
+    },
+    "1674231915849509:1543": {
+        "IResourceController": {
+            "name": "Line023",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584347659768:62439",
+            "fileId": "1674231915849640:1746",
+            "publicId": "1674231915850066:2086",
+            "expected_hash": "93465acfc43f2762cbe80194ab6032f9",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584347659768:62439",
+            "name": "Files/File_1674231915849640_1746.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849640:1746": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849640_1746.mesh"
+        }
+    },
+    "1674231915849641:1747": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849641_1747.mesh"
+        }
+    },
+    "1674231915850066:2086": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/Line023.mesh",
+                "hash": "93465acfc43f2762cbe80194ab6032f9"
+            }
+        }
+    }
+}

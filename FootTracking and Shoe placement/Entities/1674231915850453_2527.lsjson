@@ -1,0 +1,22 @@
+{
+    "1674231915850086:2153": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Meshes"
+            }
+        }
+    },
+    "1674231915850453:2527": {
+        "IResourceController": {
+            "name": "Meshes",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1674231915850086:2153",
+            "resources": [
+                "1674231915850453:2526"
+            ]
+        }
+    }
+}

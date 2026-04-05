@@ -1,0 +1,125 @@
+{
+    "1667584361379681:65580": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "6920",
+                "compressedSize": "6523",
+                "extension": "mesh",
+                "originalRAM": "6920",
+                "originalSize": "6523",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture1"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849834:1902"
+        }
+    },
+    "1674231915849519:1615": {
+        "IResourceController": {
+            "name": "stitch_01_2",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584361379681:65580",
+            "fileId": "1674231915849833:1901",
+            "publicId": "1674231915850091:2167",
+            "expected_hash": "1b083623afbd32e6f4c266cbaf1a9634",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture1"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584361379681:65580",
+            "name": "Files/File_1674231915849833_1901.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849833:1901": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849833_1901.mesh"
+        }
+    },
+    "1674231915849834:1902": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849834_1902.mesh"
+        }
+    },
+    "1674231915850091:2167": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Meshes/shoe_010/Meshes/stitch_01_2.mesh",
+                "hash": "1b083623afbd32e6f4c266cbaf1a9634"
+            }
+        }
+    }
+}
