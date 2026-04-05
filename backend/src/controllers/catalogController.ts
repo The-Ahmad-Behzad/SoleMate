@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import { ProductModel } from '../models/Product.js';
 import { cacheService } from '../services/cacheService.js';
+import { ShoeUploadRequestModel } from '../models/ShoeUploadRequest.js';
+import { AuthRequest } from '../middleware/authMiddleware.js';
+import { UserModel } from '../models/User.js';
+import { Types } from 'mongoose';
+import { s3Service } from '../services/s3Service.js';
 
 export async function getAllProducts(_req: Request, res: Response): Promise<void> {
   try {
@@ -55,4 +60,49 @@ export async function searchProducts(req: Request, res: Response): Promise<void>
   }
 }
 
+export async function requestShoe(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user || user.role !== 'seller') {
+      res.status(403).json({ error: 'Forbidden: Sellers only' });
+      return;
+    }
+
+    const { shoeName, brand, description } = req.body;
+
+    if (!shoeName || !brand || !description) {
+      res.status(400).json({ error: 'shoeName, brand, and description are required' });
+      return;
+    }
+
+    const imageUrls: string[] = [];
+    const files = req.files as Express.Multer.File[];
+    
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const key = `shoe_requests/${req.user.uid}/${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+        const url = await s3Service.uploadFile(key, file.buffer, file.mimetype);
+        imageUrls.push(url);
+      }
+    }
+
+    const request = await ShoeUploadRequestModel.create({
+      sellerId: new Types.ObjectId(req.user.uid),
+      shoeName,
+      brand,
+      description,
+      imageUrls,
+    });
+
+    res.status(201).json(request);
+  } catch (err) {
+    console.error('Request shoe error:', err);
+    res.status(500).json({ error: 'Failed to request shoe upload' });
+  }
+}
 

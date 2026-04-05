@@ -4,6 +4,7 @@ import { OutfitMatchModel } from '../models/OutfitMatch.js';
 import { ProductModel } from '../models/Product.js';
 import { Types } from 'mongoose';
 import { AIService } from '../services/aiService.js';
+import { s3Service } from '../services/s3Service.js';
 
 export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<void> {
   try {
@@ -12,7 +13,12 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const { outfitImageUrl, dominantColors } = req.body;
+    let { outfitImageUrl, dominantColors } = req.body;
+
+    if (req.file) {
+      const key = `outfits/${req.user.uid}/${Date.now()}_${req.file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+      outfitImageUrl = await s3Service.uploadFile(key, req.file.buffer, req.file.mimetype);
+    }
 
     if (!outfitImageUrl && (!dominantColors || !dominantColors.length)) {
       res.status(400).json({ error: 'outfitImageUrl or dominantColors are required' });

@@ -12,7 +12,8 @@ import 'ar_tryon_screen.dart';
 
 /// Outfit Match screen with current shoe and outfit suggestions
 class OutfitMatchScreen extends StatefulWidget {
-  const OutfitMatchScreen({super.key});
+  final Product? baseShoe;
+  const OutfitMatchScreen({super.key, this.baseShoe});
 
   @override
   State<OutfitMatchScreen> createState() => _OutfitMatchScreenState();
@@ -25,6 +26,20 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   int _selectedOutfitIndex = 0;
   bool _isGenerating = false;
   List<Product> _recommendedShoes = [];
+  Product? _currentShoe;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentShoe = widget.baseShoe;
+    
+    // Automatically generate if coming from catalog with a shoe
+    if (widget.baseShoe != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _generateOutfitRecommendations();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +142,14 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   }
 
   Widget _buildCurrentShoeCard(BuildContext context, bool isDark) {
-    final selectedShoe = SampleShoes.shoes[_selectedShoeIndex];
+    final selectedShoe = _currentShoe != null ? ProductCardData(
+      imagePath: _currentShoe!.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png',
+      title: _currentShoe!.name,
+      subtitle: _currentShoe!.category,
+      brand: _currentShoe!.brand,
+      price: _currentShoe!.price,
+      modelUrl: _currentShoe!.modelUrl,
+    ) : SampleShoes.shoes[_selectedShoeIndex];
     
     return Card(
       elevation: 0,
@@ -604,6 +626,8 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
                   onTap: () {
                     setState(() {
                       _selectedShoeIndex = index;
+                      // clear current base shoe so it falls back to sample
+                      _currentShoe = null;
                     });
                     Navigator.pop(context);
                   },
@@ -703,10 +727,8 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
 
   /// Navigate to AR Try-On screen with the current selected shoe
   void _navigateToARTryOn() {
-    final selectedShoe = SampleShoes.arSelection[_selectedShoeIndex];
-    
-    // Get model URL from shoe data with fallback
-    final modelUrl = selectedShoe.modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+    final modelUrl = _currentShoe?.modelUrl ?? SampleShoes.arSelection[_selectedShoeIndex].modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+    final name = _currentShoe?.name ?? SampleShoes.arSelection[_selectedShoeIndex].title;
     
     // Use ARMain to open AR with the specific shoe model
     final arMain = ARMain();
@@ -715,7 +737,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
     // Show which shoe is being loaded
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Loading ${selectedShoe.title} in AR...'),
+        content: Text('Loading $name in AR...'),
         duration: const Duration(seconds: 1),
       ),
     );

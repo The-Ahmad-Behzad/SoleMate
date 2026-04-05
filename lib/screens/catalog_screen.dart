@@ -3,7 +3,10 @@ import '../theme/theme_config.dart';
 import '../models/product.dart';
 import '../repositories/catalog_repository.dart';
 import '../widgets/product_card.dart';
+import '../widgets/custom_button.dart';
 import 'ar_tryon_screen.dart';
+import 'customize_screen.dart';
+import 'outfit_match_screen.dart';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
@@ -67,6 +70,24 @@ class _CatalogScreenState extends State<CatalogScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ARTryOnScreen(selectedProduct: product),
+      ),
+    );
+  }
+
+  void _openCustomize(Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        // Assuming CustomizeScreen takes a shoe context or we pass it (will update CustomizeScreen later)
+        builder: (_) => const CustomizeScreen(),
+      ),
+    );
+  }
+
+  void _openOutfitRecommendation(Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        // Pass base colors when opening outfit match
+        builder: (_) => OutfitMatchScreen(baseShoe: product),
       ),
     );
   }
@@ -155,7 +176,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: AppSpacing.xl2,
         mainAxisSpacing: AppSpacing.xl2,
-        childAspectRatio: 1.0,
+        childAspectRatio: 0.55,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
@@ -164,10 +185,30 @@ class _CatalogScreenState extends State<CatalogScreen> {
           imagePath: p.thumbnailUrl ?? '',
           title: p.name,
           price: p.price,
-          showActions: true,
-          actionText: 'Try On',
-          onAction: () => _openTryOn(p),
           onTap: () => _openTryOn(p),
+          actions: [
+            CustomButton(
+              text: 'Try On',
+              onPressed: () => _openTryOn(p),
+              variant: CustomButtonVariant.primary,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+            CustomButton(
+              text: 'Customize',
+              onPressed: () => _openCustomize(p),
+              variant: CustomButtonVariant.secondary,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+            CustomButton(
+              text: 'Outfit Match',
+              onPressed: () => _openOutfitRecommendation(p),
+              variant: CustomButtonVariant.outline,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+          ],
         );
       },
     );
