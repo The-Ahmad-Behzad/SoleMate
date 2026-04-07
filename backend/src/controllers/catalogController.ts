@@ -92,7 +92,7 @@ export async function requestShoe(req: AuthRequest, res: Response): Promise<void
     }
 
     const request = await ShoeUploadRequestModel.create({
-      sellerId: new Types.ObjectId(req.user.uid),
+      sellerId: user._id,
       shoeName,
       brand,
       description,
@@ -100,9 +100,9 @@ export async function requestShoe(req: AuthRequest, res: Response): Promise<void
     });
 
     res.status(201).json(request);
-  } catch (err) {
-    console.error('Request shoe error:', err);
-    res.status(500).json({ error: 'Failed to request shoe upload' });
+  } catch (err: any) {
+    console.error('Request shoe error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to request shoe upload', details: err.message });
   }
 }
 
