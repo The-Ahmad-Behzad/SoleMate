@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../config/api_config.dart';
@@ -24,6 +25,7 @@ class ApiClient {
       }
     }
 
+    debugPrint('API GET: $uri');
     return http.get(uri, headers: headers).timeout(ApiConfig.timeout);
   }
 
@@ -38,6 +40,7 @@ class ApiClient {
       }
     }
 
+    debugPrint('API POST: $uri');
     return http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
   }
 
@@ -52,6 +55,7 @@ class ApiClient {
       }
     }
 
+    debugPrint('API PUT: $uri');
     return http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
   }
 
@@ -66,6 +70,7 @@ class ApiClient {
       }
     }
 
+    debugPrint('API DELETE: $uri');
     return http.delete(uri, headers: headers).timeout(ApiConfig.timeout);
   }
 
@@ -93,6 +98,7 @@ class ApiClient {
       request.files.addAll(files);
     }
 
+    debugPrint('API POST MULTIPART: $uri with ${files?.length ?? 0} files');
     return request.send().timeout(ApiConfig.timeout);
   }
 }

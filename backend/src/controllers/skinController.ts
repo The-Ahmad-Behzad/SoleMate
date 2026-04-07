@@ -30,17 +30,23 @@ export async function createSkin(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found in database' });
+      return;
+    }
+
     const skin = await CustomSkinModel.create({
-      userId: new Types.ObjectId(req.user.uid),
+      userId: user._id,
       shoeId: new Types.ObjectId(shoeId),
       skinName,
       textureUrl,
     });
 
     res.status(201).json(skin);
-  } catch (err) {
-    console.error('Create skin error:', err);
-    res.status(500).json({ error: 'Failed to create skin' });
+  } catch (err: any) {
+    console.error('Create skin error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to create skin', details: err.message });
   }
 }
 
@@ -51,15 +57,21 @@ export async function getSkins(req: AuthRequest, res: Response): Promise<void> {
       return;
     }
 
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found in database' });
+      return;
+    }
+
     const skins = await CustomSkinModel
-      .find({ userId: req.user.uid })
+      .find({ userId: user._id })
       .populate('shoeId')
       .lean();
 
     res.json(skins);
-  } catch (err) {
-    console.error('Get skins error:', err);
-    res.status(500).json({ error: 'Failed to fetch skins' });
+  } catch (err: any) {
+    console.error('Get skins error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to fetch skins', details: err.message });
   }
 }
 
@@ -70,11 +82,17 @@ export async function updateSkin(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found in database' });
+      return;
+    }
+
     const { id } = req.params;
     const { skinName, textureUrl } = req.body;
 
     const skin = await CustomSkinModel.findOneAndUpdate(
-      { _id: id, userId: req.user.uid },
+      { _id: id, userId: user._id },
       { skinName, textureUrl },
       { new: true }
     );
@@ -85,9 +103,9 @@ export async function updateSkin(req: AuthRequest, res: Response): Promise<void>
     }
 
     res.json(skin);
-  } catch (err) {
-    console.error('Update skin error:', err);
-    res.status(500).json({ error: 'Failed to update skin' });
+  } catch (err: any) {
+    console.error('Update skin error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to update skin', details: err.message });
   }
 }
 
@@ -98,13 +116,19 @@ export async function deleteSkin(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
     const { id } = req.params;
-    await CustomSkinModel.deleteOne({ _id: id, userId: req.user.uid });
+    await CustomSkinModel.deleteOne({ _id: id, userId: user._id });
 
     res.status(204).send();
-  } catch (err) {
-    console.error('Delete skin error:', err);
-    res.status(500).json({ error: 'Failed to delete skin' });
+  } catch (err: any) {
+    console.error('Delete skin error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to delete skin', details: err.message });
   }
 }
 
@@ -115,10 +139,10 @@ export async function requestRedesign(req: AuthRequest, res: Response): Promise<
       return;
     }
 
-    const { shoeId, description } = req.body;
+    const { shoeId, description, primaryColor, secondaryColor } = req.body;
 
-    if (!shoeId || !description) {
-      res.status(400).json({ error: 'shoeId and description are required' });
+    if (!shoeId || !description || !primaryColor) {
+      res.status(400).json({ error: 'shoeId, description, and primaryColor are required' });
       return;
     }
 
@@ -133,10 +157,18 @@ export async function requestRedesign(req: AuthRequest, res: Response): Promise<
       }
     }
 
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found in database' });
+      return;
+    }
+
     const request = await RedesignRequestModel.create({
-      userId: new Types.ObjectId(req.user.uid),
+      userId: user._id,
       shoeId: new Types.ObjectId(shoeId),
       description,
+      primaryColor,
+      secondaryColor,
       imageUrls,
     });
 

@@ -70,71 +70,98 @@ class _ClosetScreenState extends State<ClosetScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: const LogoButton(),
-        title: const Text('My Closet'),
-        actions: [
-          // Filter button
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () => _showFilterSheet(context, isDark),
-          ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'logout') {
-                _handleLogout();
-              }
-            },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
-                value: 'logout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout),
-                    SizedBox(width: AppSpacing.sm),
-                    Text('Logout'),
-                  ],
-                ),
-              ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const LogoButton(),
+          title: const Text('My Closet'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.shopping_bag), text: 'Shoes'),
+              Tab(icon: Icon(Icons.checkroom), text: 'Outfits'),
             ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: AppSpacing.paddingLarge,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          actions: [
+            // Filter button
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: () => _showFilterSheet(context, isDark),
+            ),
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'logout') {
+                  _handleLogout();
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                const PopupMenuItem<String>(
+                  value: 'logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout),
+                      SizedBox(width: AppSpacing.sm),
+                      Text('Logout'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        body: TabBarView(
           children: [
-            // Page Header
-            Text(
-              'My Shoe Collection',
-              style: AppTypography.headline2.copyWith(
-                color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+            // Shoes Tab
+            SingleChildScrollView(
+              padding: AppSpacing.paddingLarge,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Page Header
+                  Text(
+                    'My Shoe Collection',
+                    style: AppTypography.headline2.copyWith(
+                      color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    '${_getFilteredShoes().length} shoes in your collection',
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: AppSpacing.xl),
+                  
+                  // Search Bar
+                  _buildSearchBar(isDark),
+                  
+                  const SizedBox(height: AppSpacing.xl),
+                  
+                  // Filter Badges
+                  _buildFilterBadges(context, isDark),
+                  
+                  const SizedBox(height: AppSpacing.xl2),
+                  
+                  // Shoe Grid
+                  _buildShoeGrid(context, isDark),
+                ],
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              '${_getFilteredShoes().length} shoes in your collection',
-              style: AppTypography.bodyMedium.copyWith(
-                color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
-              ),
+            // Outfits Tab placeholder
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.checkroom, size: 80, color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground),
+                  SizedBox(height: 16),
+                  Text('Your saved Outfits will appear here.', style: AppTypography.bodyLarge.copyWith(
+                    color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                  )),
+                ]
+              )
             ),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Search Bar
-            _buildSearchBar(isDark),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Filter Badges
-            _buildFilterBadges(context, isDark),
-            
-            const SizedBox(height: AppSpacing.xl2),
-            
-            // Shoe Grid
-            _buildShoeGrid(context, isDark),
           ],
         ),
       ),

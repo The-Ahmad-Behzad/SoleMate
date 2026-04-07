@@ -61,15 +61,15 @@ class Product {
   }
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    // Handle MongoDB _id field mapping to id
-    final String productId = (json['_id'] as String?) ?? (json['id'] as String);
+    // Handle MongoDB _id field mapping to id, with fallback
+    final String productId = (json['_id'] as String?) ?? (json['id'] as String? ?? 'unknown_id');
     
     return Product(
       id: productId,
-      name: json['name'] as String,
-      brand: json['brand'] as String,
-      price: (json['price'] as num).toDouble(),
-      category: json['category'] as String,
+      name: (json['name'] as String?) ?? 'Unknown Product',
+      brand: (json['brand'] as String?) ?? 'SoleMate',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      category: (json['category'] as String?) ?? 'Misc',
       thumbnailUrl: json['thumbnailUrl'] as String?,
       modelUrl: json['modelUrl'] as String?,
       textureUrl: json['textureUrl'] as String?,

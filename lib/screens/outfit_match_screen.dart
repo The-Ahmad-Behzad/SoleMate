@@ -9,6 +9,8 @@ import '../models/product.dart';
 import '../ar/ar_main.dart';
 import 'auth/login_screen.dart';
 import 'ar_tryon_screen.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 /// Outfit Match screen with current shoe and outfit suggestions
 class OutfitMatchScreen extends StatefulWidget {
@@ -27,6 +29,8 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   bool _isGenerating = false;
   List<Product> _recommendedShoes = [];
   Product? _currentShoe;
+  File? _uploadedOutfitImage;
+  String _generatedOutfitDetails = 'Casual Street Style\nPerfect for everyday wear';
 
   @override
   void initState() {
@@ -38,6 +42,18 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _generateOutfitRecommendations();
       });
+    }
+  }
+
+  Future<void> _pickOutfitImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _uploadedOutfitImage = File(image.path);
+        _generatedOutfitDetails = "Analysis pending...";
+      });
+      _generateOutfitRecommendations(); // Use this flow to parse the uploaded image
     }
   }
 
@@ -301,43 +317,51 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
               ),
               child: Stack(
                 children: [
-                  // Outfit placeholder
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.checkroom,
-                          size: 60,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Text(
-                          'AI Generated Outfit',
-                          style: AppTypography.bodyLarge.copyWith(
-                            color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                  if (_uploadedOutfitImage != null)
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: AppRadius.radiusLarge,
+                        child: Image.file(_uploadedOutfitImage!, fit: BoxFit.cover),
+                      ),
+                    )
+                  else
+                    // Outfit placeholder
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.checkroom,
+                            size: 60,
+                            color: AppColors.accent,
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          'Tap "Generate" to create',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                          const SizedBox(height: AppSpacing.lg),
+                          Text(
+                            widget.baseShoe != null ? 'AI Generated Outfit' : 'Upload Outfit Image',
+                            style: AppTypography.bodyLarge.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            widget.baseShoe != null ? 'Tap "Generate" to create' : 'Tap to upload reference outfit',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   
                   // Generate button overlay
                   Positioned(
                     top: AppSpacing.lg,
                     right: AppSpacing.lg,
                     child: PrimaryButton(
-                      text: _isGenerating ? 'Generating...' : 'Generate',
-                      onPressed: _isGenerating ? null : _generateOutfitRecommendations,
+                      text: _isGenerating ? 'Processing...' : (widget.baseShoe != null ? 'Generate' : 'Upload'),
+                      onPressed: _isGenerating ? null : (widget.baseShoe != null ? _generateOutfitRecommendations : _pickOutfitImage),
                       size: CustomButtonSize.small,
-                      icon: Icons.auto_awesome,
+                      icon: widget.baseShoe != null ? Icons.auto_awesome : Icons.upload,
                       isLoading: _isGenerating,
                     ),
                   ),
@@ -349,7 +373,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
             
             // Outfit Info
             Text(
-              'Casual Street Style',
+              _generatedOutfitDetails.split('\n').first,
               style: AppTypography.bodyLarge.copyWith(
                 fontWeight: AppTypography.semibold,
                 color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
@@ -357,7 +381,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Perfect for everyday wear',
+              _generatedOutfitDetails.split('\n').length > 1 ? _generatedOutfitDetails.split('\n').last : '',
               style: AppTypography.bodySmall.copyWith(
                 color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
               ),

@@ -66,11 +66,17 @@ export async function getUserStats(req: AuthRequest, res: Response): Promise<voi
       return;
     }
 
-    const tryOnCount = await TryOnHistoryModel.countDocuments({ userId: req.user.uid });
+    const user = await UserModel.findOne({ uid: req.user.uid });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    const tryOnCount = await TryOnHistoryModel.countDocuments({ userId: user._id });
 
     res.json({
       tryOnCount,
-      userId: req.user.uid,
+      userId: user._id,
     });
   } catch (err) {
     console.error('[userController] getUserStats error:', err);

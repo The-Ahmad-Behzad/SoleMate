@@ -145,7 +145,7 @@ class _ShoeUploadRequestTabState extends State<ShoeUploadRequestTab> {
     try {
       final response = await _apiClient.post(
         '/catalog/request-shoe',
-        body: {
+        {
           'shoeName': _shoeNameController.text,
           'brand': _brandController.text,
           'description': _descController.text,

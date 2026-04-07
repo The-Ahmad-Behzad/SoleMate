@@ -76,7 +76,7 @@ class OutfitApiService {
             json.decode(response.body) as Map<String, dynamic>;
         return OutfitMatch.fromJson(data);
       } else {
-        debugPrint('Analyze outfit failed: ${response.statusCode}');
+        debugPrint('Analyze outfit failed: ${response.statusCode} - ${response.body}');
         return null;
       }
     } catch (e) {
@@ -101,7 +101,7 @@ class OutfitApiService {
             .map((e) => Product.fromJson(e))
             .toList(growable: false);
       } else {
-        debugPrint('Get recommendations failed: ${response.statusCode}');
+        debugPrint('Get recommendations failed: ${response.statusCode} - ${response.body}');
         return [];
       }
     } catch (e) {
@@ -122,7 +122,7 @@ class OutfitApiService {
             .map((e) => OutfitMatch.fromJson(e))
             .toList(growable: false);
       } else {
-        debugPrint('Get outfit history failed: ${response.statusCode}');
+        debugPrint('Get outfit history failed: ${response.statusCode} - ${response.body}');
         return [];
       }
     } catch (e) {

@@ -8,7 +8,7 @@ class UserService {
   Future<Map<String, dynamic>> syncProfile(String name) async {
     final response = await _apiClient.put(
       '/user/profile',
-      body: {'name': name},
+      {'name': name},
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

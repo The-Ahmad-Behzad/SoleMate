@@ -4,8 +4,6 @@ import '../../theme/theme_config.dart';
 import '../../widgets/custom_button.dart';
 import '../main_shell.dart';
 import 'signup_screen.dart';
-import '../../services/user_service.dart';
-import '../seller_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
-  final _userService = UserService();
   bool _loading = false;
 
   void _login() async {
@@ -26,16 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _authService.login(_emailController.text.trim(), _passwordController.text.trim());
       
-      // Fetch profile to get role
-      // Fallback name if sync is needed immediately.
-      final profile = await _userService.syncProfile('User');
-      
       if (mounted) {
-        if (profile['role'] == 'seller') {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SellerDashboardScreen()));
-        } else {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainAppShell()));
-        }
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainAppShell()));
       }
     } catch (e) {
       if (mounted) {
