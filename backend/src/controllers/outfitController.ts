@@ -14,7 +14,18 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    let { outfitImageUrl, dominantColors } = req.body;
+    console.log('Analyze Outfit Request Body:', req.body);
+    console.log('Analyze Outfit Request File:', req.file ? 'Present' : 'Missing');
+
+    let { outfitImageUrl, dominantColors, category, description, recommendedShoeIds } = req.body;
+
+    // Handle stringified arrays from multipart/form-data
+    if (typeof dominantColors === 'string') {
+      try { dominantColors = JSON.parse(dominantColors); } catch (e) {}
+    }
+    if (typeof recommendedShoeIds === 'string') {
+      try { recommendedShoeIds = JSON.parse(recommendedShoeIds); } catch (e) {}
+    }
 
     if (req.file) {
       const key = `outfits/${req.user.uid}/${Date.now()}_${req.file.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
@@ -35,9 +46,14 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
     const match = await OutfitMatchModel.create({
       userId: user._id,
       outfitImageUrl,
-      dominantColors: dominantColors || [],
-      recommendedShoeIds: [],
+      category,
+      description,
+      dominantColors: Array.isArray(dominantColors) ? dominantColors : [],
+      recommendedShoeIds: Array.isArray(recommendedShoeIds) ? recommendedShoeIds : [],
     });
+
+    // Populate shoes before returning to ensure frontend has full data
+    await match.populate('recommendedShoeIds');
 
     res.status(201).json(match);
   } catch (err: any) {
