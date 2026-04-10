@@ -9,17 +9,22 @@ import { s3Service } from '../services/s3Service.js';
 
 export async function getAllProducts(_req: Request, res: Response): Promise<void> {
   try {
+    console.log('[catalogController] Fetching all products...');
     const cached = await cacheService.getCatalog();
     if (cached) {
+      console.log(`[catalogController] Returning ${cached.length} cached products`);
       res.json(cached);
       return;
     }
 
+    console.log('[catalogController] Cache miss, querying database...');
     const products = await ProductModel.find().lean();
+    console.log(`[catalogController] Database returned ${products.length} products`);
+    
     await cacheService.setCatalog(products);
     res.json(products);
   } catch (err) {
-    console.error('Get products error:', err);
+    console.error('[catalogController] Get products error:', err);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 }
@@ -103,6 +108,69 @@ export async function requestShoe(req: AuthRequest, res: Response): Promise<void
   } catch (err: any) {
     console.error('Request shoe error details:', err.message, err.stack);
     res.status(500).json({ error: 'Failed to request shoe upload', details: err.message });
+  }
+}
+
+export async function uploadShoeModel(req: Request, res: Response): Promise<void> {
+  try {
+    const { name, brand, price, category, colors, sizes, modelUrl, arLensId, arLensGroupId } = req.body;
+
+    if (!name || !brand || !price || !category) {
+      res.status(400).json({ error: 'name, brand, price, and category are required' });
+      return;
+    }
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    let finalModelUrl = modelUrl;
+    let finalThumbnailUrl = undefined;
+
+    if (files && files['model'] && files['model'].length > 0) {
+      const modelFile = files['model'][0];
+      const key = `3d_models/${brand.replace(/\\s+/g, '_')}/${Date.now()}_${modelFile.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+      finalModelUrl = await s3Service.uploadFile(key, modelFile.buffer, modelFile.mimetype);
+    }
+
+    if (files && files['thumbnail'] && files['thumbnail'].length > 0) {
+      const thumbFile = files['thumbnail'][0];
+      const thumbKey = `thumbnails/${brand.replace(/\\s+/g, '_')}/${Date.now()}_${thumbFile.originalname.replace(/[^a-zA-Z0-9.]/g, '')}`;
+      finalThumbnailUrl = await s3Service.uploadFile(thumbKey, thumbFile.buffer, thumbFile.mimetype);
+    }
+
+    let parsedColors = [];
+    try { parsedColors = typeof colors === 'string' ? JSON.parse(colors) : (colors || []); } catch (e) {}
+
+    let parsedSizes = [];
+    try { parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : (sizes || []); } catch (e) {}
+
+    const updateData = {
+      name,
+      brand,
+      price: Number(price),
+      category,
+      colors: parsedColors,
+      sizes: parsedSizes,
+      ...(finalModelUrl && { modelUrl: finalModelUrl }),
+      ...(finalThumbnailUrl && { thumbnailUrl: finalThumbnailUrl }),
+      ...(arLensId && { arLensId }),
+      ...(arLensGroupId && { arLensGroupId })
+    };
+
+    const existingProduct = await ProductModel.findOne({ name, brand });
+
+    if (existingProduct) {
+      Object.assign(existingProduct, updateData);
+      const updatedProduct = await existingProduct.save();
+      await cacheService.clearCatalog();
+      res.status(200).json(updatedProduct);
+      return;
+    }
+
+    const product = await ProductModel.create(updateData);
+    await cacheService.clearCatalog();
+    res.status(201).json(product);
+  } catch (err: any) {
+    console.error('Upload 3D model error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to upload 3D model', details: err.message });
   }
 }
 
