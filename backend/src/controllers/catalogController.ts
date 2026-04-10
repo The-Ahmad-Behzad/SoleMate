@@ -11,7 +11,7 @@ export async function getAllProducts(_req: Request, res: Response): Promise<void
   try {
     console.log('[catalogController] Fetching all products...');
     const cached = await cacheService.getCatalog();
-    if (cached) {
+    if (cached && cached.length > 0) {
       console.log(`[catalogController] Returning ${cached.length} cached products`);
       res.json(cached);
       return;

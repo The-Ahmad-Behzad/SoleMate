@@ -5,7 +5,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const API_URL = 'http://localhost:8080/api/catalog/upload-3d';
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+
+const API_URL = process.env.API_URL || 'http://localhost:8080/api/catalog/upload-3d';
 
 const modelsToUpload = [
     {
