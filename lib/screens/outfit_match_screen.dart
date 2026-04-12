@@ -6,13 +6,18 @@ import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
 import '../services/outfit_api_service.dart';
 import '../models/product.dart';
+import '../repositories/catalog_repository.dart';
+import '../services/tryon_api_service.dart';
 import '../ar/ar_main.dart';
 import 'auth/login_screen.dart';
 import 'ar_tryon_screen.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 /// Outfit Match screen with current shoe and outfit suggestions
 class OutfitMatchScreen extends StatefulWidget {
-  const OutfitMatchScreen({super.key});
+  final Product? baseShoe;
+  const OutfitMatchScreen({super.key, this.baseShoe});
 
   @override
   State<OutfitMatchScreen> createState() => _OutfitMatchScreenState();
@@ -21,10 +26,63 @@ class OutfitMatchScreen extends StatefulWidget {
 class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   final AuthService _authService = AuthService();
   final OutfitApiService _outfitService = OutfitApiService();
+  final CatalogRepository _catalogRepository = CatalogRepository();
+  final TryOnApiService _tryOnService = TryOnApiService();
+  List<Product> _catalog = [];
+  bool _isLoadingCatalog = true;
+
   int _selectedShoeIndex = 0;
   int _selectedOutfitIndex = 0;
   bool _isGenerating = false;
   List<Product> _recommendedShoes = [];
+  Product? _currentShoe;
+  File? _uploadedOutfitImage;
+  String _generatedOutfitDetails = 'Casual Street Style\nPerfect for everyday wear';
+  String _outfitCategory = 'Casual';
+  List<String> _currentColors = ['black', 'white', 'grey'];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentShoe = widget.baseShoe;
+    _loadCatalog();
+    
+    // Automatically generate if coming from catalog with a shoe
+    if (widget.baseShoe != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _generateOutfitRecommendations();
+      });
+    }
+  }
+
+  Future<void> _loadCatalog() async {
+    setState(() => _isLoadingCatalog = true);
+    try {
+      final products = await _catalogRepository.getProducts();
+      if (mounted) {
+        setState(() {
+          _catalog = products;
+          _isLoadingCatalog = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading catalog: $e');
+      if (mounted) setState(() => _isLoadingCatalog = false);
+    }
+  }
+
+  Future<void> _pickOutfitImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _uploadedOutfitImage = File(image.path);
+        _generatedOutfitDetails = 'Image Uploaded. Tap Analyze to get shoe matches.';
+        _outfitCategory = 'Ready for Analysis';
+        _recommendedShoes = []; // Clear old results
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +185,14 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   }
 
   Widget _buildCurrentShoeCard(BuildContext context, bool isDark) {
-    final selectedShoe = SampleShoes.shoes[_selectedShoeIndex];
+    final selectedShoe = _currentShoe != null ? ProductCardData(
+      imagePath: _currentShoe!.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png',
+      title: _currentShoe!.name,
+      subtitle: _currentShoe!.category,
+      brand: _currentShoe!.brand,
+      price: _currentShoe!.price,
+      modelUrl: _currentShoe!.modelUrl,
+    ) : SampleShoes.shoes[_selectedShoeIndex];
     
     return Card(
       elevation: 0,
@@ -279,43 +344,59 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
               ),
               child: Stack(
                 children: [
-                  // Outfit placeholder
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.checkroom,
-                          size: 60,
-                          color: AppColors.accent,
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Text(
-                          'AI Generated Outfit',
-                          style: AppTypography.bodyLarge.copyWith(
-                            color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                  if (_uploadedOutfitImage != null)
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: AppRadius.radiusLarge,
+                        child: Image.file(_uploadedOutfitImage!, fit: BoxFit.cover),
+                      ),
+                    )
+                  else
+                    // Outfit placeholder
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.checkroom,
+                            size: 60,
+                            color: AppColors.accent,
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          'Tap "Generate" to create',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                          const SizedBox(height: AppSpacing.lg),
+                          Text(
+                            widget.baseShoe != null ? 'AI Generated Outfit' : 'Upload Outfit Image',
+                            style: AppTypography.bodyLarge.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            widget.baseShoe != null ? 'Tap "Generate" to create' : 'Tap to upload reference outfit',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   
                   // Generate button overlay
                   Positioned(
                     top: AppSpacing.lg,
                     right: AppSpacing.lg,
                     child: PrimaryButton(
-                      text: _isGenerating ? 'Generating...' : 'Generate',
-                      onPressed: _isGenerating ? null : _generateOutfitRecommendations,
+                      text: _isGenerating 
+                          ? 'Processing...' 
+                          : (_uploadedOutfitImage != null && _recommendedShoes.isEmpty 
+                              ? 'Analyze' 
+                              : (widget.baseShoe != null ? 'Generate' : 'Upload Image')),
+                      onPressed: _isGenerating 
+                          ? null 
+                          : (_uploadedOutfitImage != null && _recommendedShoes.isEmpty
+                              ? _analyzeUploadedOutfit
+                              : (widget.baseShoe != null ? _generateOutfitRecommendations : _pickOutfitImage)),
                       size: CustomButtonSize.small,
-                      icon: Icons.auto_awesome,
+                      icon: (widget.baseShoe != null || _uploadedOutfitImage != null) ? Icons.auto_awesome : Icons.upload,
                       isLoading: _isGenerating,
                     ),
                   ),
@@ -325,24 +406,49 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
             
             const SizedBox(height: AppSpacing.lg),
             
-            // Outfit Info
-            Text(
-              'Casual Street Style',
-              style: AppTypography.bodyLarge.copyWith(
-                fontWeight: AppTypography.semibold,
-                color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+            // AI Recommendation Card
+            if (_generatedOutfitDetails != 'Ready to analyze...')
+              Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+                padding: AppSpacing.paddingLarge,
+                decoration: BoxDecoration(
+                  gradient: isDark ? AppGradients.cardDark : AppGradients.cardLight,
+                  borderRadius: AppRadius.radiusLarge,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.auto_awesome, color: AppColors.secondary, size: 20),
+                        const SizedBox(width: AppSpacing.sm),
+                        Text(
+                          _outfitCategory,
+                          style: AppTypography.headline4.copyWith(color: AppColors.secondary),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      _generatedOutfitDetails.contains('\n') 
+                        ? _generatedOutfitDetails.split('\n').sublist(1).join('\n')
+                        : _generatedOutfitDetails,
+                      style: AppTypography.bodyMedium.copyWith(
+                        height: 1.5,
+                        color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              'Perfect for everyday wear',
-              style: AppTypography.bodySmall.copyWith(
-                color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
-              ),
-            ),
-            
-            const SizedBox(height: AppSpacing.xl2),
-            
+
             // Action Buttons
             Row(
               children: [
@@ -352,13 +458,22 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
                     onPressed: () async {
                       try {
                         // Call backend API to save the outfit
+                        // Record the analysis with real results from the screen
                         await _outfitService.analyzeOutfit(
-                          outfitImageUrl: 'placeholder_outfit.jpg', // Placeholder for now
-                          dominantColors: ['black', 'white', 'blue'],
+                          imagePath: _uploadedOutfitImage?.path,
+                          dominantColors: _currentColors,
+                          category: _outfitCategory,
+                          description: _generatedOutfitDetails.contains('\n') 
+                              ? _generatedOutfitDetails.split('\n').sublist(1).join('\n')
+                              : _generatedOutfitDetails,
+                          recommendedShoeIds: _recommendedShoes.map((s) => s.id).toList(),
                         );
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Outfit saved securely to Closet!')),
+                            const SnackBar(
+                              content: Text('Outfit saved securely to Closet!'),
+                              backgroundColor: AppColors.secondary,
+                            ),
                           );
                         }
                       } catch (e) {
@@ -577,119 +692,137 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
   void _showShoeSelector() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        ),
         padding: AppSpacing.paddingLarge,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Select Shoe',
-              style: AppTypography.headline4,
+            Container(
+              width: 40, height: 4,
+              margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: AppRadius.radiusFull),
             ),
+            Text('Select Current Shoe', style: AppTypography.headline3),
             const SizedBox(height: AppSpacing.lg),
-            GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: AppSpacing.md,
-                mainAxisSpacing: AppSpacing.md,
-                childAspectRatio: 1.0,
-              ),
-              itemCount: SampleShoes.shoes.length,
-              itemBuilder: (context, index) {
-                final shoe = SampleShoes.shoes[index];
-                final isSelected = _selectedShoeIndex == index;
-                
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedShoeIndex = index;
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: AppRadius.radiusLarge,
-                      border: Border.all(
-                        color: isSelected ? AppColors.secondary : AppColors.lightBorder,
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: AppRadius.radiusLarge,
-                      child: Image.asset(
-                        shoe.imagePath,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              gradient: AppGradients.elementGradient,
-                              borderRadius: AppRadius.radiusLarge,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.shopping_bag,
-                                color: AppColors.accent,
-                                size: 30,
+            if (_isLoadingCatalog)
+              const Expanded(child: Center(child: CircularProgressIndicator()))
+            else if (_catalog.isEmpty)
+              const Expanded(child: Center(child: Text('No shoes found in catalog.')))
+            else
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: AppSpacing.md,
+                    mainAxisSpacing: AppSpacing.md,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: _catalog.length,
+                  itemBuilder: (context, index) {
+                    final shoe = _catalog[index];
+                    final isSelected = _currentShoe?.id == shoe.id;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _currentShoe = shoe;
+                          _generatedOutfitDetails = "Ready to analyze...";
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: AppRadius.radiusLarge,
+                          border: Border.all(color: isSelected ? AppColors.secondary : Colors.grey.withOpacity(0.2), width: isSelected ? 2 : 1),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg - 1)),
+                                child: (shoe.thumbnailUrl != null && shoe.thumbnailUrl!.startsWith('http'))
+                                    ? Image.network(shoe.thumbnailUrl!, fit: BoxFit.cover)
+                                    : Image.asset(shoe.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png', fit: BoxFit.cover),
                               ),
                             ),
-                          );
-                        },
+                            Padding(
+                              padding: AppSpacing.paddingSmall,
+                              child: Text(shoe.name, style: AppTypography.bodySmall.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  /// Generates outfit recommendations using the API
+  /// Generates outfit recommendations for a specific shoe
   Future<void> _generateOutfitRecommendations() async {
     setState(() => _isGenerating = true);
 
     try {
-      // Use some sample colors for demonstration
-      final colors = ['black', 'white', 'blue'];
+      // Logic for shoe-to-outfit:
+      // Start with the shoe's primary colors
+      _currentColors = ['black', 'white', 'grey'];
       
-      // 1. Record the outfit analysis in the backend history
+      // 1. Fetch live AI recommendations
+      final recommendations = await _outfitService.getRecommendations(_currentColors);
+      
+      // 2. Generate Description based on the shoe
+      String category = "Modern Ensemble";
+      if (_currentShoe?.category == 'running') category = "Sporty Chic";
+      if (_currentShoe?.category == 'casual') category = "Relaxed Urban";
+      
+      String description = "This outfit is designed to complement the unique profile of your ${_currentShoe?.name ?? 'selected shoe'}. We've focused on ${_currentColors.join(' and ')} tones to create a balanced, high-fashion aesthetic.";
+
+      // 3. Record the analysis in the backend history with rich data
       await _outfitService.analyzeOutfit(
-        outfitImageUrl: 'https://solemate-production.up.railway.app/placeholder_outfit.jpg',
-        dominantColors: colors,
+        imagePath: _uploadedOutfitImage?.path,
+        dominantColors: _currentColors,
+        category: category,
+        description: description,
+        recommendedShoeIds: recommendations.map((s) => s.id).toList(),
       );
-      
-      // 2. Fetch live AI recommendations based on those colors
-      final recommendations = await _outfitService.getRecommendations(colors);
+
+      // 4. Also record a Try-On event if a shoe is selected to populate "My Closet"
+      if (_currentShoe != null) {
+        await _tryOnService.saveTryOn(
+          shoeId: _currentShoe!.id,
+          customSkinApplied: false,
+        );
+      }
       
       if (mounted) {
         setState(() {
           _recommendedShoes = recommendations;
+          _outfitCategory = category;
+          _generatedOutfitDetails = "$category\n$description";
         });
         
-        if (recommendations.isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Found ${recommendations.length} matching shoes!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No matching shoes found. Try different colors.'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Found ${recommendations.length} matching items!'),
+            backgroundColor: AppColors.secondary,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error generating recommendations: $e'),
+            content: Text('Error: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -701,12 +834,61 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
     }
   }
 
+  /// Analyzes an uploaded outfit image to find matching shoes
+  Future<void> _analyzeUploadedOutfit() async {
+    if (_uploadedOutfitImage == null) return;
+    setState(() => _isGenerating = true);
+
+    try {
+      // Simulated dominant color extraction
+      _currentColors = ['white', 'grey', 'accent']; 
+      
+      // 1. Fetch live shoe recommendations from the catalog based on outfit colors
+      final recommendations = await _outfitService.getRecommendations(_currentColors);
+      
+      // 2. Perform Analysis & History creation (This uploads image to S3)
+      String category = "Coordinated Look";
+      String description = "Based on your uploaded outfit, we've identified key neutral tones that work best with our classic silhouettes. These shoe recommendations provide the perfect finishing touch for a clean, cohesive style.";
+
+      final match = await _outfitService.analyzeOutfit(
+        imagePath: _uploadedOutfitImage!.path,
+        dominantColors: _currentColors,
+        category: category,
+        description: description,
+        recommendedShoeIds: recommendations.map((s) => s.id).toList(),
+      );
+
+      if (mounted) {
+        setState(() {
+          _recommendedShoes = recommendations;
+          _outfitCategory = category;
+          _generatedOutfitDetails = description;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(match != null ? 'Analysis complete & saved to Closet!' : 'Analysis complete!'),
+            backgroundColor: AppColors.secondary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error analyzing outfit: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isGenerating = false);
+      }
+    }
+  }
+
   /// Navigate to AR Try-On screen with the current selected shoe
   void _navigateToARTryOn() {
-    final selectedShoe = SampleShoes.arSelection[_selectedShoeIndex];
-    
-    // Get model URL from shoe data with fallback
-    final modelUrl = selectedShoe.modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+    final modelUrl = _currentShoe?.modelUrl ?? SampleShoes.arSelection[_selectedShoeIndex].modelUrl ?? 'models/shoes/nike_journey_run_left.glb';
+    final name = _currentShoe?.name ?? SampleShoes.arSelection[_selectedShoeIndex].title;
     
     // Use ARMain to open AR with the specific shoe model
     final arMain = ARMain();
@@ -715,7 +897,7 @@ class _OutfitMatchScreenState extends State<OutfitMatchScreen> {
     // Show which shoe is being loaded
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Loading ${selectedShoe.title} in AR...'),
+        content: Text('Loading $name in AR...'),
         duration: const Duration(seconds: 1),
       ),
     );

@@ -46,6 +46,7 @@ export class S3Service {
             Key: key,
             Body: body,
             ContentType: contentType,
+            ACL: 'public-read',
         });
 
         try {

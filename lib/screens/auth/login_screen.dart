@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
     try {
       await _authService.login(_emailController.text.trim(), _passwordController.text.trim());
+      
       if (mounted) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainAppShell()));
       }

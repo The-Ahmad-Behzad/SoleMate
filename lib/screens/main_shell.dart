@@ -3,6 +3,7 @@ import '../theme/theme_config.dart';
 import '../widgets/app_scaffold.dart';
 import '../widgets/custom_button.dart';
 import '../services/auth_service.dart';
+import '../services/user_service.dart';
 import '../services/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'auth/login_screen.dart';
@@ -22,11 +23,31 @@ class MainAppShell extends StatefulWidget {
 class _MainAppShellState extends State<MainAppShell> {
   late List<Widget> _screens;
   final AuthService _authService = AuthService();
+  final UserService _userService = UserService();
+  bool _isSyncing = true;
 
   @override
   void initState() {
     super.initState();
     _initializeScreens();
+    _syncUser();
+  }
+
+  Future<void> _syncUser() async {
+    try {
+      final user = _authService.currentUser;
+      if (user != null) {
+        await _userService.syncProfile(user.displayName ?? 'SoleMate User');
+      }
+    } catch (e) {
+      debugPrint('Failed to sync user: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSyncing = false;
+        });
+      }
+    }
   }
 
   void _initializeScreens() {
@@ -60,7 +81,20 @@ class _MainAppShellState extends State<MainAppShell> {
 
   @override
   Widget build(BuildContext context) {
-    final navService = Provider.of<NavigationService>(context);
+    if (_isSyncing) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: isDark ? AppGradients.heroDark : AppGradients.heroLight,
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    }
+
     return AppScaffold(
       children: _screens,
       currentIndex: navService.currentIndex,

@@ -17,6 +17,7 @@ class ProductCard extends StatelessWidget {
     this.actionText,
     this.aspectRatio = 1.0,
     this.showActions = false,
+    this.actions,
   });
 
   final String imagePath;
@@ -30,6 +31,7 @@ class ProductCard extends StatelessWidget {
   final String? actionText;
   final double aspectRatio;
   final bool showActions;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +146,13 @@ class ProductCard extends StatelessWidget {
                   ],
                   
                   // Action buttons (optional)
-                  if (showActions && onAction != null && actionText != null) ...[
+                  if (actions != null && actions!.isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: actions!.map((w) => Padding(padding: const EdgeInsets.only(bottom: 4), child: w)).toList(),
+                    ),
+                  ] else if (showActions && onAction != null && actionText != null) ...[
                     const SizedBox(height: AppSpacing.md),
                     SizedBox(
                       width: double.infinity,

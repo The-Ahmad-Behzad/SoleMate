@@ -37,6 +37,10 @@ export class CacheService {
     await this.set('catalog:all', data, ttl);
   }
 
+  async clearCatalog(): Promise<void> {
+    await this.del('catalog:all');
+  }
+
   async getUserSession(userId: string): Promise<unknown | null> {
     return this.get(`session:${userId}`);
   }

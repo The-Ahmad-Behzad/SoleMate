@@ -89,7 +89,8 @@ class TryOnApiService {
             json.decode(responseBody) as Map<String, dynamic>;
         return TryOnEntry.fromJson(data);
       } else {
-        debugPrint('Save try-on failed: ${response.statusCode}');
+        final errorBody = await response.stream.bytesToString();
+        debugPrint('Save try-on failed: ${response.statusCode} - $errorBody');
         return null;
       }
     } catch (e) {
@@ -110,7 +111,7 @@ class TryOnApiService {
             .map((e) => TryOnEntry.fromJson(e))
             .toList(growable: false);
       } else {
-        debugPrint('Get history failed: ${response.statusCode}');
+        debugPrint('Get history failed: ${response.statusCode} - ${response.body}');
         return [];
       }
     } catch (e) {

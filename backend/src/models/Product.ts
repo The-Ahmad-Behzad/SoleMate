@@ -28,8 +28,8 @@ const productSchema = new Schema<ProductDoc>(
     modelUrl: { type: String },
     textureUrl: { type: String },
     thumbnailUrl: { type: String },
-    arLensId: { type: String, required: true },
-    arLensGroupId: { type: String, required: true },
+    arLensId: { type: String },
+    arLensGroupId: { type: String },
     metadata: { type: Schema.Types.Mixed }
   },
   { timestamps: true }

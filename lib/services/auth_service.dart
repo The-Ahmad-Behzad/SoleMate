@@ -6,6 +6,7 @@ class AuthService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Stream<User?> get userStream => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
 
   Future<User?> signUp(String email, String password, String name) async {
     try {

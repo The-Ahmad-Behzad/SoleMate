@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../config/api_config.dart';
@@ -24,7 +25,10 @@ class ApiClient {
       }
     }
 
-    return http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API GET: $uri');
+    final response = await http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API GET Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> post(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -38,7 +42,10 @@ class ApiClient {
       }
     }
 
-    return http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API POST: $uri');
+    final response = await http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API POST Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> put(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -52,7 +59,10 @@ class ApiClient {
       }
     }
 
-    return http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API PUT: $uri');
+    final response = await http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API PUT Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> delete(String endpoint, {bool requiresAuth = false}) async {
@@ -66,6 +76,7 @@ class ApiClient {
       }
     }
 
+    debugPrint('API DELETE: $uri');
     return http.delete(uri, headers: headers).timeout(ApiConfig.timeout);
   }
 
@@ -93,6 +104,7 @@ class ApiClient {
       request.files.addAll(files);
     }
 
+    debugPrint('API POST MULTIPART: $uri with ${files?.length ?? 0} files');
     return request.send().timeout(ApiConfig.timeout);
   }
 }

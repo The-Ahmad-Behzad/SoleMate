@@ -1,4 +1,4 @@
-
+import { ProductModel } from '../models/Product.js';
 
 export class AIService {
     private static instance: AIService;
@@ -57,7 +57,7 @@ export class AIService {
 
             // Map AI fields to Flutter Product shape
             return recommendationsList.map(shoe => ({
-                _id: shoe.id || shoe._id || `ai_mock_${Math.random()}`,
+                _id: shoe.id || shoe._id || Array.from({length: 24}, () => Math.floor(Math.random() * 16).toString(16)).join(''),
                 name: shoe.name || shoe.title || 'AI Recommended Shoe',
                 brand: shoe.brand || 'SoleMate',
                 price: shoe.price || 129.99,
@@ -68,33 +68,29 @@ export class AIService {
             }));
 
         } catch (error) {
-            console.warn('[AIService] Call to deployed AI endpoint failed or timed out. Falling back to local mock.', error);
+            console.warn('[AIService] Call to deployed AI endpoint failed or timed out. Falling back to database products.', error);
             
-            // Simulating a minor delay
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            return [
-                {
-                    _id: 'mock_shoe_1',
-                    name: 'Air Zoom Runner',
-                    brand: 'SoleMate',
-                    price: 129.99,
-                    category: 'Running', 
-                    thumbnailUrl: 'assets/images/shoes/nike_journey_run.png', 
-                    modelUrl: 'models/shoes/nike_journey_run_left.glb', 
-                    colors: colors.length ? colors : ['black', 'white']
-                },
-                {
-                    _id: 'mock_shoe_2',
-                    name: 'Classic Leather',
-                    brand: 'SoleMate',
-                    category: 'Casual', 
-                    price: 89.99,
-                    thumbnailUrl: 'assets/images/shoes/puma_winter_shoe.png',
-                    modelUrl: 'models/shoes/puma_winter_shoe_left.glb',
-                    colors: ['white', 'beige']
+            try {
+                // Fetch 2 real products from the database as a fallback
+                const products = await ProductModel.find().limit(2).lean();
+                if (products && products.length > 0) {
+                    return products.map(shoe => ({
+                        _id: shoe._id.toString(),
+                        name: (shoe as any).name || 'SoleMate Original',
+                        brand: (shoe as any).brand || 'SoleMate',
+                        price: (shoe as any).price || 129.99,
+                        category: (shoe as any).category || 'Casual',
+                        thumbnailUrl: (shoe as any).thumbnailUrl || 'assets/images/shoes/nike_journey_run.png',
+                        modelUrl: (shoe as any).modelUrl || 'models/shoes/nike_journey_run_left.glb',
+                        colors: (shoe as any).colors || colors
+                    }));
                 }
-            ];
+            } catch (dbError) {
+                console.error('[AIService] Database fallback failed:', dbError);
+            }
+
+            // Absolute last resort (should rarely happen if DB is connected)
+            return [];
         }
     }
 
