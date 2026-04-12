@@ -1,23 +1,28 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import 'api_client.dart';
 
 /// Model representing an outfit match entry from the backend.
 class OutfitMatch {
+  final String id;
+  final String? outfitImageUrl;
+  final String? category;
+  final String? description;
+  final List<String> dominantColors;
+  final List<Product> recommendedShoes;
+  final DateTime? createdAt;
+
   const OutfitMatch({
     required this.id,
     this.outfitImageUrl,
+    this.category,
+    this.description,
     this.dominantColors = const [],
     this.recommendedShoes = const [],
     this.createdAt,
   });
-
-  final String id;
-  final String? outfitImageUrl;
-  final List<String> dominantColors;
-  final List<Product> recommendedShoes;
-  final DateTime? createdAt;
 
   factory OutfitMatch.fromJson(Map<String, dynamic> json) {
     final String matchId = (json['_id'] as String?) ?? (json['id'] as String? ?? '');
@@ -35,6 +40,8 @@ class OutfitMatch {
     return OutfitMatch(
       id: matchId,
       outfitImageUrl: json['outfitImageUrl'] as String?,
+      category: (json['category'] as String?) ?? 'Outfit Match',
+      description: json['description'] as String?,
       dominantColors: (json['dominantColors'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList(growable: false) ??
@@ -58,26 +65,57 @@ class OutfitApiService {
 
   /// Analyzes an outfit image and stores the result.
   Future<OutfitMatch?> analyzeOutfit({
-    required String outfitImageUrl,
+    String? outfitImageUrl,
+    String? imagePath,
     List<String> dominantColors = const [],
+    String? category,
+    String? description,
+    List<String>? recommendedShoeIds,
   }) async {
     try {
-      final response = await _api.post(
-        '/outfit/analyze',
-        {
-          'outfitImageUrl': outfitImageUrl,
-          'dominantColors': dominantColors,
-        },
-        requiresAuth: true,
-      );
+      if (imagePath != null) {
+        // Use multipart for real image uploads
+        final response = await _api.postMultipart(
+          '/outfit/analyze',
+          fields: {
+            if (dominantColors.isNotEmpty) 'dominantColors': jsonEncode(dominantColors),
+            if (category != null) 'category': category,
+            if (description != null) 'description': description,
+            if (recommendedShoeIds != null) 'recommendedShoeIds': jsonEncode(recommendedShoeIds),
+          },
+          files: [await http.MultipartFile.fromPath('outfitImage', imagePath)],
+          requiresAuth: true,
+        );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final Map<String, dynamic> data =
-            json.decode(response.body) as Map<String, dynamic>;
-        return OutfitMatch.fromJson(data);
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          final responseBody = await response.stream.bytesToString();
+          return OutfitMatch.fromJson(json.decode(responseBody) as Map<String, dynamic>);
+        } else {
+          final errorBody = await response.stream.bytesToString();
+          debugPrint('Analyze outfit (multipart) failed: ${response.statusCode} - $errorBody');
+          return null;
+        }
       } else {
-        debugPrint('Analyze outfit failed: ${response.statusCode} - ${response.body}');
-        return null;
+        // Fallback to JSON for updates or URL-based analysis
+        final response = await _api.post(
+          '/outfit/analyze',
+          {
+            if (outfitImageUrl != null) 'outfitImageUrl': outfitImageUrl,
+            'dominantColors': dominantColors,
+            if (category != null) 'category': category,
+            if (description != null) 'description': description,
+            if (recommendedShoeIds != null) 'recommendedShoeIds': recommendedShoeIds,
+          },
+          requiresAuth: true,
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final Map<String, dynamic> data = json.decode(response.body) as Map<String, dynamic>;
+          return OutfitMatch.fromJson(data);
+        } else {
+          debugPrint('Analyze outfit (JSON) failed: ${response.statusCode} - ${response.body}');
+          return null;
+        }
       }
     } catch (e) {
       debugPrint('Analyze outfit error: $e');

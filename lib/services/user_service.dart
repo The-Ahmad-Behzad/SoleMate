@@ -9,6 +9,7 @@ class UserService {
     final response = await _apiClient.put(
       '/user/profile',
       {'name': name},
+      requiresAuth: true,
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -20,7 +21,7 @@ class UserService {
 
   /// Fetches the profile to get current role.
   Future<Map<String, dynamic>> getProfile() async {
-    final response = await _apiClient.get('/user/profile');
+    final response = await _apiClient.get('/user/profile', requiresAuth: true);
     
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

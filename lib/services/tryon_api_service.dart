@@ -89,7 +89,8 @@ class TryOnApiService {
             json.decode(responseBody) as Map<String, dynamic>;
         return TryOnEntry.fromJson(data);
       } else {
-        debugPrint('Save try-on failed: ${response.statusCode} - ${response.body}');
+        final errorBody = await response.stream.bytesToString();
+        debugPrint('Save try-on failed: ${response.statusCode} - $errorBody');
         return null;
       }
     } catch (e) {

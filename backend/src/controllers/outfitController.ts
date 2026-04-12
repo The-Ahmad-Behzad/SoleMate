@@ -32,6 +32,18 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
       outfitImageUrl = await s3Service.uploadFile(key, req.file.buffer, req.file.mimetype);
     }
 
+    // Sanitize and validate recommendedShoeIds to prevent 500 CastErrors
+    let validShoeIds: Types.ObjectId[] = [];
+    if (Array.isArray(recommendedShoeIds)) {
+      validShoeIds = recommendedShoeIds
+        .filter(id => id && Types.ObjectId.isValid(id))
+        .map(id => new Types.ObjectId(id));
+      
+      if (validShoeIds.length < recommendedShoeIds.length) {
+        console.warn(`[analyzeOutfit] Filtered out ${recommendedShoeIds.length - validShoeIds.length} invalid shoe IDs.`);
+      }
+    }
+
     if (!outfitImageUrl && (!dominantColors || !dominantColors.length)) {
       res.status(400).json({ error: 'outfitImageUrl or dominantColors are required' });
       return;
@@ -49,7 +61,7 @@ export async function analyzeOutfit(req: AuthRequest, res: Response): Promise<vo
       category,
       description,
       dominantColors: Array.isArray(dominantColors) ? dominantColors : [],
-      recommendedShoeIds: Array.isArray(recommendedShoeIds) ? recommendedShoeIds : [],
+      recommendedShoeIds: validShoeIds,
     });
 
     // Populate shoes before returning to ensure frontend has full data

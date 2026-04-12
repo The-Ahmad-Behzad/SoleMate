@@ -26,7 +26,9 @@ class ApiClient {
     }
 
     debugPrint('API GET: $uri');
-    return http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    final response = await http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API GET Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> post(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -41,7 +43,9 @@ class ApiClient {
     }
 
     debugPrint('API POST: $uri');
-    return http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    final response = await http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API POST Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> put(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -56,7 +60,9 @@ class ApiClient {
     }
 
     debugPrint('API PUT: $uri');
-    return http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    final response = await http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API PUT Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> delete(String endpoint, {bool requiresAuth = false}) async {

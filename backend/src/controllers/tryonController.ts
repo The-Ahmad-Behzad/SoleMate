@@ -32,6 +32,11 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
       return;
     }
 
+    if (!Types.ObjectId.isValid(shoeId)) {
+      res.status(400).json({ error: 'Invalid shoeId format' });
+      return;
+    }
+
     const tryOn = await TryOnHistoryModel.create({
       userId: user._id,
       shoeId: new Types.ObjectId(shoeId),
@@ -41,8 +46,8 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
 
     res.status(201).json(tryOn);
   } catch (err: any) {
-    console.error('Analyze outfit error details:', err.message, err.stack);
-    res.status(500).json({ error: 'Failed to analyze outfit', details: err.message });
+    console.error('Save try-on error details:', err.message, err.stack);
+    res.status(500).json({ error: 'Failed to save try-on history', details: err.message });
   }
 }
 

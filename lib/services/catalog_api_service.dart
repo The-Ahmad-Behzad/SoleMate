@@ -30,15 +30,17 @@ class CatalogApiService {
     }
 
     try {
+      debugPrint('CatalogApiService: Fetching products from /catalog');
       // Attempt to fetch from API
       final response = await _api.get('/catalog');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body) as List<dynamic>;
+        debugPrint('CatalogApiService: Successfully loaded ${data.length} products');
         final List<Product> products = data
             .whereType<Map<String, dynamic>>()
             .map((e) => Product.fromJson(e))
-            .toList(growable: false);
+          .toList(growable: false);
 
         // Update cache
         _cache = products;
@@ -47,12 +49,14 @@ class CatalogApiService {
         return products;
       } else {
         // API returned error, fallback to local
-        debugPrint('Catalog API returned ${response.statusCode}, falling back to local');
+        debugPrint('CatalogApiService: API returned error ${response.statusCode} - ${response.body}');
+        debugPrint('CatalogApiService: Falling back to local catalog');
         return _localService.loadProducts(forceRefresh: forceRefresh);
       }
     } catch (e) {
       // Network error or timeout, fallback to local
-      debugPrint('Catalog API error: $e, falling back to local');
+      debugPrint('CatalogApiService: Network error fetching catalog: $e');
+      debugPrint('CatalogApiService: Falling back to local catalog');
       return _localService.loadProducts(forceRefresh: forceRefresh);
     }
   }

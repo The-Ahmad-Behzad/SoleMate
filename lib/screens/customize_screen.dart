@@ -12,6 +12,8 @@ import '../widgets/custom_button.dart';
 import '../widgets/logo_button.dart';
 import '../services/auth_service.dart';
 import '../services/api_client.dart';
+import '../models/product.dart';
+import '../repositories/catalog_repository.dart';
 import 'auth/login_screen.dart';
 
 class CustomizeScreen extends StatefulWidget {
@@ -38,7 +40,111 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   List<String> _selectedImagePaths = [];
   Map<String, Uint8List> _editedImages = {}; // Maps original path to edited bytes
   
+  final CatalogRepository _catalogRepository = CatalogRepository();
+  List<Product> _catalog = [];
+  Product? _selectedShoe;
+  bool _isLoadingCatalog = true;
   bool _isSending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCatalog();
+  }
+
+  Future<void> _loadCatalog() async {
+    setState(() => _isLoadingCatalog = true);
+    try {
+      final products = await _catalogRepository.getProducts();
+      if (mounted) {
+        setState(() {
+          _catalog = products;
+          _isLoadingCatalog = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading catalog for redesign: $e');
+      if (mounted) {
+        setState(() => _isLoadingCatalog = false);
+      }
+    }
+  }
+
+  void _showShoeSelector() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+        ),
+        padding: AppSpacing.paddingLarge,
+        child: Column(
+          children: [
+            Container(
+              width: 40, height: 4,
+              margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: AppRadius.radiusFull),
+            ),
+            Text('Select Shoe Base', style: AppTypography.headline3),
+            const SizedBox(height: AppSpacing.lg),
+            if (_isLoadingCatalog)
+              const Expanded(child: Center(child: CircularProgressIndicator()))
+            else if (_catalog.isEmpty)
+              const Expanded(child: Center(child: Text('No shoes found in catalog.')))
+            else
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: AppSpacing.md,
+                    mainAxisSpacing: AppSpacing.md,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: _catalog.length,
+                  itemBuilder: (context, index) {
+                    final shoe = _catalog[index];
+                    final isSelected = _selectedShoe?.id == shoe.id;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() => _selectedShoe = shoe);
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: AppRadius.radiusLarge,
+                          border: Border.all(color: isSelected ? AppColors.secondary : Colors.grey.withOpacity(0.2), width: isSelected ? 2 : 1),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg - 1)),
+                                child: (shoe.thumbnailUrl != null && shoe.thumbnailUrl!.startsWith('http'))
+                                    ? Image.network(shoe.thumbnailUrl!, fit: BoxFit.cover)
+                                    : Image.asset(shoe.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png', fit: BoxFit.cover),
+                              ),
+                            ),
+                            Padding(
+                              padding: AppSpacing.paddingSmall,
+                              child: Text(shoe.name, style: AppTypography.bodySmall.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -99,28 +205,33 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
       return;
     }
 
-    setState(() => _isSending = true);
-
-    try {
-      final List<http.MultipartFile> files = [];
-      for (var path in _selectedImagePaths) {
-        if (_editedImages.containsKey(path)) {
-          files.add(http.MultipartFile.fromBytes('images', _editedImages[path]!, filename: 'edited_${DateTime.now().millisecondsSinceEpoch}.png'));
-        } else {
-          files.add(await http.MultipartFile.fromPath('images', path));
-        }
+      if (_selectedShoe == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a shoe base first.')));
+        return;
       }
 
-      String primaryColorHex = _colors[_selectedPrimaryColorIndex].value.toRadixString(16).substring(2);
-      String? secondaryColorHex = _selectedSecondaryColorIndex != null 
-          ? _colors[_selectedSecondaryColorIndex!].value.toRadixString(16).substring(2) 
-          : null;
+      setState(() => _isSending = true);
 
-      final fields = {
-        'shoeId': '65eaf15c0000000000000001', // Stub Shoe ID for Catalog
-        'description': _descController.text,
-        'primaryColor': '#$primaryColorHex',
-      };
+      try {
+        final List<http.MultipartFile> files = [];
+        for (var path in _selectedImagePaths) {
+          if (_editedImages.containsKey(path)) {
+            files.add(http.MultipartFile.fromBytes('images', _editedImages[path]!, filename: 'edited_${DateTime.now().millisecondsSinceEpoch}.png'));
+          } else {
+            files.add(await http.MultipartFile.fromPath('images', path));
+          }
+        }
+
+        String primaryColorHex = _colors[_selectedPrimaryColorIndex].value.toRadixString(16).substring(2);
+        String? secondaryColorHex = _selectedSecondaryColorIndex != null 
+            ? _colors[_selectedSecondaryColorIndex!].value.toRadixString(16).substring(2) 
+            : null;
+
+        final fields = {
+          'shoeId': _selectedShoe!.id,
+          'description': _descController.text,
+          'primaryColor': '#$primaryColorHex',
+        };
       
       if (secondaryColorHex != null) {
         fields['secondaryColor'] = '#$secondaryColorHex';
@@ -174,10 +285,44 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                 textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xl),
 
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.shopping_bag),
-              label: const Text('Select Shoe Base'),
+            // Shoe Selection Card
+            Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLarge),
+              child: InkWell(
+                onTap: _showShoeSelector,
+                borderRadius: AppRadius.radiusLarge,
+                child: Padding(
+                  padding: AppSpacing.paddingMedium,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 60, height: 60,
+                        decoration: BoxDecoration(color: AppColors.accent.withOpacity(0.1), borderRadius: AppRadius.radiusMedium),
+                        child: _selectedShoe != null 
+                            ? ClipRRect(
+                                borderRadius: AppRadius.radiusMedium,
+                                child: (_selectedShoe!.thumbnailUrl != null && _selectedShoe!.thumbnailUrl!.startsWith('http'))
+                                    ? Image.network(_selectedShoe!.thumbnailUrl!, fit: BoxFit.cover)
+                                    : Image.asset(_selectedShoe!.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png', fit: BoxFit.cover),
+                              )
+                            : const Icon(Icons.shopping_bag, color: AppColors.accent),
+                      ),
+                      const SizedBox(width: AppSpacing.lg),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_selectedShoe?.name ?? 'Select Shoe Base', style: AppTypography.headline4),
+                            Text(_selectedShoe?.brand ?? 'Required for redesign request', style: AppTypography.caption),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: AppSpacing.xl),
 

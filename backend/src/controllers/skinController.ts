@@ -36,6 +36,11 @@ export async function createSkin(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
+    if (!Types.ObjectId.isValid(shoeId)) {
+      res.status(400).json({ error: 'Invalid shoeId format' });
+      return;
+    }
+
     const skin = await CustomSkinModel.create({
       userId: user._id,
       shoeId: new Types.ObjectId(shoeId),
@@ -160,6 +165,11 @@ export async function requestRedesign(req: AuthRequest, res: Response): Promise<
     const user = await UserModel.findOne({ uid: req.user.uid });
     if (!user) {
       res.status(404).json({ error: 'User not found in database' });
+      return;
+    }
+
+    if (!Types.ObjectId.isValid(shoeId)) {
+      res.status(400).json({ error: 'Invalid shoeId format' });
       return;
     }
 

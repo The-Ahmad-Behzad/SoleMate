@@ -7,9 +7,11 @@ import '../services/auth_service.dart';
 import '../services/closet_api_service.dart';
 import '../services/tryon_api_service.dart';
 import '../models/product.dart';
+import '../services/outfit_api_service.dart';
 import '../ar/ar_main.dart';
 import 'auth/login_screen.dart';
 import 'ar_tryon_screen.dart';
+import 'catalog_screen.dart';
 
 /// My Closet screen with shoe grid, search, and filters
 class ClosetScreen extends StatefulWidget {
@@ -22,10 +24,12 @@ class ClosetScreen extends StatefulWidget {
 class _ClosetScreenState extends State<ClosetScreen> {
   final AuthService _authService = AuthService();
   final ClosetApiService _closetService = ClosetApiService();
+  final OutfitApiService _outfitService = OutfitApiService();
   final TextEditingController _searchController = TextEditingController();
   
   ClosetFilter _currentFilter = ClosetFilter.all;
   List<TryOnEntry> _apiShoes = [];
+  List<OutfitMatch> _apiOutfits = [];
   Set<String> _favoriteIds = {};
   bool _isLoading = false;
   String _searchQuery = '';
@@ -50,14 +54,22 @@ class _ClosetScreenState extends State<ClosetScreen> {
   Future<void> _loadClosetFromApi() async {
     setState(() => _isLoading = true);
     try {
-      final items = await _closetService.getClosetItems();
+      // Clear cache to ensure we get the latest try-ons from AI matching
+      _closetService.clearCache();
+      
+      final results = await Future.wait([
+        _closetService.getClosetItems(forceRefresh: true),
+        _outfitService.getHistory(),
+      ]);
+      
       if (mounted) {
         setState(() {
-          _apiShoes = items;
+          _apiShoes = results[0] as List<TryOnEntry>;
+          _apiOutfits = results[1] as List<OutfitMatch>;
         });
       }
     } catch (e) {
-      // Fallback to sample data on error
+      debugPrint('Error loading closet: $e');
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -149,18 +161,33 @@ class _ClosetScreenState extends State<ClosetScreen> {
                 ],
               ),
             ),
-            // Outfits Tab placeholder
-            Center(
+            // Outfits Tab
+            SingleChildScrollView(
+              padding: AppSpacing.paddingLarge,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.checkroom, size: 80, color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground),
-                  SizedBox(height: 16),
-                  Text('Your saved Outfits will appear here.', style: AppTypography.bodyLarge.copyWith(
-                    color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
-                  )),
-                ]
-              )
+                  Text(
+                    'Saved Outfits',
+                    style: AppTypography.headline2,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    '${_apiOutfits.length} outfits in your collection',
+                    style: AppTypography.bodyMedium.copyWith(
+                      color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl2),
+                  
+                  if (_apiOutfits.isEmpty && !_isLoading)
+                    _buildEmptyState(context, isDark, title: 'No Saved Outfits', subtitle: 'Use AI matching to generate and save your best looks.')
+                  else if (_isLoading)
+                     const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator()))
+                  else
+                    _buildOutfitGrid(context, isDark),
+                ],
+              ),
             ),
           ],
         ),
@@ -567,7 +594,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, bool isDark) {
+  Widget _buildEmptyState(BuildContext context, bool isDark, {String? title, String? subtitle}) {
     return Center(
       child: Padding(
         padding: AppSpacing.paddingLarge,
@@ -577,7 +604,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.accent10,
+                color: AppColors.accent.withOpacity(0.1),
                 borderRadius: AppRadius.radiusFull,
               ),
               child: const Icon(
@@ -588,7 +615,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
             ),
             const SizedBox(height: AppSpacing.xl2),
             Text(
-              _getEmptyStateTitle(),
+              title ?? _getEmptyStateTitle(),
               style: AppTypography.headline4.copyWith(
                 color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
               ),
@@ -596,14 +623,138 @@ class _ClosetScreenState extends State<ClosetScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              _getEmptyStateSubtitle(),
+              subtitle ?? _getEmptyStateSubtitle(),
               style: AppTypography.bodyMedium.copyWith(
                 color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: AppSpacing.xl2),
+            PrimaryButton(
+              text: 'Explore Shoe Catalog',
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => CatalogScreen()),
+                );
+              },
+              icon: Icons.search,
+              size: CustomButtonSize.medium,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildOutfitGrid(BuildContext context, bool isDark) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: AppSpacing.lg,
+        mainAxisSpacing: AppSpacing.lg,
+        childAspectRatio: 0.8,
+      ),
+      itemCount: _apiOutfits.length,
+      itemBuilder: (context, index) {
+        final outfit = _apiOutfits[index];
+        return GestureDetector(
+          onTap: () => _showOutfitDetails(context, outfit, isDark),
+          child: Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLarge),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.radiusLarge,
+                gradient: isDark ? AppGradients.cardDark : AppGradients.cardLight,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+                      child: (outfit.outfitImageUrl != null && outfit.outfitImageUrl!.startsWith('http'))
+                          ? Image.network(outfit.outfitImageUrl!, fit: BoxFit.cover)
+                          : const Icon(Icons.checkroom, size: 40, color: AppColors.accent),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: AppSpacing.paddingSmall,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(outfit.category ?? 'Outfit Match', style: AppTypography.bodyMedium.copyWith(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          if (outfit.description != null) ...[
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              outfit.description!,
+                              style: AppTypography.caption.copyWith(color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showOutfitDetails(BuildContext context, OutfitMatch outfit, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? AppColors.darkCard : AppColors.lightCard,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLarge),
+        title: Text(outfit.category ?? 'Outfit Match', style: AppTypography.headline3),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (outfit.outfitImageUrl != null)
+                ClipRRect(
+                  borderRadius: AppRadius.radiusMedium,
+                  child: Image.network(outfit.outfitImageUrl!, fit: BoxFit.contain),
+                ),
+              const SizedBox(height: AppSpacing.lg),
+              Text('AI Recommendation', style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: AppSpacing.sm),
+              Text(outfit.description ?? 'No detailed description available.', style: AppTypography.bodyMedium),
+              const SizedBox(height: AppSpacing.xl),
+              Text('Recommended Shoes', style: AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: AppSpacing.sm),
+              if (outfit.recommendedShoes.isEmpty)
+                const Text('No shoes recommended.')
+              else
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  children: outfit.recommendedShoes.map((shoe) => Chip(
+                    label: Text(shoe.name),
+                    avatar: const Icon(Icons.shopping_bag, size: 16),
+                  )).toList(),
+                ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
