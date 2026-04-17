@@ -4,7 +4,7 @@ import { cacheService } from '../services/cacheService.js';
 import { ShoeUploadRequestModel } from '../models/ShoeUploadRequest.js';
 import { AuthRequest } from '../middleware/authMiddleware.js';
 import { UserModel } from '../models/User.js';
-import { Types } from 'mongoose';
+import { Types, default as mongoose } from 'mongoose';
 import { s3Service } from '../services/s3Service.js';
 
 export async function getAllProducts(_req: Request, res: Response): Promise<void> {
