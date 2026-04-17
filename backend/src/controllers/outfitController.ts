@@ -214,6 +214,7 @@ export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promi
     res.json({
       detectedStyle: style,
       detectedColors: originalColors,
+      detected_colors: detectedColors, // RAW objects for dominance logic
       suggestedShoeColor: suggestedShoeColor,
       recommendations: matchedProducts
     });
