@@ -5,6 +5,9 @@ export interface ProductDoc {
   brand: string;
   price: number;
   colors: string[];
+  primaryColor?: string;
+  secondaryColor?: string;
+  style?: string; // e.g., 'casual', 'sporty', 'formal'
   sizes: number[];
   category: string;
   modelUrl?: string; // S3 URL
@@ -17,13 +20,18 @@ export interface ProductDoc {
   updatedAt: Date;
 }
 
+
 const productSchema = new Schema<ProductDoc>(
   {
     name: { type: String, required: true },
     brand: { type: String, required: true, index: true },
     price: { type: Number, required: true },
     colors: { type: [String], default: [] },
+    primaryColor: { type: String, index: true },
+    secondaryColor: { type: String, index: true },
+    style: { type: String, index: true },
     sizes: { type: [Number], default: [] },
+
     category: { type: String, required: true, index: true },
     modelUrl: { type: String },
     textureUrl: { type: String },

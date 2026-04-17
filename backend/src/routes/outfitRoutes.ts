@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { authMiddleware, optionalAuthMiddleware } from '../middleware/authMiddleware.js';
-import { analyzeOutfit, getRecommendations, getOutfitHistory } from '../controllers/outfitController.js';
+import { 
+  analyzeOutfit, 
+  getRecommendations, 
+  getOutfitHistory,
+  matchShoesToOutfit,
+  recommendOutfitForShoe
+} from '../controllers/outfitController.js';
 import multer from 'multer';
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -10,6 +16,11 @@ router.post('/analyze', authMiddleware, upload.single('outfitImage'), analyzeOut
 router.post('/recommend', authMiddleware, getRecommendations);
 router.get('/history', optionalAuthMiddleware, getOutfitHistory);
 
+// New AI endpoints
+router.post('/recommend-shoes', authMiddleware, upload.single('outfitImage'), matchShoesToOutfit);
+router.get('/recommend-outfit-for-shoe/:shoeId', authMiddleware, recommendOutfitForShoe);
+
 export default router;
+
 
 

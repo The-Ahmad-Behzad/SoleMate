@@ -90,7 +90,7 @@ export async function getRecommendations(req: AuthRequest, res: Response): Promi
 
     // Use the AI Service to get recommendations
     const aiService = AIService.getInstance();
-    const recommendations = await aiService.getRecommendations(colors || []);
+    const recommendations = await aiService.getRecommendationsByColors(colors || []);
 
     res.json(recommendations);
   } catch (err) {
@@ -125,4 +125,80 @@ export async function getOutfitHistory(req: AuthRequest, res: Response): Promise
     res.status(500).json({ error: 'Failed to fetch history', details: err.message });
   }
 }
+
+/**
+ * NEW: Matches shoes from DB to an uploaded outfit image.
+ */
+export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'Outfit image is required' });
+      return;
+    }
+
+    const aiService = AIService.getInstance();
+    const aiResult = await aiService.getRecommendationsFromImage(req.file.buffer, req.file.originalname);
+
+    const { colors, style } = aiResult;
+    console.log(`[outfitController] AI detected style: ${style}, colors: ${colors.join(', ')}`);
+
+    // Match products in DB
+    // Match logic: Style must match, and primary or secondary color must be in detected colors.
+    const matchedProducts = await ProductModel.find({
+      $and: [
+        { style: style.toLowerCase() },
+        { 
+          $or: [
+            { primaryColor: { $in: colors } },
+            { secondaryColor: { $in: colors } }
+          ]
+        }
+      ]
+    }).limit(10).lean();
+
+    res.json({
+      detectedStyle: style,
+      detectedColors: colors,
+      recommendations: matchedProducts
+    });
+  } catch (err: any) {
+    console.error('Match shoes error:', err);
+    res.status(500).json({ error: 'Failed to match shoes', details: err.message });
+  }
+}
+
+/**
+ * NEW: Recommends an outfit for a specific shoe ID.
+ */
+export async function recommendOutfitForShoe(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { shoeId } = req.params;
+    
+    const product = await ProductModel.findById(shoeId).lean();
+    if (!product) {
+      res.status(404).json({ error: 'Shoe not found' });
+      return;
+    }
+
+    if (!product.thumbnailUrl) {
+      res.status(400).json({ error: 'Shoe has no thumbnail for AI analysis' });
+      return;
+    }
+
+    // Fetch the thumbnail image buffer
+    const imgResponse = await fetch(product.thumbnailUrl);
+    if (!imgResponse.ok) throw new Error('Failed to fetch shoe thumbnail');
+    const arrayBuffer = await imgResponse.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const aiService = AIService.getInstance();
+    const result = await aiService.getOutfitRecommendationForShoe(buffer, 'shoe_thumbnail.jpg');
+
+    res.json(result);
+  } catch (err: any) {
+    console.error('Recommend outfit error:', err);
+    res.status(500).json({ error: 'Failed to generate outfit recommendation', details: err.message });
+  }
+}
+
 
