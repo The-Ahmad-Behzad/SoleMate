@@ -243,4 +243,24 @@ export async function recommendOutfitFromImage(req: AuthRequest, res: Response):
   }
 }
 
+/**
+ * NEW: Checks for style harmony (mismatch) in an uploaded outfit image.
+ */
+export async function checkOutfitMismatch(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.file) {
+      res.status(400).json({ error: 'Outfit image is required' });
+      return;
+    }
+
+    const aiService = AIService.getInstance();
+    const result = await aiService.validateOutfitImage(req.file.buffer, req.file.originalname);
+
+    res.json(result);
+  } catch (err: any) {
+    console.error('Check outfit mismatch error:', err);
+    res.status(500).json({ error: 'Failed to check outfit harmony', details: err.message });
+  }
+}
+
 

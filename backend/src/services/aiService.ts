@@ -97,6 +97,43 @@ export class AIService {
     }
 
     /**
+     * Checks for style harmony between outfit and shoes in an image.
+     */
+    public async validateOutfitImage(imageBuffer: Buffer, filename: string): Promise<any> {
+        console.log(`[AIService] Requesting style harmony check for image: ${filename}`);
+
+        try {
+            const formData = new FormData();
+            const blob = new Blob([new Uint8Array(imageBuffer)]);
+            formData.append('file', blob, filename);
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+            const response = await fetch(`${AI_BASE_URL}/validate_outfit_image`, {
+                method: 'POST',
+                body: formData,
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                console.error(`[AIService] AI API Error: ${response.status} ${response.statusText}`);
+                throw new Error(`AI API Error: ${response.status}`);
+            }
+
+            const data: any = await response.json();
+            console.log('[AIService] AI /validate_outfit_image Response received successfully.');
+
+            return data;
+        } catch (error) {
+            console.error('[AIService] Call to AI /validate_outfit_image failed:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Legacy method for color-based recommendations (fallback)
      */
     public async getRecommendationsByColors(colors: string[]): Promise<any[]> {
