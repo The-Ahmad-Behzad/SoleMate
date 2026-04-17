@@ -18,10 +18,12 @@ async function seedColors() {
         const products = await ProductModel.find();
         console.log(`Found ${products.length} products to update.`);
 
+const randomGenders = ['male', 'female', 'unisex'];
         for (const product of products) {
             const pColor = randomColors[Math.floor(Math.random() * randomColors.length)];
             const sColor = randomColors[Math.floor(Math.random() * randomColors.length)];
             const style = randomStyles[Math.floor(Math.random() * randomStyles.length)];
+            const gender = randomGenders[Math.floor(Math.random() * randomGenders.length)];
 
             await ProductModel.updateOne(
                 { _id: product._id },
@@ -30,6 +32,7 @@ async function seedColors() {
                         primaryColor: pColor, 
                         secondaryColor: sColor,
                         style: style,
+                        gender: gender,
                         colors: [pColor, sColor],
                         sizes: [40, 41, 42, 43, 44]
                     } 

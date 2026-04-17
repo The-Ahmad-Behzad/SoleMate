@@ -140,31 +140,81 @@ export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promi
     const aiResult = await aiService.getRecommendationsFromImage(req.file.buffer, req.file.originalname);
 
     const { colors: detectedColors, style } = aiResult;
+    const gender = (req.body.gender || 'unisex').toLowerCase();
     
-    // Normalize colors: extract 'name' if it's an object from the AI service
-    const colors = Array.isArray(detectedColors) 
-      ? detectedColors.map((c: any) => (typeof c === 'object' && c.name) ? c.name.toLowerCase() : String(c).toLowerCase())
-      : [];
+    // Normalize colors for searching, while keeping original for display if needed
+    const normalize = (c: any) => (typeof c === 'object' && c.name) ? c.name.toLowerCase() : String(c).toLowerCase();
+    const originalColors = Array.isArray(detectedColors) ? detectedColors.map(normalize) : [];
 
-    console.log(`[outfitController] AI detected style: ${style}, normalized colors: ${colors.join(', ')}`);
+    // Mapping for broader search fallbacks
+    const colorGroupMap: Record<string, string> = {
+      'maroon': 'red', 'burgundy': 'red', 'crimson': 'red',
+      'navy': 'blue', 'teal': 'blue', 'cyan': 'blue',
+      'forest': 'green', 'olive': 'green', 'lime': 'green',
+      'tan': 'brown', 'beige': 'brown', 'khaki': 'brown',
+      'charcoal': 'grey', 'silver': 'grey',
+      'gold': 'yellow', 'amber': 'yellow'
+    };
 
-    // Match products in DB
-    // Match logic: Style must match, and primary or secondary color must be in detected colors.
-    const matchedProducts = await ProductModel.find({
+    const getFallbacks = (colors: string[]) => {
+      const fallbacks = new Set<string>();
+      colors.forEach(c => {
+        if (colorGroupMap[c]) fallbacks.add(colorGroupMap[c]);
+      });
+      return Array.from(fallbacks);
+    };
+
+    console.log(`[outfitController] AI detected style: ${style}, colors: ${originalColors.join(', ')}, gender: ${gender}`);
+
+    // Tiered Match: 1. Exact Name/Color + Gender
+    let matchedProducts = await ProductModel.find({
       $and: [
         { style: style.toLowerCase() },
+        { gender: { $in: [gender, 'unisex'] } },
         { 
           $or: [
-            { primaryColor: { $in: colors } },
-            { secondaryColor: { $in: colors } }
+            { primaryColor: { $in: originalColors } },
+            { secondaryColor: { $in: originalColors } }
           ]
         }
       ]
     }).limit(10).lean();
 
+    // Tiered Match: 2. Fallback to Color Groups + Gender
+    if (matchedProducts.length === 0) {
+      const fallbackColors = getFallbacks(originalColors);
+      if (fallbackColors.length > 0) {
+        console.log(`[outfitController] No exact matches for ${originalColors.join(', ')}. Trying fallbacks: ${fallbackColors.join(', ')}`);
+        matchedProducts = await ProductModel.find({
+          $and: [
+            { style: style.toLowerCase() },
+            { gender: { $in: [gender, 'unisex'] } },
+            { 
+              $or: [
+                { primaryColor: { $in: fallbackColors } },
+                { secondaryColor: { $in: fallbackColors } }
+              ]
+            }
+          ]
+        }).limit(10).lean();
+      }
+    }
+
+    // Determine Suggested Shoe Color (Z)
+    // If we have matches, use the first one's primary color. 
+    // Otherwise, suggest a neutral (black/white/grey)
+    let suggestedShoeColor = 'neutral';
+    if (matchedProducts.length > 0) {
+      suggestedShoeColor = (matchedProducts[0] as any).primaryColor || 'neutral';
+    } else {
+      // Logic for neutral suggestion if no matches
+      suggestedShoeColor = originalColors.includes('black') || originalColors.includes('dark') ? 'white' : 'black';
+    }
+
     res.json({
       detectedStyle: style,
-      detectedColors: colors,
+      detectedColors: originalColors,
+      suggestedShoeColor: suggestedShoeColor,
       recommendations: matchedProducts
     });
   } catch (err: any) {

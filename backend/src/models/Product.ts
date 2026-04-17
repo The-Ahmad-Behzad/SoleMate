@@ -10,6 +10,7 @@ export interface ProductDoc {
   style?: string; // e.g., 'casual', 'sporty', 'formal'
   sizes: number[];
   category: string;
+  gender: 'male' | 'female' | 'unisex';
   modelUrl?: string; // S3 URL
   textureUrl?: string;
   thumbnailUrl?: string;
@@ -33,6 +34,7 @@ const productSchema = new Schema<ProductDoc>(
     sizes: { type: [Number], default: [] },
 
     category: { type: String, required: true, index: true },
+    gender: { type: String, enum: ['male', 'female', 'unisex'], default: 'unisex', index: true },
     modelUrl: { type: String },
     textureUrl: { type: String },
     thumbnailUrl: { type: String },
