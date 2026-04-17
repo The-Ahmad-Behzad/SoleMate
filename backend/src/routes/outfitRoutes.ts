@@ -5,7 +5,7 @@ import {
   getRecommendations, 
   getOutfitHistory,
   matchShoesToOutfit,
-  recommendOutfitForShoe
+  recommendOutfitFromImage
 } from '../controllers/outfitController.js';
 import multer from 'multer';
 
@@ -18,7 +18,7 @@ router.get('/history', optionalAuthMiddleware, getOutfitHistory);
 
 // New AI endpoints
 router.post('/recommend-shoes', authMiddleware, upload.single('outfitImage'), matchShoesToOutfit);
-router.get('/recommend-outfit-for-shoe/:shoeId', authMiddleware, recommendOutfitForShoe);
+router.post('/recommend-outfit-for-shoe', authMiddleware, upload.single('file'), recommendOutfitFromImage);
 
 export default router;
 

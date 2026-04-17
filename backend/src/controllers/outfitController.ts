@@ -224,35 +224,21 @@ export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promi
 }
 
 /**
- * NEW: Recommends an outfit for a specific shoe ID.
+ * NEW: Recommends an outfit for an uploaded shoe image.
  */
-export async function recommendOutfitForShoe(req: AuthRequest, res: Response): Promise<void> {
+export async function recommendOutfitFromImage(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { shoeId } = req.params;
-    
-    const product = await ProductModel.findById(shoeId).lean();
-    if (!product) {
-      res.status(404).json({ error: 'Shoe not found' });
+    if (!req.file) {
+      res.status(400).json({ error: 'Shoe image is required' });
       return;
     }
-
-    if (!product.thumbnailUrl) {
-      res.status(400).json({ error: 'Shoe has no thumbnail for AI analysis' });
-      return;
-    }
-
-    // Fetch the thumbnail image buffer
-    const imgResponse = await fetch(product.thumbnailUrl);
-    if (!imgResponse.ok) throw new Error('Failed to fetch shoe thumbnail');
-    const arrayBuffer = await imgResponse.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
 
     const aiService = AIService.getInstance();
-    const result = await aiService.getOutfitRecommendationForShoe(buffer, 'shoe_thumbnail.jpg');
+    const result = await aiService.getOutfitRecommendationForShoe(req.file.buffer, req.file.originalname);
 
     res.json(result);
   } catch (err: any) {
-    console.error('Recommend outfit error:', err);
+    console.error('Recommend outfit from image error:', err);
     res.status(500).json({ error: 'Failed to generate outfit recommendation', details: err.message });
   }
 }
