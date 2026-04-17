@@ -139,8 +139,14 @@ export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promi
     const aiService = AIService.getInstance();
     const aiResult = await aiService.getRecommendationsFromImage(req.file.buffer, req.file.originalname);
 
-    const { colors, style } = aiResult;
-    console.log(`[outfitController] AI detected style: ${style}, colors: ${colors.join(', ')}`);
+    const { colors: detectedColors, style } = aiResult;
+    
+    // Normalize colors: extract 'name' if it's an object from the AI service
+    const colors = Array.isArray(detectedColors) 
+      ? detectedColors.map((c: any) => (typeof c === 'object' && c.name) ? c.name.toLowerCase() : String(c).toLowerCase())
+      : [];
+
+    console.log(`[outfitController] AI detected style: ${style}, normalized colors: ${colors.join(', ')}`);
 
     // Match products in DB
     // Match logic: Style must match, and primary or secondary color must be in detected colors.
