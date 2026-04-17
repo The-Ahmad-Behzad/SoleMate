@@ -102,7 +102,7 @@ export async function getRecommendations(req: AuthRequest, res: Response): Promi
 export async function getOutfitHistory(req: AuthRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.json([]); // Return empty history for guests/diagnostics
       return;
     }
 

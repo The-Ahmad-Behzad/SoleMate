@@ -81,6 +81,8 @@ class _MainAppShellState extends State<MainAppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final navService = Provider.of<NavigationService>(context);
+
     if (_isSyncing) {
       final isDark = Theme.of(context).brightness == Brightness.dark;
       return Scaffold(

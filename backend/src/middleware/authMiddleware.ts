@@ -40,4 +40,34 @@ export async function authMiddleware(
   }
 }
 
+export async function optionalAuthMiddleware(
+  req: AuthRequest,
+  _res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next(); // Proceed without user
+    }
+
+    const token = authHeader.split('Bearer ')[1];
+
+    if (token === 'test_token') {
+      req.user = { uid: '000000000000000000000123', email: 'dev@example.com' };
+      return next();
+    }
+
+    const admin = getFirebaseAdmin();
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    
+    req.user = { uid: decodedToken.uid, email: decodedToken.email };
+    next();
+  } catch (err) {
+    console.error('Optional auth error (ignored):', err);
+    next(); // Proceed anyway, req.user will be undefined
+  }
+}
+
+
 

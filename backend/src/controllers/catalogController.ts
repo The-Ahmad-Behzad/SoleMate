@@ -10,6 +10,13 @@ import { s3Service } from '../services/s3Service.js';
 export async function getAllProducts(_req: Request, res: Response): Promise<void> {
   try {
     console.log('[catalogController] Fetching all products...');
+    
+    // Check DB connection status
+    const dbState = mongoose.connection.readyState;
+    if (dbState !== 1) {
+      console.warn(`[catalogController] Database not connected (readyState: ${dbState}). Attempting to fetch from cache only...`);
+    }
+
     const cached = await cacheService.getCatalog();
     if (cached && cached.length > 0) {
       console.log(`[catalogController] Returning ${cached.length} cached products`);
@@ -23,11 +30,16 @@ export async function getAllProducts(_req: Request, res: Response): Promise<void
     
     await cacheService.setCatalog(products);
     res.json(products);
-  } catch (err) {
-    console.error('[catalogController] Get products error:', err);
-    res.status(500).json({ error: 'Failed to fetch products' });
+  } catch (err: any) {
+    console.error('[catalogController] Get products error details:', err.message, err.stack);
+    res.status(500).json({ 
+      error: 'Failed to fetch products', 
+      details: err.message,
+      dbStatus: mongoose.connection.readyState 
+    });
   }
 }
+
 
 export async function getProductById(req: Request, res: Response): Promise<void> {
   try {

@@ -54,7 +54,7 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
 export async function getTryOnHistory(req: AuthRequest, res: Response): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.json([]); // Return empty history for guests/diagnostics
       return;
     }
 

@@ -1,0 +1,52 @@
+{
+  "device_id": "192.168.100.18:46517",
+  "package_name": "com.solemate.app.solemate_app",
+  "main_activity": ".MainActivity",
+  "log_file": "diagnostics_log.txt",
+  "steps": [
+    {
+      "name": "Wait for app launch",
+      "action": "wait",
+      "duration_ms": 7000
+    },
+    {
+      "name": "Tap Start AR Try-On",
+      "action": "tap",
+      "rel_x": 0.5,
+      "rel_y": 0.3
+    },
+    {
+      "name": "Wait for navigation",
+      "action": "wait",
+      "duration_ms": 3000
+    },
+    {
+      "name": "Switch to My Closet tab",
+      "action": "tap",
+      "rel_x": 0.375,
+      "rel_y": 0.90
+    },
+    {
+      "name": "Wait for Closet content",
+      "action": "wait",
+      "duration_ms": 2000
+    },
+    {
+      "name": "Switch to Outfit Match tab",
+      "action": "tap",
+      "rel_x": 0.625,
+      "rel_y": 0.90
+    },
+    {
+      "name": "Wait for Outfit Match content",
+      "action": "wait",
+      "duration_ms": 2000
+    },
+    {
+      "name": "Switch back to AR Try-On tab",
+      "action": "tap",
+      "rel_x": 0.125,
+      "rel_y": 0.90
+    }
+  ]
+}
