@@ -139,84 +139,28 @@ export async function matchShoesToOutfit(req: AuthRequest, res: Response): Promi
     const aiService = AIService.getInstance();
     const aiResult = await aiService.getRecommendationsFromImage(req.file.buffer, req.file.originalname);
 
-    const { colors: detectedColors, style } = aiResult;
-    const gender = (req.body.gender || 'unisex').toLowerCase();
+    const { colors: detectedColors, style, recommendations } = aiResult;
     
-    // Normalize colors for searching, while keeping original for display if needed
+    // Process detected colors for legacy/display purposes if needed by frontend
     const normalize = (c: any) => (typeof c === 'object' && c.name) ? c.name.toLowerCase() : String(c).toLowerCase();
     const originalColors = Array.isArray(detectedColors) ? detectedColors.map(normalize) : [];
 
-    // Mapping for broader search fallbacks
-    const colorGroupMap: Record<string, string> = {
-      'maroon': 'red', 'burgundy': 'red', 'crimson': 'red',
-      'navy': 'blue', 'teal': 'blue', 'cyan': 'blue',
-      'forest': 'green', 'olive': 'green', 'lime': 'green',
-      'tan': 'brown', 'beige': 'brown', 'khaki': 'brown',
-      'charcoal': 'grey', 'silver': 'grey',
-      'gold': 'yellow', 'amber': 'yellow'
-    };
+    console.log(`[outfitController] PURE AI MODE: Passing through ${recommendations?.length || 0} recommendations for style: ${style}`);
 
-    const getFallbacks = (colors: string[]) => {
-      const fallbacks = new Set<string>();
-      colors.forEach(c => {
-        if (colorGroupMap[c]) fallbacks.add(colorGroupMap[c]);
-      });
-      return Array.from(fallbacks);
-    };
-
-    console.log(`[outfitController] AI detected style: ${style}, colors: ${originalColors.join(', ')}, gender: ${gender}`);
-
-    // Tiered Match: 1. Exact Name/Color + Gender
-    let matchedProducts = await ProductModel.find({
-      $and: [
-        { style: style.toLowerCase() },
-        { gender: { $in: [gender, 'unisex'] } },
-        { 
-          $or: [
-            { primaryColor: { $in: originalColors } },
-            { secondaryColor: { $in: originalColors } }
-          ]
-        }
-      ]
-    }).limit(10).lean();
-
-    // Tiered Match: 2. Fallback to Color Groups + Gender
-    if (matchedProducts.length === 0) {
-      const fallbackColors = getFallbacks(originalColors);
-      if (fallbackColors.length > 0) {
-        console.log(`[outfitController] No exact matches for ${originalColors.join(', ')}. Trying fallbacks: ${fallbackColors.join(', ')}`);
-        matchedProducts = await ProductModel.find({
-          $and: [
-            { style: style.toLowerCase() },
-            { gender: { $in: [gender, 'unisex'] } },
-            { 
-              $or: [
-                { primaryColor: { $in: fallbackColors } },
-                { secondaryColor: { $in: fallbackColors } }
-              ]
-            }
-          ]
-        }).limit(10).lean();
-      }
-    }
-
-    // Determine Suggested Shoe Color (Z)
-    // If we have matches, use the first one's primary color. 
-    // Otherwise, suggest a neutral (black/white/grey)
+    // Suggest a color based on the first recommendation if available
     let suggestedShoeColor = 'neutral';
-    if (matchedProducts.length > 0) {
-      suggestedShoeColor = (matchedProducts[0] as any).primaryColor || 'neutral';
+    if (recommendations && recommendations.length > 0) {
+      suggestedShoeColor = recommendations[0].color_name || recommendations[0].hex || 'neutral';
     } else {
-      // Logic for neutral suggestion if no matches
       suggestedShoeColor = originalColors.includes('black') || originalColors.includes('dark') ? 'white' : 'black';
     }
 
     res.json({
       detectedStyle: style,
       detectedColors: originalColors,
-      detected_colors: detectedColors, // RAW objects for dominance logic
+      detected_colors: detectedColors, // RAW objects for adaptive color logic
       suggestedShoeColor: suggestedShoeColor,
-      recommendations: matchedProducts
+      recommendations: recommendations || []
     });
   } catch (err: any) {
     console.error('Match shoes error:', err);
