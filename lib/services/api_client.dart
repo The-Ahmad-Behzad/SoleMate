@@ -72,6 +72,7 @@ class ApiClient {
     if (requiresAuth) {
       final token = await _getAuthToken();
       if (token != null) {
+        debugPrint('AUTH_TOKEN_DIAGNOSTIC: $token');
         headers['Authorization'] = 'Bearer $token';
       }
     }
@@ -105,7 +106,8 @@ class ApiClient {
     }
 
     debugPrint('API POST MULTIPART: $uri with ${files?.length ?? 0} files');
-    return request.send().timeout(ApiConfig.timeout);
+    final response = await request.send().timeout(ApiConfig.timeout);
+    return response;
   }
 }
 

@@ -130,18 +130,33 @@ class _ClosetScreenState extends State<ClosetScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Page Header
-                  Text(
-                    'My Shoe Collection',
-                    style: AppTypography.headline2.copyWith(
-                      color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    '${_getFilteredShoes().length} shoes in your collection',
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'My Shoes',
+                            style: AppTypography.headline2.copyWith(
+                              color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            '${_getFilteredShoes().length} shoes in your collection',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: _loadClosetFromApi,
+                        tooltip: 'Refresh Collection',
+                      ),
+                    ],
                   ),
                   
                   const SizedBox(height: AppSpacing.xl),
@@ -167,16 +182,31 @@ class _ClosetScreenState extends State<ClosetScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Saved Outfits',
-                    style: AppTypography.headline2,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    '${_apiOutfits.length} outfits in your collection',
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Saved Outfits',
+                            style: AppTypography.headline2,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            '${_apiOutfits.length} outfits in your collection',
+                            style: AppTypography.bodyMedium.copyWith(
+                              color: isDark ? AppColors.darkMutedForeground : AppColors.lightMutedForeground,
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: _loadClosetFromApi,
+                        tooltip: 'Refresh Outfits',
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.xl2),
                   

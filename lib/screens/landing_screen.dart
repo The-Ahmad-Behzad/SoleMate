@@ -252,7 +252,9 @@ class LandingScreen extends StatelessWidget {
           FeatureCardsGrid(
             features: SoleMateFeatures.features,
             onFeatureTap: (index) {
-              // Navigate to specific feature
+              // Feature Mapping: 
+              // index matches the intended screen index in MainAppShell:
+              // 0: AR, 1: Closet, 2: Outfit, 3: Customize
               _navigateToMainApp(context, initialTab: index);
             },
           ),
@@ -338,9 +340,10 @@ class LandingScreen extends StatelessWidget {
       future: service.loadProducts(),
       builder: (context, snapshot) {
         final List<Product> all = snapshot.data ?? <Product>[];
-        final List<Product> popular = all.where((p) => p.isPopular).toList(growable: false);
+        final List<Product> popular = all.where((p) => p.isPopular).take(2).toList(growable: false);
         final List<Product> recents = all
             .where((p) => p.lastTriedAt != null)
+            .take(2)
             .toList(growable: false);
 
         return Column(
@@ -374,7 +377,7 @@ class LandingScreen extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const MainAppShell(),
+        builder: (context) => MainAppShell(initialIndex: initialTab),
       ),
     );
   }

@@ -3,7 +3,7 @@
     <application
         android:label="solemate_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <!-- Snap Camera Kit API Token -->
         <!-- TODO: Paste your Snap Kit API Token here -->

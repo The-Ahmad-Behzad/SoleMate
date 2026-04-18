@@ -188,6 +188,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'screens/landing_screen.dart';
@@ -200,6 +201,12 @@ import 'services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Force Portrait Mode
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _requestCameraPermission();
   runApp(

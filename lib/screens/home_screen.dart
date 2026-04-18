@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _refreshData() {
     setState(() {
-      _popularFuture = _catalog.getProducts().then((list) => list.where((p) => p.isPopular).toList());
+      _popularFuture = _catalog.getProducts().then((list) => list.take(2).toList());
       _historyFuture = _closet.getTryOnHistory();
     });
   }
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          itemCount: history.length > 3 ? 3 : history.length,
+          itemCount: history.length > 2 ? 2 : history.length,
           itemBuilder: (context, index) {
             final entry = history[index];
             final shoeName = entry.shoe.name;

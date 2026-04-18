@@ -15,6 +15,7 @@ class Product {
     this.arLensGroupId,
     this.isPopular = false,
     this.lastTriedAt,
+    this.matchReason,
   });
 
   final String id;
@@ -29,6 +30,7 @@ class Product {
   final String? arLensGroupId;
   final bool isPopular;
   final DateTime? lastTriedAt;
+  final String? matchReason;
 
   Product copyWith({
     String? id,
@@ -43,6 +45,7 @@ class Product {
     String? arLensGroupId,
     bool? isPopular,
     DateTime? lastTriedAt,
+    String? matchReason,
   }) {
     return Product(
       id: id ?? this.id,
@@ -57,6 +60,7 @@ class Product {
       arLensGroupId: arLensGroupId ?? this.arLensGroupId,
       isPopular: isPopular ?? this.isPopular,
       lastTriedAt: lastTriedAt ?? this.lastTriedAt,
+      matchReason: matchReason ?? this.matchReason,
     );
   }
 
@@ -64,9 +68,18 @@ class Product {
     // Handle MongoDB _id field mapping to id, with fallback
     final String productId = (json['_id'] as String?) ?? (json['id'] as String? ?? 'unknown_id');
     
+    // Inclusive mapping for AI-generated recommendations
+    final String typeName = (json['type'] as String?) ?? (json['shoe_style'] as String?) ?? '';
+    final String colorName = (json['color_name'] as String?) ?? '';
+    final String aiName = (typeName.isNotEmpty && colorName.isNotEmpty) 
+        ? '$typeName in $colorName' 
+        : (typeName.isNotEmpty ? typeName : (colorName.isNotEmpty ? colorName : 'Unknown Product'));
+
     return Product(
       id: productId,
-      name: (json['name'] as String?) ?? 'Unknown Product',
+      name: (json['name'] as String? ?? '').trim().isNotEmpty 
+          ? json['name'] 
+          : aiName,
       brand: (json['brand'] as String?) ?? 'SoleMate',
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       category: (json['category'] as String?) ?? 'Misc',
@@ -79,6 +92,7 @@ class Product {
       lastTriedAt: json['lastTriedAt'] != null
           ? DateTime.tryParse(json['lastTriedAt'] as String)
           : null,
+      matchReason: (json['reason'] as String?) ?? (json['match_reason'] as String?),
     );
   }
 
@@ -96,6 +110,7 @@ class Product {
       'arLensGroupId': arLensGroupId,
       'isPopular': isPopular,
       'lastTriedAt': lastTriedAt?.toIso8601String(),
+      'reason': matchReason,
     };
   }
 

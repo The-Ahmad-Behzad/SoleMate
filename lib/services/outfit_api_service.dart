@@ -168,4 +168,80 @@ class OutfitApiService {
       return [];
     }
   }
+
+  /// NEW: Gets shoe recommendations based on an uploaded outfit image file.
+  Future<Map<String, dynamic>?> recommendShoesFromImage(String imagePath, {String gender = 'unisex'}) async {
+    try {
+      final response = await _api.postMultipart(
+        '/outfit/recommend-shoes',
+        fields: {
+          'gender': gender,
+        },
+        files: [await http.MultipartFile.fromPath('outfitImage', imagePath)],
+        requiresAuth: true,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        return json.decode(responseBody) as Map<String, dynamic>;
+      } else {
+        final errorBody = await response.stream.bytesToString();
+        debugPrint('Recommend shoes failed: ${response.statusCode} - $errorBody');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Recommend shoes error: $e');
+      return null;
+    }
+  }
+
+  /// NEW: Gets an outfit recommendation (text) for an uploaded shoe image.
+  Future<Map<String, dynamic>?> getOutfitRecommendationForShoe(String imagePath, {String gender = 'unisex'}) async {
+    try {
+      final response = await _api.postMultipart(
+        '/outfit/recommend-outfit-for-shoe',
+        fields: {
+          'gender': gender,
+        },
+        files: [await http.MultipartFile.fromPath('file', imagePath)],
+        requiresAuth: true,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        return json.decode(responseBody) as Map<String, dynamic>;
+      } else {
+        final errorBody = await response.stream.bytesToString();
+        debugPrint('Get outfit recommendation failed: ${response.statusCode} - $errorBody');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Get outfit recommendation error: $e');
+      return null;
+    }
+  }
+
+  /// NEW: Checks for style harmony (mismatch) in an uploaded outfit image.
+  Future<Map<String, dynamic>?> checkOutfitMismatch(String imagePath) async {
+    try {
+      final response = await _api.postMultipart(
+        '/outfit/check-mismatch',
+        files: [await http.MultipartFile.fromPath('image', imagePath)],
+        requiresAuth: true,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        return json.decode(responseBody) as Map<String, dynamic>;
+      } else {
+        final errorBody = await response.stream.bytesToString();
+        debugPrint('Check outfit mismatch failed: ${response.statusCode} - $errorBody');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Check outfit mismatch error: $e');
+      return null;
+    }
+  }
 }
+

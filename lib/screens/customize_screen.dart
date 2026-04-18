@@ -89,7 +89,17 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               margin: const EdgeInsets.only(bottom: AppSpacing.lg),
               decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: AppRadius.radiusFull),
             ),
-            Text('Select Shoe Base', style: AppTypography.headline3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Select Shoe Base', style: AppTypography.headline3),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 20),
+                  onPressed: _loadCatalog,
+                  tooltip: 'Refresh Catalog',
+                ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.lg),
             if (_isLoadingCatalog)
               const Expanded(child: Center(child: CircularProgressIndicator()))

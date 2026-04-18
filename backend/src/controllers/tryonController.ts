@@ -37,12 +37,17 @@ export async function saveTryOn(req: AuthRequest, res: Response): Promise<void> 
       return;
     }
 
-    const tryOn = await TryOnHistoryModel.create({
-      userId: user._id,
-      shoeId: new Types.ObjectId(shoeId),
-      snapshotUrl,
-      customSkinApplied,
-    });
+    const tryOn = await TryOnHistoryModel.findOneAndUpdate(
+      { userId: user._id, shoeId: new Types.ObjectId(shoeId) },
+      { 
+        userId: user._id, 
+        shoeId: new Types.ObjectId(shoeId), 
+        snapshotUrl, 
+        customSkinApplied,
+        createdAt: new Date() // Update timestamp to bring it to the top
+      },
+      { upsert: true, new: true }
+    );
 
     res.status(201).json(tryOn);
   } catch (err: any) {

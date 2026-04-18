@@ -43,7 +43,7 @@ Write-Host "[3/5] Installing and launching app..."
 $InstallTapper = Start-Process adb -ArgumentList "-s", $DeviceId, "shell", "while true; do input tap 288 2090; sleep 1; done" -NoNewWindow -PassThru
 
 # Install
-adb -s $DeviceId install -r "build/app/outputs/flutter-apk/app-release.apk"
+adb -s $DeviceId install -r "build/app/outputs/flutter-apk/app-debug.apk"
 
 # Stop Install Tapper
 Stop-Process -Id $InstallTapper.Id -ErrorAction SilentlyContinue
@@ -94,9 +94,28 @@ foreach ($Step in $Config.steps) {
             } catch {
                 Write-Warning "Tap failed: $_"
             }
+            # Added wait for garment selection + second tap for Analyze
+            if ($Step.name -eq "Action: PROMINENT - Tap Rec Outfit") {
+                Write-Host "  > Action: WAITING FOR USER: Select an image for Recommendation..." -ForegroundColor Yellow
+                Start-Sleep -Seconds 10
+                Write-Host "  > Tapping 'Analyze' now..."
+                adb -s $DeviceId shell input tap $TargetX $TargetY 2>&1 | Out-Default
+            }
         }
         "key" {
             adb -s $DeviceId shell input keyevent $Step.code
+        }
+        "swipe" {
+            $StartX = [int]($Step.start_x * $Width)
+            $StartY = [int]($Step.start_y * $Height)
+            $EndX = [int]($Step.end_x * $Width)
+            $EndY = [int]($Step.end_y * $Height)
+            $Duration = if ($Step.duration_ms) { $Step.duration_ms } else { 500 }
+
+            $WaitAfter = if ($Step.wait_after) { $Step.wait_after / 1000 } else { 2 }
+            Start-Sleep -Seconds $WaitAfter
+            Write-Host "    Current Swipe: ($StartX, $StartY) -> ($EndX, $EndY) in $($Duration)ms" -ForegroundColor Gray
+            adb -s $DeviceId shell input swipe $StartX $StartY $EndX $EndY $Duration
         }
     }
 }
@@ -106,7 +125,8 @@ Write-Host "Logs are being captured in $LogFile. Monitoring will continue until 
 Write-Host "Log process ID: $($LogProcess.Id)"
 
 # Optional: Wait a bit more for finishing logs
-Start-Sleep -Seconds 5
+# Wait for final logs to settle
+Start-Sleep -Seconds 30
 # Write-Host "Stopping log capture..."
 # Stop-Process -Id $LogProcess.Id -ErrorAction SilentlyContinue
 

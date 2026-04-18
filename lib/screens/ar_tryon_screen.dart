@@ -439,11 +439,21 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Select Shoe',
-              style: AppTypography.headline4.copyWith(
-                color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Select Shoe',
+                  style: AppTypography.headline4.copyWith(
+                    color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 20),
+                  onPressed: _loadProducts,
+                  tooltip: 'Refresh Catalog',
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.lg),
             

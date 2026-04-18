@@ -14,7 +14,8 @@ import 'customize_screen.dart';
 
 /// Main app shell that wraps the bottom navigation with feature screens
 class MainAppShell extends StatefulWidget {
-  const MainAppShell({super.key});
+  final int initialIndex;
+  const MainAppShell({super.key, this.initialIndex = 0});
 
   @override
   State<MainAppShell> createState() => _MainAppShellState();
@@ -31,6 +32,16 @@ class _MainAppShellState extends State<MainAppShell> {
     super.initState();
     _initializeScreens();
     _syncUser();
+    
+    // Set initial tab if provided
+    if (widget.initialIndex != 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final navService = Provider.of<NavigationService>(context, listen: false);
+          navService.setIndex(widget.initialIndex);
+        }
+      });
+    }
   }
 
   Future<void> _syncUser() async {
