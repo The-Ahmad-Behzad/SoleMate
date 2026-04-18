@@ -1,0 +1,17 @@
+{
+    "1773045680635314:1643762": {
+        "IResourceController": {
+            "name": "Cloud Storage Module",
+            "type": 38,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1773045680635305:1643761"
+        },
+        "IResourceManager": {
+            "uid": "1773045680635305:1643761",
+            "name": "",
+            "flags": 0
+        }
+    }
+}

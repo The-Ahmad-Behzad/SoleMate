@@ -1,0 +1,115 @@
+{
+    "1667584352770407:64109": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "270480",
+                "compressedSize": "135773",
+                "extension": "mesh",
+                "originalRAM": "270480",
+                "originalSize": "135773",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849719:1812"
+        }
+    },
+    "1674231915849513:1571": {
+        "IResourceController": {
+            "name": "metal_2 2",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584352770407:64109",
+            "fileId": "1674231915849718:1811",
+            "publicId": "1674231915850075:2117",
+            "expected_hash": "c48eee0af5fbe1530936d82ece45fd50",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584352770407:64109",
+            "name": "Files/File_1674231915849718_1811.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849718:1811": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849718_1811.mesh"
+        }
+    },
+    "1674231915849719:1812": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849719_1812.mesh"
+        }
+    },
+    "1674231915850075:2117": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Meshes/metal_2 2.mesh",
+                "hash": "c48eee0af5fbe1530936d82ece45fd50"
+            }
+        }
+    }
+}

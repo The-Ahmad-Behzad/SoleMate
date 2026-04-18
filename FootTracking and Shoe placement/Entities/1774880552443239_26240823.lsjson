@@ -1,0 +1,17 @@
+{
+    "1774880552443239:26240823": {
+        "IResourceController": {
+            "name": "Remote Media Module",
+            "type": 40,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774880552443211:26240822"
+        },
+        "IResourceManager": {
+            "uid": "1774880552443211:26240822",
+            "name": "",
+            "flags": 0
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "1674231915849509:1538": {
+        "IResourceController": {
+            "name": "Mocassins Inside",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584346569129:61982",
+            "fileId": "1674231915849628:1736",
+            "originalId": "1674231915849629:1737",
+            "publicId": "1674231915850064:2079",
+            "expected_hash": "0abeb8c116eccb6416876e6ecdb094f2"
+        },
+        "IResourceManager": {
+            "uid": "1667584346569129:61982",
+            "name": "Files/File_1674231915849628_1736",
+            "flags": 1
+        }
+    },
+    "1674231915849628:1736": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849628_1736"
+        }
+    },
+    "1674231915849629:1737": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849629_1737.lsmat"
+        }
+    },
+    "1674231915850064:2079": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Materials/Mocassins Inside.lsmat",
+                "hash": "f28ef8c2848e058c5024c708bbbed402"
+            }
+        }
+    }
+}

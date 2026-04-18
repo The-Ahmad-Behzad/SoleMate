@@ -1,0 +1,38 @@
+{
+    "1773045680438316:1643675": {
+        "IFileManager": {
+            "path": "Files/File_1773045680438316_1643675.js"
+        }
+    },
+    "1773045680442599:1643676": {
+        "IResourceController": {
+            "name": "CloudStoreWrapperModule",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1773045680444237:1643677",
+            "fileId": "1773045680438316:1643675",
+            "publicId": "1773045680472679:1643691",
+            "expected_hash": "4a2d1898e3854f485953cf780a0cf665"
+        },
+        "IResourceManager": {
+            "uid": "1773045680444237:1643677",
+            "name": "Files/File_1773045680438316_1643675.js",
+            "flags": 1
+        }
+    },
+    "1773045680444237:1643677": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    },
+    "1773045680472679:1643691": {
+        "IResourceController": {
+            "public": {
+                "path": "CloudStoreWrapper/CloudStoreWrapperModule.js",
+                "hash": "4a2d1898e3854f485953cf780a0cf665"
+            }
+        }
+    }
+}

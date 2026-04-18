@@ -1,0 +1,67 @@
+{
+    "1667584355035531:64533": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "16777216",
+                "compressedSize": "198220",
+                "extension": "jpg",
+                "originalRAM": "16777216",
+                "originalSize": "198220",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849776:1856"
+        }
+    },
+    "1674231915849516:1592": {
+        "IResourceController": {
+            "name": "Main_Shoe_Normal",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584355035531:64533",
+            "fileId": "1674231915849774:1854",
+            "originalId": "1674231915849775:1855",
+            "publicId": "1674231915850082:2140",
+            "expected_hash": "a3b25afc3d320f600808d62bdd1decbf",
+            "additional": {
+                "originHash": "b0b28d67aa68f4297fb5dc86f8d1e946",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584355035531:64533",
+            "name": "Files/File_1674231915849774_1854.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849774:1854": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849774_1854.jpg"
+        }
+    },
+    "1674231915849775:1855": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849775_1855.jpg"
+        }
+    },
+    "1674231915849776:1856": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849776_1856.jpg"
+        }
+    },
+    "1674231915850082:2140": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/Main_Shoe_Normal.jpg",
+                "hash": "a3b25afc3d320f600808d62bdd1decbf"
+            }
+        }
+    }
+}

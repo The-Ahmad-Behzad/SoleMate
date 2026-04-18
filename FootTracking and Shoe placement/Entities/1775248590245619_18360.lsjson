@@ -1,0 +1,31 @@
+{
+    "1775248590242485:18359": {
+        "IFileManager": {
+            "path": "Files/File_1775248590242485_18359.js"
+        }
+    },
+    "1775248590245619:18360": {
+        "IResourceController": {
+            "name": "Annotator",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590245636:18361",
+            "fileId": "1775248590242485:18359",
+            "expected_hash": "a3776c18dd6ef4727c28e30359bf5be3"
+        },
+        "IResourceManager": {
+            "uid": "1775248590245636:18361",
+            "name": "Files/File_1775248590242485_18359.js",
+            "flags": 1
+        }
+    },
+    "1775248590245636:18361": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "GenericDecoders"
+            ]
+        }
+    }
+}

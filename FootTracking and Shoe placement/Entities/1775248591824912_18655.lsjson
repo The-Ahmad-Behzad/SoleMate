@@ -1,0 +1,30 @@
+{
+    "1775248591824912:18655": {
+        "IResourceController": {
+            "name": "KeypointFTController",
+            "type": 12,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248591824812:18652",
+            "fileId": "1775248591860146:18659",
+            "originalId": "1775248598084449:20028",
+            "expected_hash": "76378ff4d83b620c248e03bbcd7356d1"
+        },
+        "IResourceManager": {
+            "uid": "1775248591824812:18652",
+            "name": "sceneObject_2",
+            "flags": 0
+        }
+    },
+    "1775248591860146:18659": {
+        "IFileManager": {
+            "path": "Files/File_1775248591860146_18659.oprfb"
+        }
+    },
+    "1775248598084449:20028": {
+        "IFileManager": {
+            "path": "Files/File_1775248598084449_20028.oprfb"
+        }
+    }
+}

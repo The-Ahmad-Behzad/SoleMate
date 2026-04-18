@@ -1,0 +1,38 @@
+{
+    "1666616572473662:172559": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    },
+    "1674231915849507:1521": {
+        "IResourceController": {
+            "name": "Shoe Controller",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1666616572473662:172559",
+            "fileId": "1674231915849577:1695",
+            "publicId": "1674231915850058:2058",
+            "expected_hash": "416277d060198c387c22bf789d82ea89"
+        },
+        "IResourceManager": {
+            "uid": "1666616572473662:172559",
+            "name": "Files/File_1674231915849577_1695.js",
+            "flags": 1
+        }
+    },
+    "1674231915849577:1695": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849577_1695.js"
+        }
+    },
+    "1674231915850058:2058": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/Shoe Controller.js",
+                "hash": "416277d060198c387c22bf789d82ea89"
+            }
+        }
+    }
+}

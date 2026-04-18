@@ -1,0 +1,38 @@
+{
+    "1774878780773583:25566369": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/RemoteApiHandler.js",
+                "hash": "8b530ba939d1b1dcd13be88cab77dc66"
+            }
+        }
+    },
+    "1774878780774525:25566370": {
+        "IFileManager": {
+            "path": "Files/File_1774878780774525_25566370.js"
+        }
+    },
+    "1774878780781112:25566373": {
+        "IResourceController": {
+            "name": "RemoteApiHandler",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774878780781345:25566374",
+            "fileId": "1774878780774525:25566370",
+            "publicId": "1774878780773583:25566369",
+            "expected_hash": "8b530ba939d1b1dcd13be88cab77dc66"
+        },
+        "IResourceManager": {
+            "uid": "1774878780781345:25566374",
+            "name": "Files/File_1774878780774525_25566370.js",
+            "flags": 1
+        }
+    },
+    "1774878780781345:25566374": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

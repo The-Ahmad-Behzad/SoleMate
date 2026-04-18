@@ -1,0 +1,43 @@
+{
+    "1681910492791830:708407": {
+        "IFileManager": {
+            "path": "Files/File_1681910492791830_708407"
+        }
+    },
+    "1681910492799005:708408": {
+        "IResourceController": {
+            "name": "Hint_Swap_Camera",
+            "type": 1,
+            "subtype": 5,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1681910492800692:708411",
+            "fileId": "1681910492791830:708407",
+            "originalId": "1681910492812970:708418",
+            "publicId": "1681910492847686:708432",
+            "expected_hash": "52bfaf374a49024fa6399915e4bf5ccd",
+            "additional": {
+                "subtype": "5"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1681910492800692:708411",
+            "name": "Files/File_1681910492791830_708407",
+            "flags": 1
+        }
+    },
+    "1681910492812970:708418": {
+        "IFileManager": {
+            "path": "Files/File_1681910492812970_708418"
+        }
+    },
+    "1681910492847686:708432": {
+        "IResourceController": {
+            "public": {
+                "path": "Textures/Hint_Swap_Camera",
+                "hash": "52bfaf374a49024fa6399915e4bf5ccd",
+                "complexResourceHash": "2992412ee0b1ffd213a31bffd23b668d"
+            }
+        }
+    }
+}

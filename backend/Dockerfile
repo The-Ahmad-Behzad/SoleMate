@@ -1,30 +1,41 @@
-# syntax=docker/dockerfile:1
+# Build stage
+FROM node:22-alpine AS builder
 
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json* .npmrc* ./
-RUN npm ci || npm install
+# Create app directory
+WORKDIR /usr/src/app
 
-FROM node:20-alpine AS build
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY package.json ./
-COPY tsconfig.json ./
-COPY src ./src
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+
+# Install all dependencies (including devDependencies for building)
+RUN npm ci
+
+# Bundle app source
+COPY . .
+
+# Build the TypeScript code
 RUN npm run build
 
-FROM node:20-alpine AS runner
-WORKDIR /app
+# Production stage
+FROM node:22-alpine
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Set environment to production
 ENV NODE_ENV=production
-COPY package.json ./
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
+ENV PORT=8080
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev
 
+# Copy built artifacts from the builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Expose the API port
 EXPOSE 8080
-CMD ["node", "dist/index.js"]
 
-
-
+# Start the application
+CMD ["npm", "start"]

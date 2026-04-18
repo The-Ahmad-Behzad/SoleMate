@@ -1,0 +1,96 @@
+{
+  "device_id": "192.168.100.18:44539",
+  "package_name": "com.solemate.app.solemate_app",
+  "main_activity": ".MainActivity",
+  "log_file": "diagnostics_log.txt",
+  "steps": [
+    {
+      "name": "Wait for app launch",
+      "action": "wait",
+      "duration_ms": 7000
+    },
+    {
+      "name": "Tap Start AR Try-On",
+      "action": "tap",
+      "rel_x": 0.5,
+      "rel_y": 0.3
+    },
+    {
+      "name": "Wait for navigation",
+      "action": "wait",
+      "duration_ms": 3000
+    },
+    {
+      "name": "Switch to Outfit Match tab",
+      "action": "tap",
+      "rel_x": 0.625,
+      "rel_y": 0.90
+    },
+    {
+      "name": "Wait for Outfit Match content",
+      "action": "wait",
+      "duration_ms": 3000
+    },
+    {
+      "name": "Action: PROMINENT - Tap Rec Outfit",
+      "action": "tap",
+      "rel_x": 0.5,
+      "rel_y": 0.35
+    },
+    {
+      "name": "Wait for Shoe Recommendation results",
+      "action": "wait",
+      "duration_ms": 5000
+    },
+    {
+      "name": "Scroll Down to see Outfit analysis",
+      "action": "swipe",
+      "start_x": 0.5,
+      "start_y": 0.8,
+      "end_x": 0.5,
+      "end_y": 0.2,
+      "duration_ms": 800
+    },
+    {
+      "name": "Wait for scroll animation",
+      "action": "wait",
+      "duration_ms": 1000
+    },
+    {
+      "name": "Scroll Down again to see Outfit Mismatch",
+      "action": "swipe",
+      "start_x": 0.5,
+      "start_y": 0.8,
+      "end_x": 0.5,
+      "end_y": 0.2,
+      "duration_ms": 800
+    },
+    {
+      "name": "Wait for scroll animation",
+      "action": "wait",
+      "duration_ms": 1000
+    },
+    {
+      "name": "Tap Upload (Mismatch Checker)",
+      "action": "tap",
+      "rel_x": 0.75,
+      "rel_y": 0.55
+    },
+    {
+      "name": "WAITING FOR USER: Select an image in the gallery...",
+      "action": "wait",
+      "duration_ms": 10000
+    },
+    {
+      "name": "Tap Check Harmony",
+      "action": "tap",
+      "rel_x": 0.75,
+      "rel_y": 0.55
+    },
+    {
+      "name": "Wait for Harmony results",
+      "action": "wait",
+      "duration_ms": 7000
+    }
+  ]
+}

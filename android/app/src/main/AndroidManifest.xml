@@ -3,12 +3,20 @@
     <application
         android:label="solemate_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
+        <!-- Snap Camera Kit API Token -->
+        <!-- TODO: Paste your Snap Kit API Token here -->
+        <meta-data
+            android:name="com.snap.camerakit.api.token"
+            android:value="eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNzY5MTY2OTEzLCJzdWIiOiJhMjBjNWYyYS0yY2FkLTQxNDAtOTVlZC1jZGNlNGY1YWQwYjF-U1RBR0lOR343ZGExMGU0Ni0zNzRhLTQxZDktOWFmYS00OWFmNDc1YmYzOWMifQ.hOalDSA0aYTH_dbBMdCBMuUeOr4ukyx_q63WhJf_KF8" />
+
+        <!--
         <meta-data
             android:name="com.google.ar.core"
             android:value="required"
             tools:replace="android:value" />
+        -->
 
 
         <activity
@@ -81,9 +89,13 @@
             <action android:name="android.intent.action.SEND"/>
             <data android:mimeType="image/*"/>
         </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- optional for saving images -->

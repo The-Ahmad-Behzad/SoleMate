@@ -1,0 +1,43 @@
+{
+    "1674231915849515:1585": {
+        "IResourceController": {
+            "name": "shoe_mask_03",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584354403775:64414",
+            "fileId": "1674231915849755:1839",
+            "originalId": "1674231915849757:1840",
+            "publicId": "1674231915850080:2133",
+            "expected_hash": "59145a12547ea2a58a7338b8db13840d",
+            "additional": {
+                "originHash": "59145a12547ea2a58a7338b8db13840d",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584354403775:64414",
+            "name": "Files/File1903.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849755:1839": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849755_1839.webp"
+        }
+    },
+    "1674231915849757:1840": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849757_1840.webp"
+        }
+    },
+    "1674231915850080:2133": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/shoe_mask_03.webp",
+                "hash": "59145a12547ea2a58a7338b8db13840d"
+            }
+        }
+    }
+}

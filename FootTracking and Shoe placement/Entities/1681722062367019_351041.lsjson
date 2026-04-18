@@ -1,0 +1,29 @@
+{
+    "1681722062365290:351040": {
+        "IFileManager": {
+            "path": "Files/File_1681722062365290_351040.js"
+        }
+    },
+    "1681722062367019:351041": {
+        "IResourceController": {
+            "name": "DestructionHelper",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1681722062367029:351042",
+            "fileId": "1681722062365290:351040",
+            "expected_hash": "92fa1bbff92644aea791c37aaa29561e"
+        },
+        "IResourceManager": {
+            "uid": "1681722062367029:351042",
+            "name": "Files/File_1681722062365290_351040.js",
+            "flags": 1
+        }
+    },
+    "1681722062367029:351042": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "1772189007966027:11225": {
+        "IResourceController": {
+            "name": "Toggle Handle",
+            "type": 12,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1772189007965978:11222",
+            "fileId": "1772189008029077:11229",
+            "originalId": "1772189020389896:13398",
+            "expected_hash": "b055d6843bb2fd95f0a1a071d4b7cc2e"
+        },
+        "IResourceManager": {
+            "uid": "1772189007965978:11222",
+            "name": "sceneObject_0",
+            "flags": 0
+        }
+    },
+    "1772189008029077:11229": {
+        "IFileManager": {
+            "path": "Files/File_1772189008029077_11229.oprfb"
+        }
+    },
+    "1772189020389896:13398": {
+        "IFileManager": {
+            "path": "Files/File_1772189020389896_13398.oprfb"
+        }
+    }
+}

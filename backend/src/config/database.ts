@@ -16,8 +16,10 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
     maxPoolSize: 10
   } as any);
 
+  console.log(`[Database] Successfully connected to MongoDB: ${DEFAULT_DB_NAME}`);
   return connection;
 }
+
 
 export async function disconnectFromDatabase(): Promise<void> {
   await mongoose.disconnect();

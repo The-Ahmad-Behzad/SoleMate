@@ -1,0 +1,39 @@
+{
+    "1774868939721161:21367041": {
+        "IFileManager": {
+            "path": "Files/File_1774868939721161_21367041"
+        }
+    },
+    "1774868939723294:21367042": {
+        "IResourceController": {
+            "name": "material_0",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774868939723300:21367043",
+            "fileId": "1774868939721161:21367041",
+            "originalId": "1774868939769748:21367049",
+            "publicId": "1774868940580043:21367468",
+            "expected_hash": "20b64ecbdcf7e2b82c0aa29038627025"
+        },
+        "IResourceManager": {
+            "uid": "1774868939723300:21367043",
+            "name": "Files/File_1774868939721161_21367041",
+            "flags": 1
+        }
+    },
+    "1774868939769748:21367049": {
+        "IFileManager": {
+            "path": "Files/File_1774868939769748_21367049.lsmat"
+        }
+    },
+    "1774868940580043:21367468": {
+        "IResourceController": {
+            "public": {
+                "path": "../AdditionalFiles/3D Resources/Sandal 1/girl_sandal1/Materials/material_0.lsmat",
+                "hash": "a2beb43d7f54a6faf489f84fb528dcd4"
+            }
+        }
+    }
+}

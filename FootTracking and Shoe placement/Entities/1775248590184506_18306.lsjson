@@ -1,0 +1,32 @@
+{
+    "1775248590181895:18305": {
+        "IFileManager": {
+            "path": "Files/File_1775248590181895_18305.js"
+        }
+    },
+    "1775248590184506:18306": {
+        "IResourceController": {
+            "name": "Foot Tracking",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590185034:18307",
+            "fileId": "1775248590181895:18305",
+            "expected_hash": "d761231efe197be0b7c31447998e78a3"
+        },
+        "IResourceManager": {
+            "uid": "1775248590185034:18307",
+            "name": "Files/File_1775248590181895_18305.js",
+            "flags": 1
+        }
+    },
+    "1775248590185034:18307": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "EventModule",
+                "SceneObjectHelpersModule"
+            ]
+        }
+    }
+}

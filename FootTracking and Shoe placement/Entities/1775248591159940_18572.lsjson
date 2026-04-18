@@ -1,0 +1,29 @@
+{
+    "1775248591156406:18571": {
+        "IFileManager": {
+            "path": "Files/File_1775248591156406_18571.js"
+        }
+    },
+    "1775248591159940:18572": {
+        "IResourceController": {
+            "name": "NewJSMathLibrary",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248591159961:18573",
+            "fileId": "1775248591156406:18571",
+            "expected_hash": "e70f8f3a01f6eebe51e98f741a3f2b10"
+        },
+        "IResourceManager": {
+            "uid": "1775248591159961:18573",
+            "name": "Files/File_1775248591156406_18571.js",
+            "flags": 1
+        }
+    },
+    "1775248591159961:18573": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

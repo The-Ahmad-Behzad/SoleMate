@@ -1,0 +1,29 @@
+{
+    "1775248590509303:18451": {
+        "IFileManager": {
+            "path": "Files/File_1775248590509303_18451.js"
+        }
+    },
+    "1775248590512286:18452": {
+        "IResourceController": {
+            "name": "SceneObjectHelpersModule 3",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 1,
+            "hidden": true,
+            "uid": "1775248590512310:18453",
+            "fileId": "1775248590509303:18451",
+            "expected_hash": "3840708d98d4624b318c7a53b1a45433"
+        },
+        "IResourceManager": {
+            "uid": "1775248590512310:18453",
+            "name": "Files/File_1775248590509303_18451.js",
+            "flags": 1
+        }
+    },
+    "1775248590512310:18453": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

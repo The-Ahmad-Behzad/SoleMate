@@ -1,0 +1,38 @@
+{
+    "1774965109085918:17396": {
+        "IResourceController": {
+            "public": {
+                "path": "Lens_Studio_5.js",
+                "hash": "0c28e0071f0b5541e15e1d3491e72b18"
+            }
+        }
+    },
+    "1774965109086566:17397": {
+        "IFileManager": {
+            "path": "Files/File_1774965109086566_17397.js"
+        }
+    },
+    "1774965109089647:17398": {
+        "IResourceController": {
+            "name": "Lens_Studio_5",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774965109089828:17399",
+            "fileId": "1774965109086566:17397",
+            "publicId": "1774965109085918:17396",
+            "expected_hash": "0c28e0071f0b5541e15e1d3491e72b18"
+        },
+        "IResourceManager": {
+            "uid": "1774965109089828:17399",
+            "name": "Files/File_1774965109086566_17397.js",
+            "flags": 1
+        }
+    },
+    "1774965109089828:17399": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

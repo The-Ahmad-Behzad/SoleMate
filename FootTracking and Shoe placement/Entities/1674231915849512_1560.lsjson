@@ -1,0 +1,80 @@
+{
+    "1667584350114680:63213": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "2049",
+                        "uncompressed_hash": "f82e607c7f4cc2e6ea7bf218ea880590"
+                    },
+                    "v": "1674231915849875:1932"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "3328",
+                "compressedSize": "1905",
+                "extension": "png",
+                "originalRAM": "26112",
+                "originalSize": "8097",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "2",
+                    "subtype": "9",
+                    "type": "1"
+                }
+            },
+            "uncompressed_file": "1674231915849688:1788"
+        }
+    },
+    "1674231915849512:1560": {
+        "IResourceController": {
+            "name": "stitch_nrm_2",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584350114680:63213",
+            "fileId": "1674231915849686:1786",
+            "originalId": "1674231915849687:1787",
+            "publicId": "1674231915850071:2104",
+            "expected_hash": "fb072d5e7bbe6e5efe795f46d6b2b54d",
+            "additional": {
+                "originHash": "f82e607c7f4cc2e6ea7bf218ea880590",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584350114680:63213",
+            "name": "Files/File1848.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849686:1786": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849686_1786.pvr"
+        }
+    },
+    "1674231915849687:1787": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849687_1787.png"
+        }
+    },
+    "1674231915849688:1788": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849688_1788.png"
+        }
+    },
+    "1674231915849875:1932": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849875_1932.pvr"
+        }
+    },
+    "1674231915850071:2104": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Textures/stitch_nrm_2.png",
+                "hash": "f82e607c7f4cc2e6ea7bf218ea880590"
+            }
+        }
+    }
+}

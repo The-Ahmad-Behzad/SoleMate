@@ -1,0 +1,39 @@
+{
+    "1674231915849507:1527": {
+        "IResourceController": {
+            "name": "Stroke",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667499025570888:22171",
+            "fileId": "1674231915849597:1711",
+            "originalId": "1674231915849599:1712",
+            "publicId": "1674231915850060:2064",
+            "expected_hash": "4f9ea7abe8ae4cc33d47b95528d7b455"
+        },
+        "IResourceManager": {
+            "uid": "1667499025570888:22171",
+            "name": "Files/File_1674231915849597_1711",
+            "flags": 1
+        }
+    },
+    "1674231915849597:1711": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849597_1711"
+        }
+    },
+    "1674231915849599:1712": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849599_1712.lsmat"
+        }
+    },
+    "1674231915850060:2064": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 2/Materials/Stroke.lsmat",
+                "hash": "594120121f5f0e12bf790bdeb233fd29"
+            }
+        }
+    }
+}

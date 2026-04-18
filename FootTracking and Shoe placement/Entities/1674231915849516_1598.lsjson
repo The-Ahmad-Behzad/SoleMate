@@ -1,0 +1,39 @@
+{
+    "1674231915849516:1598": {
+        "IResourceController": {
+            "name": "Shoe Laces",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584357228429:64918",
+            "fileId": "1674231915849790:1867",
+            "originalId": "1674231915849791:1868",
+            "publicId": "1674231915850085:2147",
+            "expected_hash": "3464c1249ee1d06abaf4137ff8433f39"
+        },
+        "IResourceManager": {
+            "uid": "1667584357228429:64918",
+            "name": "Files/File_1674231915849790_1867",
+            "flags": 1
+        }
+    },
+    "1674231915849790:1867": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849790_1867"
+        }
+    },
+    "1674231915849791:1868": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849791_1868.lsmat"
+        }
+    },
+    "1674231915850085:2147": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Laces.lsmat",
+                "hash": "7f57a39c51cf25923679acfe19812461"
+            }
+        }
+    }
+}

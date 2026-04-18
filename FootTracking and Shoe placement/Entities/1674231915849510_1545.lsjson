@@ -1,0 +1,115 @@
+{
+    "1667584347914633:62477": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "4740",
+                "compressedSize": "4515",
+                "extension": "mesh",
+                "originalRAM": "4740",
+                "originalSize": "4515",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849645:1751"
+        }
+    },
+    "1674231915849510:1545": {
+        "IResourceController": {
+            "name": "stitch_02",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584347914633:62477",
+            "fileId": "1674231915849644:1750",
+            "publicId": "1674231915850066:2088",
+            "expected_hash": "c8243e9c8f5c20cb27df6703e5ea3c5f",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584347914633:62477",
+            "name": "Files/File_1674231915849644_1750.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849644:1750": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849644_1750.mesh"
+        }
+    },
+    "1674231915849645:1751": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849645_1751.mesh"
+        }
+    },
+    "1674231915850066:2088": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/stitch_02.mesh",
+                "hash": "c8243e9c8f5c20cb27df6703e5ea3c5f"
+            }
+        }
+    }
+}

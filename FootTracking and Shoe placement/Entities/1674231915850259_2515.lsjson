@@ -1,0 +1,24 @@
+{
+    "1674231915850055:2048": {
+        "IResourceController": {
+            "public": {
+                "path": "Textures/ShoeIcons"
+            }
+        }
+    },
+    "1674231915850259:2515": {
+        "IResourceController": {
+            "name": "ShoeIcons",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1674231915850055:2048",
+            "resources": [
+                "1674231915849507:1523",
+                "1674231915849507:1524",
+                "1674231915849507:1522"
+            ]
+        }
+    }
+}

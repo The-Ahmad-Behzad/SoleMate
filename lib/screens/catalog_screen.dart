@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../theme/theme_config.dart';
 import '../models/product.dart';
-import '../services/catalog_api_service.dart';
+import '../repositories/catalog_repository.dart';
 import '../widgets/product_card.dart';
+import '../widgets/custom_button.dart';
 import 'ar_tryon_screen.dart';
+import 'customize_screen.dart';
+import 'outfit_match_screen.dart';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
@@ -13,7 +16,7 @@ class CatalogScreen extends StatefulWidget {
 }
 
 class _CatalogScreenState extends State<CatalogScreen> {
-  final CatalogApiService _catalog = CatalogApiService();
+  final CatalogRepository _catalog = CatalogRepository();
   final TextEditingController _searchController = TextEditingController();
 
   late Future<List<Product>> _future;
@@ -35,25 +38,27 @@ class _CatalogScreenState extends State<CatalogScreen> {
   }
 
   Future<List<Product>> _load({bool refresh = false}) async {
-    final products = await _catalog.loadProducts(forceRefresh: refresh);
+    final products = await _catalog.getProducts();
     _all = products;
     _shown = products;
     return products;
   }
 
-  void _onSearchChanged() {
+  Future<void> _onSearchChanged() async {
     final text = _searchController.text.trim().toLowerCase();
-    setState(() {
-      if (text.isEmpty) {
-        _shown = _all;
-      } else {
-        _shown = _all.where((p) {
-          return p.name.toLowerCase().contains(text) ||
-              p.brand.toLowerCase().contains(text) ||
-              p.category.toLowerCase().contains(text);
-        }).toList(growable: false);
-      }
-    });
+    
+    if (text.isEmpty) {
+      if (mounted) setState(() => _shown = _all);
+      return;
+    }
+    
+    // Call backend API for search
+    final results = await _catalog.searchProducts(text);
+    if (mounted) {
+      setState(() {
+        _shown = results;
+      });
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -65,6 +70,24 @@ class _CatalogScreenState extends State<CatalogScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ARTryOnScreen(selectedProduct: product),
+      ),
+    );
+  }
+
+  void _openCustomize(Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        // Assuming CustomizeScreen takes a shoe context or we pass it (will update CustomizeScreen later)
+        builder: (_) => const CustomizeScreen(),
+      ),
+    );
+  }
+
+  void _openOutfitRecommendation(Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        // Pass base colors when opening outfit match
+        builder: (_) => OutfitMatchScreen(baseShoe: product),
       ),
     );
   }
@@ -153,7 +176,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: AppSpacing.xl2,
         mainAxisSpacing: AppSpacing.xl2,
-        childAspectRatio: 1.0,
+        childAspectRatio: 0.55,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
@@ -162,10 +185,30 @@ class _CatalogScreenState extends State<CatalogScreen> {
           imagePath: p.thumbnailUrl ?? '',
           title: p.name,
           price: p.price,
-          showActions: true,
-          actionText: 'Try On',
-          onAction: () => _openTryOn(p),
           onTap: () => _openTryOn(p),
+          actions: [
+            CustomButton(
+              text: 'Try On',
+              onPressed: () => _openTryOn(p),
+              variant: CustomButtonVariant.primary,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+            CustomButton(
+              text: 'Customize',
+              onPressed: () => _openCustomize(p),
+              variant: CustomButtonVariant.secondary,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+            CustomButton(
+              text: 'Outfit Match',
+              onPressed: () => _openOutfitRecommendation(p),
+              variant: CustomButtonVariant.outline,
+              size: CustomButtonSize.small,
+              isFullWidth: true,
+            ),
+          ],
         );
       },
     );

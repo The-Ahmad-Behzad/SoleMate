@@ -1,0 +1,80 @@
+{
+    "1667584349654450:63145": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "3073",
+                        "uncompressed_hash": "4f3e25d14d6d8369791b8de42fa2bc55"
+                    },
+                    "v": "1674231915849873:1930"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "8192",
+                "compressedSize": "5020",
+                "extension": "jpg",
+                "originalRAM": "65536",
+                "originalSize": "2100",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "3",
+                    "subtype": "9",
+                    "type": "1"
+                }
+            },
+            "uncompressed_file": "1674231915849678:1779"
+        }
+    },
+    "1674231915849511:1557": {
+        "IResourceController": {
+            "name": "insides_ao",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584349654450:63145",
+            "fileId": "1674231915849676:1777",
+            "originalId": "1674231915849677:1778",
+            "publicId": "1674231915850070:2101",
+            "expected_hash": "6a5e7ea39e552c8499cc0b6e68dd172c",
+            "additional": {
+                "originHash": "4f3e25d14d6d8369791b8de42fa2bc55",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584349654450:63145",
+            "name": "Files/File1836.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849676:1777": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849676_1777.pvr"
+        }
+    },
+    "1674231915849677:1778": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849677_1778.jpg"
+        }
+    },
+    "1674231915849678:1779": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849678_1779.jpg"
+        }
+    },
+    "1674231915849873:1930": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849873_1930.pvr"
+        }
+    },
+    "1674231915850070:2101": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Textures/insides_ao.jpg",
+                "hash": "4f3e25d14d6d8369791b8de42fa2bc55"
+            }
+        }
+    }
+}

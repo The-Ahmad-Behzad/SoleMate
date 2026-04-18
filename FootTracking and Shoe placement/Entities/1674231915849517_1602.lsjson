@@ -1,0 +1,39 @@
+{
+    "1674231915849517:1602": {
+        "IResourceController": {
+            "name": "Shoe Shadow",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584359388240:65205",
+            "fileId": "1674231915849799:1875",
+            "originalId": "1674231915849801:1876",
+            "publicId": "1674231915850086:2151",
+            "expected_hash": "4f9ea7abe8ae4cc33d47b95528d7b455"
+        },
+        "IResourceManager": {
+            "uid": "1667584359388240:65205",
+            "name": "Files/File_1674231915849799_1875",
+            "flags": 1
+        }
+    },
+    "1674231915849799:1875": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849799_1875"
+        }
+    },
+    "1674231915849801:1876": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849801_1876.lsmat"
+        }
+    },
+    "1674231915850086:2151": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Shadow.lsmat",
+                "hash": "07981ca77e885bca5652ff0b7bc46496"
+            }
+        }
+    }
+}

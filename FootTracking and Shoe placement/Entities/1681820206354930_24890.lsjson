@@ -1,0 +1,40 @@
+{
+    "1681820206353344:24889": {
+        "IFileManager": {
+            "path": "Files/File_1681820206353344_24889.js"
+        }
+    },
+    "1681820206354930:24890": {
+        "IResourceController": {
+            "name": "ShoeVisualization",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1681820206354940:24891",
+            "fileId": "1681820206353344:24889",
+            "publicId": "1681820206359387:24901",
+            "expected_hash": "b716c7466c581795eb82e11675309640"
+        },
+        "IResourceManager": {
+            "uid": "1681820206354940:24891",
+            "name": "Files/File_1681820206353344_24889.js",
+            "flags": 1
+        }
+    },
+    "1681820206354940:24891": {
+        "ScriptModulesController": {
+            "dependent_module_names": [
+                "SceneObjectHelpersModule"
+            ]
+        }
+    },
+    "1681820206359387:24901": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/ShoeVisualization.js",
+                "hash": "b716c7466c581795eb82e11675309640"
+            }
+        }
+    }
+}

@@ -1,0 +1,651 @@
+--------- beginning of main
+04-18 06:12:34.210 E/Zygote  ( 6892): process_name_ptr:6892 com.solemate.app.solemate_app
+04-18 06:12:34.210 E/Zygote  ( 6892): SetMemoryProtected process_name_ptr:6892 com.solemate.app.solemate_app
+04-18 06:12:34.268 I/pp.solemate_app( 6892): Late-enabling -Xcheck:jni
+04-18 06:12:34.351 I/pp.solemate_app( 6892): Using CollectorTypeCMC GC.
+04-18 06:12:34.398 D/nativeloader( 6892): Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+--------- beginning of system
+04-18 06:12:34.442 I/ActivityThread( 6892): Current dynamic renderEngine type=0
+04-18 06:12:34.581 D/MiuiDownscaleImpl( 6892): set override inverted scale : 1.0
+04-18 06:12:34.607 D/AppScoutStateMachine( 6892): 6892-ScoutStateMachinecreated
+04-18 06:12:34.641 I/RENDER_TURBO( 6892): onActivityThreadCreate not in white list, pkg=com.solemate.app.solemate_app, type=tides
+04-18 06:12:34.712 D/ActivityThread( 6892): setEmbeddedParam packageName=com.solemate.app.solemate_app processName=com.solemate.app.solemate_app isEmbedded=false isIsolated=false
+04-18 06:12:34.729 D/ApplicationLoaders( 6892): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+04-18 06:12:34.729 D/ApplicationLoaders( 6892): Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+04-18 06:12:35.341 D/nativeloader( 6892): Configuring clns-10 for other apk /data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/base.apk. target_sdk_version=36, uses_libraries=libOpenCL.so, library_path=/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/lib/arm64:/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.solemate.app.solemate_app
+04-18 06:12:35.355 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7d7a78) locale list changing from [] to [en-GB]
+04-18 06:12:35.362 E/MiuiPreloadClassImpl( 6892): invoke error.
+04-18 06:12:35.363 D/MiuiMonitorThread( 6892): Shared singleton Thread for stability monitor start
+04-18 06:12:35.376 D/HWUI    ( 6892): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+04-18 06:12:35.376 D/HWUI    ( 6892): [HWUI] EnhanceVkPipelineCache is disabled
+04-18 06:12:35.376 D/HWUI    ( 6892): [HWUI] Flag ddre enabled
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892): Currently set values for:
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892):   angle_gl_driver_selection_pkgs=[]
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892):   angle_gl_driver_selection_values=[]
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892): com.solemate.app.solemate_app is not listed in per-application setting
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892): ANGLE allowlist from config: 
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892): com.solemate.app.solemate_app is not listed in ANGLE allowlist or settings, returning default
+04-18 06:12:35.379 V/GraphicsEnvironment( 6892): Neither updatable production driver nor prerelease driver is supported.
+04-18 06:12:35.384 I/ActivityThread( 6892): TrafficStats init done
+04-18 06:12:35.388 I/ForceDarkHelperStubImpl( 6892): initialize for com.solemate.app.solemate_app , ForceDarkAppConfig: null
+04-18 06:12:35.390 D/nativeloader( 6892): Load libforcedarkimpl.so using system ns (caller=/system_ext/framework/miui-framework.jar): ok
+04-18 06:12:35.390 D/HWUI    ( 6892): JNI_OnLoad success
+04-18 06:12:35.390 I/MiuiForceDarkConfig( 6892): setConfig density:2.750000, mainRule:0, secondaryRule:0, tertiaryRule:0
+04-18 06:12:35.400 E/ashmem  ( 6892): Pinning is deprecated since Android Q. Please use trim or other methods.
+04-18 06:12:35.405 I/ActivityThread( 6892): Miui Feature Init done
+04-18 06:12:35.424 D/ResMonitorStub( 6892): The current process type is: third_party_app, process name is: com.solemate.app.solemate_app
+04-18 06:12:35.425 I/MiuiAppAdaptationStubsControl( 6892): Feature Flag of ThirdAppOpt is turned off
+04-18 06:12:35.493 I/FirebaseApp( 6892): Device unlocked: initializing all Firebase APIs for app [DEFAULT]
+04-18 06:12:35.522 I/FirebaseInitProvider( 6892): FirebaseApp initialization successful
+04-18 06:12:35.570 W/pp.solemate_app( 6892): ClassLoaderContext classpath size mismatch. expected=1, found=0 (DLC[];PCL[base.apk*3395480911]{PCL[/system/framework/org.apache.http.legacy.jar*1129637092]#PCL[/system/framework/com.android.location.provider.jar*1570284764]#PCL[/system/framework/com.android.media.remotedisplay.jar*487574312]#PCL[/system_ext/framework/com.android.extensions.appfunctions.jar*2880224042]#PCL[/system_ext/framework/androidx.window.extensions.jar*1912387715]#PCL[/system_ext/framework/androidx.window.sidecar.jar*2421929624]} | DLC[];PCL[])
+04-18 06:12:35.581 I/DynamiteModule( 6892): Considering local module com.google.android.gms.measurement.dynamite:155 and remote module com.google.android.gms.measurement.dynamite:185
+04-18 06:12:35.581 I/DynamiteModule( 6892): Selected remote version of com.google.android.gms.measurement.dynamite, version >= 185
+04-18 06:12:35.581 V/DynamiteModule( 6892): Dynamite loader version >= 2, using loadModule2NoCrashUtils
+04-18 06:12:35.605 W/libc    ( 6892): Access denied finding property "ro.vendor.perf.scroll_opt"
+04-18 06:12:35.614 D/nativeloader( 6892): Load libpowerhalwrap_jni.so using system ns (caller=/system_ext/framework/mediatek-framework.jar): ok
+04-18 06:12:35.614 I/PowerHalWrapper( 6892): PowerHalWrapper.getInstance 
+04-18 06:12:35.615 I/PowerHalWrapper( 6892): PowerHalWrapper.getInstance 
+04-18 06:12:35.615 I/M-ProMotion( 6892): M-ProMotion is disabled
+04-18 06:12:35.621 D/FramePredict( 6892): FramePredict init: true
+04-18 06:12:35.627 D/HWUI    ( 6892): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+04-18 06:12:35.627 D/HWUI    ( 6892): [HWUI] EnhanceVkPipelineCache is disabled
+04-18 06:12:35.627 D/HWUI    ( 6892): [HWUI] Flag ddre enabled
+04-18 06:12:35.627 D/pp.solemate_app( 6892): blurUtils, initBackgroundBlurMinInterval processName(com.solemate.app.solemate_app), inWhiteLists(0)
+04-18 06:12:35.627 I/ActivityThread( 6892): HardwareRenderer preload  done
+04-18 06:12:35.634 I/DisplayManager( 6892): Choreographer implicitly registered for the refresh rate.
+04-18 06:12:35.647 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7db2b8) locale list changing from [] to [en-GB]
+04-18 06:12:35.669 W/libc    ( 6892): Access denied finding property "vendor.mivk.log.debug"
+04-18 06:12:35.669 D/libMiVK ( 6892): MiVkSettings::InitDataInfo()
+04-18 06:12:35.671 D/vulkan  ( 6892): searching for layers in '/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/lib/arm64'
+04-18 06:12:35.683 W/System  ( 6892): ClassLoader referenced unknown path: 
+04-18 06:12:35.684 D/nativeloader( 6892): Configuring clns-11 for other apk . target_sdk_version=37, uses_libraries=, library_path=/data/app/~~q8__zJZ-DNug_M1oWx-WzA==/com.google.android.gms-SK-kFGhnq2Su_g71SXTGyQ==/lib/arm64:/data/app/~~q8__zJZ-DNug_M1oWx-WzA==/com.google.android.gms-SK-kFGhnq2Su_g71SXTGyQ==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+04-18 06:12:35.689 D/vulkan  ( 6892): added global layer 'VK_LAYER_KHRONOS_validation' from library '/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/lib/arm64/libVkLayer_khronos_validation.so'
+04-18 06:12:35.694 D/vulkan  ( 6892): searching for layers in '/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/base.apk!/lib/arm64-v8a'
+04-18 06:12:35.707 D/MMUD    ( 6892): mtk_memory_debug_init com.solemate.app.solemate_app 0xb400007397dd95d0
+04-18 06:12:35.740 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7e7798) locale list changing from [] to [en-GB]
+04-18 06:12:35.744 I/libEGL  ( 6892): shader cache num entries: 10
+04-18 06:12:35.745 D/HWUI    ( 6892): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+04-18 06:12:35.745 D/HWUI    ( 6892): [HWUI] EnhanceVkPipelineCache is disabled
+04-18 06:12:35.745 D/HWUI    ( 6892): [HWUI] Flag ddre enabled
+04-18 06:12:35.748 D/SKIA    ( 6892): [Skia] Flag vulkan_enhance_pipeline_cache enabled
+04-18 06:12:35.748 D/SKIA    ( 6892): [Skia] EnhanceVkPipelineCache is false
+04-18 06:12:35.755 D/FlutterJNI( 6892): Beginning load of flutter...
+04-18 06:12:35.763 I/ResourceExtractor( 6892): Found extracted resources res_timestamp-2-1776474579736
+04-18 06:12:35.763 I/ResourceExtractor( 6892): Resource version mismatch res_timestamp-2-1776474751932
+04-18 06:12:35.775 D/nativeloader( 6892): Load /data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/lib/arm64/libflutter.so using class loader ns clns-10 (caller=/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/base.apk): ok
+04-18 06:12:35.778 D/FlutterJNI( 6892): flutter (null) was loaded normally!
+04-18 06:12:35.782 W/pp.solemate_app( 6892): ClassLoaderContext classpath element checksum mismatch. expected=3395480911, found=3490575969 (DLC[];PCL[base.apk*3395480911]{PCL[/system/framework/org.apache.http.legacy.jar*1129637092]#PCL[/system/framework/com.android.location.provider.jar*1570284764]#PCL[/system/framework/com.android.media.remotedisplay.jar*487574312]#PCL[/system_ext/framework/com.android.extensions.appfunctions.jar*2880224042]#PCL[/system_ext/framework/androidx.window.extensions.jar*1912387715]#PCL[/system_ext/framework/androidx.window.sidecar.jar*2421929624]} | DLC[];PCL[/data/app/~~pPdEgWR1RrtBBvFYusoStQ==/com.solemate.app.solemate_app-Fa6e8pfVWC1WTOBac3u6SA==/base.apk*3490575969]{PCL[/system_ext/framework/androidx.window.extensions.jar*1912387715]#PCL[/system_ext/framework/androidx.window.sidecar.jar*2421929624]})
+04-18 06:12:35.800 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7e48b8) locale list changing from [] to [en-GB]
+04-18 06:12:35.803 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7e5538) locale list changing from [] to [en-GB]
+04-18 06:12:35.816 D/MMUD    ( 6892): get_leak_baseline 3246391296
+04-18 06:12:35.973 I/pp.solemate_app( 6892): hiddenapi: Accessing hidden method Ldalvik/system/VMStack;->getStackClass2()Ljava/lang/Class; (runtime_flags=0, domain=core-platform, api=unsupported) from Lm7/apn; (domain=app) using reflection: allowed
+04-18 06:12:36.073 E/pp.solemate_app( 6892): No package ID 6a found for resource ID 0x6a0b0013.
+04-18 06:12:36.079 I/FA      ( 6892): App measurement initialized, version: 161007
+04-18 06:12:36.079 I/FA      ( 6892): To enable debug logging run: adb shell setprop log.tag.FA VERBOSE
+04-18 06:12:36.080 I/FA      ( 6892): To enable faster debug mode event logging run:
+04-18 06:12:36.080 I/FA      ( 6892):   adb shell setprop debug.firebase.analytics.app com.solemate.app.solemate_app
+04-18 06:12:36.657 I/ResourceExtractor( 6892): Extracted baseline resource assets/flutter_assets/kernel_blob.bin
+04-18 06:12:36.660 I/ResourceExtractor( 6892): Extracted baseline resource assets/flutter_assets/vm_snapshot_data
+04-18 06:12:36.812 I/ResourceExtractor( 6892): Extracted baseline resource assets/flutter_assets/isolate_snapshot_data
+04-18 06:12:36.834 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7e7ab8) locale list changing from [] to [en-GB]
+04-18 06:12:36.877 D/DesktopModeFlags( 6892): Toggle override initialized to: OVERRIDE_UNSET
+04-18 06:12:36.879 D/MMUD    ( 6892): mtk_memory_debug_init com.solemate.app.solemate_app 0xb4000073937e75d0
+04-18 06:12:36.896 I/flutter ( 6892): [IMPORTANT:flutter/shell/platform/android/android_context_vk_impeller.cc(62)] Using the Impeller rendering backend (Vulkan).
+04-18 06:12:37.129 I/flutter ( 6892): The Dart VM service is listening on http://127.0.0.1:39713/NXkVuky-Cdc=/
+04-18 06:12:37.315 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da7eeb38) locale list changing from [] to [en-GB]
+04-18 06:12:37.318 I/TextToSpeech( 6892): Sucessfully bound to com.google.android.tts
+04-18 06:12:37.339 I/SurfaceFactory( 6892): [static] sSurfaceFactory = com.mediatek.view.impl.SurfaceFactoryImpl@bfb8583
+04-18 06:12:37.343 D/MiuiMultiWindowUtils( 6892): freeform resolution args raw data:{  "wide_default":{    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.168,"left_margin":0.484},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.1222,"left_margin":0.59745},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":0.6992,"original_scale":0.604,"top_margin":0.2596,"left_margin":0.2624},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":0.6992,"original_scale":0.604,"top_margin":0.213,"left_margin":0.3758}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.147},        "horizontal_portrait":{"original_ratio":0.147},        "vertical_landscape":{"original_ratio":0.165},        "horizontal_landscape":{"original_ratio":0.165}    }  },  "narrow_default": {    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.74,"top_margin":0.0753,"left_margin":-1},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.5756,"top_margin":-1,"left_margin":0.0753},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.587,"top_margin":0.0753,"left_margin":-1},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.587,"top_margin":-1,"left_margin":0.0753}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.26},        "horizontal_portrait":{"original_ratio":0.26},        "vertical_landscape":{"original_ratio":0.293},        "horizontal_landscape":{"original_ratio":0.293}    }  },  "regular_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.625, "original_ratio":1,"original_scale":0.7,"top_margin":0.109,"left_margin":-1},      "horizontal_portrait":{"aspect_ratio":0.6667, "original_ratio":1,"original_scale":0.6102,"top_margin":-1,"left_margin":0.026},      "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.5899,"top_margin":0.109,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.5899,"top_margin":-1,"left_margin":0.026}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.25},      "horizontal_portrait":{"original_ratio":0.25},      "vertical_landscape":{"original_ratio":0.25},      "horizontal_landscape":{"original_ratio":0.25}    }  },  "pad_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":0.049,"left_margin":0.2775},      "horizontal_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":-1,"left_margin":0.6525},      "vertical_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":0.049,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":-1,"left_margin":0.4976}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.144},      "horizontal_portrait":{"original_ratio":0.144},      "vertical_landscape":{"original_ratio":0.2},      "horizontal_landscape":{"original_ratio":0.2}    }  }}
+04-18 06:12:37.350 D/MiuiMultiWindowUtils( 6892): initFreeFormResolutionArgs failed, device is tides
+04-18 06:12:37.391 I/pp.solemate_app( 6892): hiddenapi: Accessing hidden method Landroid/view/accessibility/AccessibilityNodeInfo;->getSourceNodeId()J (runtime_flags=0, domain=platform, api=unsupported,test-api) from Lio/flutter/view/AccessibilityViewEmbedder$ReflectionAccessors; (domain=app) using reflection: allowed
+04-18 06:12:37.391 I/pp.solemate_app( 6892): hiddenapi: Accessing hidden method Landroid/view/accessibility/AccessibilityRecord;->getSourceNodeId()J (runtime_flags=0, domain=platform, api=unsupported) from Lio/flutter/view/AccessibilityViewEmbedder$ReflectionAccessors; (domain=app) using reflection: allowed
+04-18 06:12:37.391 I/pp.solemate_app( 6892): hiddenapi: Accessing hidden field Landroid/view/accessibility/AccessibilityNodeInfo;->mChildNodeIds:Landroid/util/LongArray; (runtime_flags=0, domain=platform, api=unsupported) from Lio/flutter/view/AccessibilityViewEmbedder$ReflectionAccessors; (domain=app) using reflection: allowed
+04-18 06:12:37.391 I/pp.solemate_app( 6892): hiddenapi: Accessing hidden method Landroid/util/LongArray;->get(I)J (runtime_flags=0, domain=platform, api=unsupported) from Lio/flutter/view/AccessibilityViewEmbedder$ReflectionAccessors; (domain=app) using reflection: allowed
+04-18 06:12:37.416 D/CompatChangeReporter( 6892): Compat change id reported: 377864165; UID 10516; state: ENABLED
+04-18 06:12:37.424 D/DecorView( 6892): updateFreeformOutlineFromActivity, inFreeform=false,inFreeformWindowMode=false
+04-18 06:12:37.425 W/MessageMonitor( 6892): PerfMonitor: Slow Operation: Activity com.solemate.app.solemate_app/.MainActivity onCreate took 1701ms
+04-18 06:12:37.430 D/Activity( 6892): Activity = ActivityInfo{c7a862e com.solemate.app.solemate_app.MainActivity}, Resume onConfigurationChanged = {1.0 410mcc1mnc [en_GB] ldltr sw393dp w393dp h895dp 440dpi nrml long widecg port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2460) mAppBounds=Rect(0, 0 - 1080, 2460) mMaxBounds=Rect(0, 0 - 1080, 2460) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0 mInSplitScreen=false letterBoxed=false foScaled=false isSpecificEmbedded=false embeddingScale=1.0} s.2 fontWeightAdjustment=0/d/0 themeChanged=0 themeChangedFlags=0 display=0 extraData = Bundle[{}] screenType=0/0}
+04-18 06:12:37.435 D/SecurityManager( 6892): checkAccessControl flag0
+04-18 06:12:37.437 I/FA      ( 6892): Tag Manager is not found and thus will not be used
+04-18 06:12:37.441 I/PowerHalWrapper( 6892): PowerHalWrapper.getInstance 
+04-18 06:12:37.453 D/FramePredict( 6892): init success
+04-18 06:12:37.455 D/MiuiCameraCoveredManager( 6892): java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String android.provider.MiuiSettings$SettingsCloudData$CloudData.getString(java.lang.String, java.lang.String)' on a null object reference
+04-18 06:12:37.455 E/FramePredict( 6892): registerContentObserver fail
+04-18 06:12:37.459 E/MI-PreRender( 6892): init cloud whiteList failed
+04-18 06:12:37.461 D/pp.solemate_app( 6892): MiuiProcessManagerServiceStub setSchedFifo
+04-18 06:12:37.461 I/MiuiProcessManagerImpl( 6892): setSchedFifo pid:6892, mode:3
+04-18 06:12:37.464 W/libc    ( 6892): Access denied finding property "ro.vendor.display.iris_x7.support"
+04-18 06:12:37.464 I/pwIrisCR( 6892): isCnVersion = 0, isSupportIris = 0
+04-18 06:12:37.468 I/ForceDarkHelperStubImpl( 6892): setViewRootImplForceDark: false for com.solemate.app.solemate_app.MainActivity@640732d, reason: DarkModeEnabled
+04-18 06:12:37.481 D/InputEventReceiver( 6892): Input log is disabled in InputEventReceiver.
+04-18 06:12:38.074 D/HWUI    ( 6892): [HWUI] Flag vulkan_enhance_pipeline_cache enabled
+04-18 06:12:38.074 D/HWUI    ( 6892): [HWUI] EnhanceVkPipelineCache is disabled
+04-18 06:12:38.074 D/HWUI    ( 6892): [HWUI] Flag ddre enabled
+04-18 06:12:38.075 I/Choreographer( 6892): Skipped 54 frames!  The application may be doing too much work on its main thread.
+04-18 06:12:38.077 I/ComputilityLevel( 6892): getComputilityLevel(): 1
+04-18 06:12:38.084 I/WindowExtensionsImpl( 6892): Initializing Window Extensions, vendor API level=9, activity embedding enabled=true
+04-18 06:12:38.132 E/pp.solemate_app( 6892): [perfctl] 6892 6892 FPSGO ver:7
+04-18 06:12:38.133 E/pp.solemate_app( 6892): [perfctl] 1 1 1 0
+04-18 06:12:38.133 D/BufferQueueConsumer( 6892): [](id:1aec00000000,api:0,p:-1,c:6892) connect: controlledByApp=false
+04-18 06:12:38.135 D/BLASTBufferQueue( 6892): [VRI[MainActivity]#0](f:0,a:0) constructor()
+04-18 06:12:38.135 D/BLASTBufferQueue( 6892): [VRI[MainActivity]#0](f:0,a:0) update width=1080 height=2460 format=-3 mTransformHint=0
+04-18 06:12:38.148 D/VRI[MainActivity]( 6892): vri.reportNextDraw 0 Rect(0, 0 - 1080, 2460) android.view.ViewRootImpl.performTraversals:5538 android.view.ViewRootImpl.doTraversal:4091 android.view.ViewRootImpl$TraversalRunnable.run:12473 android.view.Choreographer$CallbackRecord.run:2037 android.view.Choreographer$CallbackRecord.run:2046 
+04-18 06:12:38.148 D/SurfaceView( 6892): UPDATE null, mIsCastMode = false
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): onSurfaceViewAttached:
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): , vri:android.view.ViewRootImpl@aa7f7ec, com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): , vri size:1080x2460
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): , surfaceView:io.flutter.embedding.android.FlutterSurfaceView{2de1a9f V.E...... ......ID 0,0-1080,2460}, SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity]
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): , surfaceView size:1080x2460
+04-18 06:12:38.152 D/ViewRootImplStubImpl( 6892): , surfaceControl:Surface(name=2de1a9f SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity](BLAST)#226733)/@0x396a7b5
+04-18 06:12:38.154 D/BufferQueueConsumer( 6892): [](id:1aec00000001,api:0,p:-1,c:6892) connect: controlledByApp=false
+04-18 06:12:38.154 D/BLASTBufferQueue( 6892): [2de1a9f SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity]#1](f:0,a:0) constructor()
+04-18 06:12:38.154 D/BLASTBufferQueue( 6892): [2de1a9f SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity]#1](f:0,a:0) update width=1080 height=2460 format=4 mTransformHint=0
+04-18 06:12:38.301 D/SurfaceView( 6892): UPDATE Surface(name=2de1a9f SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity]#226732)/@0x8775884, mIsProjectionMode = false
+04-18 06:12:38.313 D/WindowLayoutComponentImpl( 6892): Register WindowLayoutInfoListener on Context=com.solemate.app.solemate_app.MainActivity@640732d, of which baseContext=android.app.ContextImpl@8f341c
+04-18 06:12:38.797 D/FirebaseAuth( 6892): Notifying id token listeners about user ( Zrxag46ewaaF2YKSaw6Jj5zlLi22 ).
+04-18 06:12:39.401 I/pp.solemate_app( 6892): Compiler allocated 6344KB to compile void android.view.ViewRootImpl.performTraversals()
+04-18 06:12:39.654 I/TextToSpeech( 6892): Connected to TTS engine
+04-18 06:12:41.032 W/BpBinder( 6892): PerfMonitor binderTransact: time=1373ms interface=android.speech.tts.ITextToSpeechService code=15
+04-18 06:12:41.032 I/TextToSpeech( 6892): Setting up the connection to TTS engine...
+04-18 06:12:41.038 I/GrallocExtra( 6892): gralloc_extra_query:is_SW3D 0
+04-18 06:12:41.038 I/GrallocExtra( 6892): gralloc_extra_query:is_SW3D 0
+04-18 06:12:41.038 W/libc    ( 6892): Access denied finding property "ro.vendor.display.iris_x7.support"
+04-18 06:12:41.039 D/BLASTBufferQueue( 6892): [2de1a9f SurfaceView[com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity]#1](f:0,a:1) acquireNextBufferLocked size=1080x2460 mFrameNumber=1 applyTransaction=true mTimestamp=1522257468728886(auto) mPendingTransactions.size=0 graphicBufferId=29600914604042 transform=0
+04-18 06:12:41.041 I/Choreographer( 6892): Skipped 194 frames!  The application may be doing too much work on its main thread.
+04-18 06:12:41.314 D/WmSystemUiDebug( 6892): set navigation bar color,Alpha=1.0, RGB:0,0,0 caller:io.flutter.plugin.platform.PlatformPlugin.setSystemChromeSystemUIOverlayStyle:503 io.flutter.plugin.platform.PlatformPlugin.access$700:36 io.flutter.plugin.platform.PlatformPlugin$1.setSystemUiOverlayStyle:123 io.flutter.embedding.engine.systemchannels.PlatformChannel$1.onMethodCall:130 io.flutter.plugin.common.MethodChannel$IncomingMethodCallHandler.onMessage:267 io.flutter.embedding.engine.dart.DartMessenger.invokeHandler:292 io.flutter.embedding.engine.dart.DartMessenger.lambda$dispatchMessageToQueue$0$io-flutter-embedding-engine-dart-DartMessenger:319 io.flutter.embedding.engine.dart.DartMessenger$$ExternalSyntheticLambda0.run:0 android.os.Handler.handleCallback:995 android.os.Handler.dispatchMessage:103 
+04-18 06:12:41.572 I/Choreographer( 6892): Skipped 47 frames!  The application may be doing too much work on its main thread.
+04-18 06:12:41.601 D/VRI[MainActivity]( 6892): vri.reportNextDraw 0 Rect(0, 0 - 1080, 2460) android.view.ViewRootImpl.performTraversals:5538 android.view.ViewRootImpl.doTraversal:4091 android.view.ViewRootImpl$TraversalRunnable.run:12473 android.view.Choreographer$CallbackRecord.run:2037 android.view.Choreographer$CallbackRecord.run:2046 
+04-18 06:12:41.601 D/VRI[MainActivity]( 6892): vri.Setup new sync=wmsSync-VRI[MainActivity]#1
+04-18 06:12:41.634 I/SKIA    ( 6892): CreateGraphicsPipeline pipeline cache hit. elpased time: 0.24 ms.
+04-18 06:12:41.634 I/SKIA    ( 6892): CreateGraphicsPipeline pipeline cache hit. elpased time: 0.22 ms.
+04-18 06:12:41.639 D/BLASTBufferQueue( 6892): [VRI[MainActivity]#0](f:0,a:1) acquireNextBufferLocked size=1080x2460 mFrameNumber=1 applyTransaction=true mTimestamp=1522258069131655(auto) mPendingTransactions.size=0 graphicBufferId=29600914604049 transform=0
+04-18 06:12:41.642 D/VRI[MainActivity]( 6892): vri.reportDrawFinished 0 0 Rect(0, 0 - 1080, 2460)
+04-18 06:12:41.693 D/ProfileInstaller( 6892): Installing profile for com.solemate.app.solemate_app
+04-18 06:12:41.712 I/HandWritingStubImpl( 6892): refreshLastKeyboardType: 1
+04-18 06:12:41.714 I/HandWritingStubImpl( 6892): getCurrentKeyboardType: 1
+04-18 06:12:41.742 D/InsetsController( 6892): hide(ime(), fromIme=false)
+04-18 06:12:41.743 I/ImeTracker( 6892): com.solemate.app.solemate_app:df614d98: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+04-18 06:12:41.752 I/HandWritingStubImpl( 6892): getCurrentKeyboardType: 1
+04-18 06:12:43.597 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522260016, downTime=1522260016, phoneEventTime=06:12:43.586 } moveCount:0
+04-18 06:12:43.609 W/MirrorManager( 6892): this model don't Support
+04-18 06:12:43.609 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:12:43.621 I/PowerHalMgrImpl( 6892): perfLockAcq is supported. 
+04-18 06:12:43.622 I/PowerHalMgrImpl( 6892): hdl:748175, pid:6892 
+04-18 06:12:43.774 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522260016, downTime=1522260016, phoneEventTime=06:12:43.585 } moveCount:0
+04-18 06:12:44.085 E/pp.solemate_app( 6892): DynamicFPS DF open fail: No such file or directory
+04-18 06:12:44.317 I/flutter ( 6892): API PUT: https://solemate-production-e7fd.up.railway.app/api/user/profile
+04-18 06:12:44.458 W/WindowOnBackDispatcher( 6892): sendCancelIfRunning: isInProgress=false callback=io.flutter.embedding.android.FlutterActivity$1@e0ad546
+04-18 06:12:44.557 W/pp.solemate_app( 6892): sendGameRenderCheck remote service is not exist.
+04-18 06:12:44.577 I/pp.solemate_app( 6892): Background concurrent mark compact GC freed 24MB AllocSpace bytes, 26(680KB) LOS objects, 82% free, 5054KB/28MB, paused 1.123ms,8.152ms total 128.720ms
+04-18 06:12:44.627 I/PowerHalMgrImpl( 6892): hdl:748176, pid:6892 
+04-18 06:12:45.238 I/flutter ( 6892): API PUT Response [200]: {"_id":"69d8a2299b532254712e61ca","uid":"Zrxag46ewaaF2YKSaw6Jj5zlLi22","__v":0,"createdAt":"2026-04-10T07:09:29.563Z","email":"ahmadbehzad004@gmail.com","name":"","role":"customer","updatedAt":"2026-04-18T01:12:44.990Z"}
+04-18 06:12:45.273 I/flutter ( 6892): API GET: https://solemate-production-e7fd.up.railway.app/api/catalog
+04-18 06:12:45.826 I/flutter ( 6892): API GET: https://solemate-production-e7fd.up.railway.app/api/catalog
+04-18 06:12:46.098 I/flutter ( 6892): API GET: https://solemate-production-e7fd.up.railway.app/api/catalog
+04-18 06:12:46.821 E/pp.solemate_app( 6892): FrameInsert open fail: No such file or directory
+04-18 06:12:46.855 I/flutter ( 6892): API GET: https://solemate-production-e7fd.up.railway.app/api/tryon/history
+04-18 06:12:46.908 I/flutter ( 6892): API GET: https://solemate-production-e7fd.up.railway.app/api/outfit/history
+04-18 06:12:46.972 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da85e078) locale list changing from [] to [en-GB]
+04-18 06:12:46.982 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da85ecf8) locale list changing from [] to [en-GB]
+04-18 06:12:46.987 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da858f38) locale list changing from [] to [en-GB]
+04-18 06:12:46.999 I/pp.solemate_app( 6892): AssetManager2(0xb4000071da85be18) locale list changing from [] to [en-GB]
+04-18 06:12:47.010 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522263377, downTime=1522263377, phoneEventTime=06:12:46.946 } moveCount:0
+04-18 06:12:47.010 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:12:47.012 I/PowerHalMgrImpl( 6892): hdl:748178, pid:6892 
+04-18 06:12:47.075 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522263377, downTime=1522263377, phoneEventTime=06:12:46.947 } moveCount:0
+04-18 06:12:47.259 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:12:47.516 I/flutter ( 6892): API GET Response [200]: [{"_id":"69e28548dbe23e6aa0a423e3","name":"Girl Sandal","brand":"SoleMate","price":99.99,"colors":["black","white"],"sizes":[40,41,42,43,44],"category":"sandals","modelUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/3d_models/SoleMate/1776452933630_shoeshoeswomensshoes.glb","thumbnailUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/thumbnails/SoleMate/1776452935511_Screenshot20260418000250.png","createdA...
+04-18 06:12:47.676 I/flutter ( 6892): API GET Response [200]: [{"_id":"69e28548dbe23e6aa0a423e3","name":"Girl Sandal","brand":"SoleMate","price":99.99,"colors":["black","white"],"sizes":[40,41,42,43,44],"category":"sandals","modelUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/3d_models/SoleMate/1776452933630_shoeshoeswomensshoes.glb","thumbnailUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/thumbnails/SoleMate/1776452935511_Screenshot20260418000250.png","createdA...
+04-18 06:12:47.682 I/flutter ( 6892): API GET Response [200]: [{"_id":"69e28548dbe23e6aa0a423e3","name":"Girl Sandal","brand":"SoleMate","price":99.99,"colors":["black","white"],"sizes":[40,41,42,43,44],"category":"sandals","modelUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/3d_models/SoleMate/1776452933630_shoeshoeswomensshoes.glb","thumbnailUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/thumbnails/SoleMate/1776452935511_Screenshot20260418000250.png","createdA...
+04-18 06:12:47.953 I/flutter ( 6892): API GET Response [200]: [{"_id":"69e2c17bdf84c47cbe160637","userId":"69d8a2299b532254712e61ca","shoeId":{"_id":"69e291fe77be67bb9ed26c69","name":"Sneakers","brand":"SoleMate","price":89.99,"colors":["black","yellow"],"sizes":[40,41,42,44,45],"category":"casual","gender":"unisex","modelUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/3d_models/SoleMate/1776456188292_sneakersadidasyellowblack.glb","thumbnailUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-...
+04-18 06:12:48.021 I/PowerHalMgrImpl( 6892): hdl:748180, pid:6892 
+04-18 06:12:48.034 I/flutter ( 6892): API GET Response [200]: [{"_id":"69e2da04df84c47cbe160708","userId":"69d8a2299b532254712e61ca","outfitImageUrl":"https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/outfits/Zrxag46ewaaF2YKSaw6Jj5zlLi22/1776474628295_1000065192.jpg","category":"formal","description":"A formal outfit with dominant \"lightslategray\" and \"gray\" colors contrasts nicely with these recommended shoes.","dominantColors":["gray","beige","silver","darkslategray","maroon","off-white","maroon","silver","maroo...
+04-18 06:12:50.221 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522266648, downTime=1522266648, phoneEventTime=06:12:50.217 } moveCount:0
+04-18 06:12:50.221 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:12:50.232 I/PowerHalMgrImpl( 6892): hdl:748182, pid:6892 
+04-18 06:12:50.242 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522266648, downTime=1522266648, phoneEventTime=06:12:50.218 } moveCount:0
+04-18 06:12:51.233 I/PowerHalMgrImpl( 6892): hdl:748182, pid:6892 
+04-18 06:13:00.505 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522276932, downTime=1522276932, phoneEventTime=06:13:00.502 } moveCount:0
+04-18 06:13:00.506 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:00.514 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522276932, downTime=1522276932, phoneEventTime=06:13:00.502 } moveCount:0
+04-18 06:13:00.515 I/PowerHalMgrImpl( 6892): hdl:748185, pid:6892 
+04-18 06:13:01.517 I/PowerHalMgrImpl( 6892): hdl:748185, pid:6892 
+04-18 06:13:07.773 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522284199, downTime=1522284199, phoneEventTime=06:13:07.769 } moveCount:0
+04-18 06:13:07.774 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:07.784 I/PowerHalMgrImpl( 6892): hdl:748188, pid:6892 
+04-18 06:13:07.791 I/PowerHalMgrImpl( 6892): hdl:748191, pid:6892 
+04-18 06:13:07.794 I/PowerHalMgrImpl( 6892): hdl:748188, pid:6892 
+04-18 06:13:07.798 I/PowerHalMgrImpl( 6892): hdl:748192, pid:6892 
+04-18 06:13:08.592 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522285019, downTime=1522284199, phoneEventTime=06:13:08.588 } moveCount:95
+04-18 06:13:08.593 I/ScrollIdentify( 6892): on fling
+04-18 06:13:08.599 I/PowerHalMgrImpl( 6892): hdl:748194, pid:6892 
+04-18 06:13:08.685 E/LB      ( 6892): fail to open file: No such file or directory
+04-18 06:13:08.685 E/LB      ( 6892): fail to open node: No such file or directory
+04-18 06:13:08.685 E/LB      ( 6892): fail to open node: No such file or directory
+04-18 06:13:11.601 I/PowerHalMgrImpl( 6892): hdl:748197, pid:6892 
+04-18 06:13:11.945 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522288372, downTime=1522288372, phoneEventTime=06:13:11.941 } moveCount:0
+04-18 06:13:11.946 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:11.955 I/PowerHalMgrImpl( 6892): hdl:748199, pid:6892 
+04-18 06:13:11.962 I/PowerHalMgrImpl( 6892): hdl:748202, pid:6892 
+04-18 06:13:11.965 I/PowerHalMgrImpl( 6892): hdl:748203, pid:6892 
+04-18 06:13:11.966 I/PowerHalMgrImpl( 6892): hdl:748199, pid:6892 
+04-18 06:13:12.744 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522289172, downTime=1522288372, phoneEventTime=06:13:12.742 } moveCount:95
+04-18 06:13:12.745 I/ScrollIdentify( 6892): on fling
+04-18 06:13:12.751 I/PowerHalMgrImpl( 6892): hdl:748205, pid:6892 
+04-18 06:13:13.991 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522290418, downTime=1522290418, phoneEventTime=06:13:13.988 } moveCount:0
+04-18 06:13:13.991 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:14.001 I/PowerHalMgrImpl( 6892): hdl:748209, pid:6892 
+04-18 06:13:14.002 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522290418, downTime=1522290418, phoneEventTime=06:13:13.987 } moveCount:0
+04-18 06:13:14.794 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522291221, downTime=1522291221, phoneEventTime=06:13:14.791 } moveCount:0
+04-18 06:13:14.795 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:14.844 I/PowerHalMgrImpl( 6892): hdl:748216, pid:6892 
+04-18 06:13:14.847 I/PowerHalMgrImpl( 6892): hdl:748217, pid:6892 
+04-18 06:13:14.848 I/PowerHalMgrImpl( 6892): hdl:748209, pid:6892 
+04-18 06:13:15.140 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522291568, downTime=1522291221, phoneEventTime=06:13:15.138 } moveCount:53
+04-18 06:13:15.195 I/PowerHalMgrImpl( 6892): hdl:748220, pid:6892 
+04-18 06:13:15.452 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522291878, downTime=1522291878, phoneEventTime=06:13:15.448 } moveCount:0
+04-18 06:13:15.452 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:15.463 I/PowerHalMgrImpl( 6892): hdl:748222, pid:6892 
+04-18 06:13:15.539 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522291967, downTime=1522291878, phoneEventTime=06:13:15.537 } moveCount:1
+04-18 06:13:15.642 I/PowerHalMgrImpl( 6892): hdl:748222, pid:6892 
+04-18 06:13:17.686 I/FA      ( 6892): Application backgrounded at: timestamp_millis: 1776474795680
+04-18 06:13:17.842 E/ActivityThread( 6892):  fail in deliverResultsIfNeeded java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String android.os.Bundle.getString(java.lang.String)' on a null object reference
+04-18 06:13:17.861 D/Activity( 6892): Activity = ActivityInfo{c7a862e com.solemate.app.solemate_app.MainActivity}, Resume onConfigurationChanged = {1.0 410mcc1mnc [en_GB] ldltr sw393dp w393dp h895dp 440dpi nrml long widecg port finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2460) mAppBounds=Rect(0, 0 - 1080, 2460) mMaxBounds=Rect(0, 0 - 1080, 2460) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mActivityType=standard mAlwaysOnTop=undefined mRotation=ROTATION_0 mInSplitScreen=false letterBoxed=false foScaled=false isSpecificEmbedded=false embeddingScale=1.0} s.2 fontWeightAdjustment=0/d/0 themeChanged=0 themeChangedFlags=0 display=0 extraData = Bundle[{}] screenType=0/0}
+04-18 06:13:17.864 D/SecurityManager( 6892): checkAccessControl flag0
+04-18 06:13:17.947 I/HandWritingStubImpl( 6892): refreshLastKeyboardType: 1
+04-18 06:13:17.947 I/HandWritingStubImpl( 6892): getCurrentKeyboardType: 1
+04-18 06:13:18.007 D/InsetsController( 6892): hide(ime(), fromIme=false)
+04-18 06:13:18.007 I/ImeTracker( 6892): com.solemate.app.solemate_app:74e66bf9: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+04-18 06:13:18.787 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522295215, downTime=1522295215, phoneEventTime=06:13:18.784 } moveCount:0
+04-18 06:13:18.788 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:18.797 I/PowerHalMgrImpl( 6892): hdl:748233, pid:6892 
+04-18 06:13:18.850 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522295279, downTime=1522295215, phoneEventTime=06:13:18.848 } moveCount:4
+04-18 06:13:18.960 I/flutter ( 6892): API POST MULTIPART: https://solemate-production-e7fd.up.railway.app/api/outfit/recommend-shoes with 1 files
+04-18 06:13:19.807 I/PowerHalMgrImpl( 6892): hdl:748235, pid:6892 
+04-18 06:13:20.290 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522296710, downTime=1522296710, phoneEventTime=06:13:20.280 } moveCount:0
+04-18 06:13:20.290 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:20.294 I/PowerHalMgrImpl( 6892): hdl:748237, pid:6892 
+04-18 06:13:20.337 I/PowerHalMgrImpl( 6892): hdl:748240, pid:6892 
+04-18 06:13:20.342 I/PowerHalMgrImpl( 6892): hdl:748241, pid:6892 
+04-18 06:13:20.354 I/PowerHalMgrImpl( 6892): hdl:748237, pid:6892 
+04-18 06:13:20.579 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522297000, downTime=1522296710, phoneEventTime=06:13:20.569 } moveCount:35
+04-18 06:13:20.639 I/PowerHalMgrImpl( 6892): hdl:748244, pid:6892 
+04-18 06:13:21.001 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522297429, downTime=1522297429, phoneEventTime=06:13:20.999 } moveCount:0
+04-18 06:13:21.002 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:21.009 I/PowerHalMgrImpl( 6892): hdl:748246, pid:6892 
+04-18 06:13:21.079 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522297504, downTime=1522297429, phoneEventTime=06:13:21.073 } moveCount:2
+04-18 06:13:21.847 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522298275, downTime=1522298275, phoneEventTime=06:13:21.845 } moveCount:0
+04-18 06:13:21.848 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:21.904 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522298327, downTime=1522298275, phoneEventTime=06:13:21.896 } moveCount:5
+04-18 06:13:22.011 I/PowerHalMgrImpl( 6892): hdl:748246, pid:6892 
+04-18 06:13:22.163 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522298577, downTime=1522298577, phoneEventTime=06:13:22.147 } moveCount:0
+04-18 06:13:22.164 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:22.207 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522298633, downTime=1522298577, phoneEventTime=06:13:22.202 } moveCount:3
+04-18 06:13:22.434 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522298848, downTime=1522298848, phoneEventTime=06:13:22.418 } moveCount:0
+04-18 06:13:22.435 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:22.495 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522298911, downTime=1522298848, phoneEventTime=06:13:22.481 } moveCount:3
+04-18 06:13:22.672 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522299094, downTime=1522299094, phoneEventTime=06:13:22.664 } moveCount:0
+04-18 06:13:22.672 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:22.745 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522299173, downTime=1522299094, phoneEventTime=06:13:22.743 } moveCount:1
+04-18 06:13:22.851 I/PowerHalMgrImpl( 6892): hdl:748256, pid:6892 
+04-18 06:13:22.899 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522299325, downTime=1522299325, phoneEventTime=06:13:22.894 } moveCount:0
+04-18 06:13:22.900 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:22.964 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522299392, downTime=1522299325, phoneEventTime=06:13:22.962 } moveCount:2
+04-18 06:13:23.155 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522299571, downTime=1522299571, phoneEventTime=06:13:23.140 } moveCount:0
+04-18 06:13:23.156 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:23.219 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522299642, downTime=1522299571, phoneEventTime=06:13:23.212 } moveCount:3
+04-18 06:13:23.371 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522299798, downTime=1522299798, phoneEventTime=06:13:23.367 } moveCount:0
+04-18 06:13:23.371 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:23.430 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522299853, downTime=1522299798, phoneEventTime=06:13:23.423 } moveCount:5
+04-18 06:13:23.593 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300020, downTime=1522300020, phoneEventTime=06:13:23.590 } moveCount:0
+04-18 06:13:23.593 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:23.657 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522300079, downTime=1522300020, phoneEventTime=06:13:23.649 } moveCount:3
+04-18 06:13:23.679 I/PowerHalMgrImpl( 6892): hdl:748265, pid:6892 
+04-18 06:13:23.823 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300239, downTime=1522300239, phoneEventTime=06:13:23.808 } moveCount:0
+04-18 06:13:23.824 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:23.887 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522300302, downTime=1522300239, phoneEventTime=06:13:23.871 } moveCount:2
+04-18 06:13:24.046 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300473, downTime=1522300473, phoneEventTime=06:13:24.042 } moveCount:0
+04-18 06:13:24.046 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:24.108 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522300525, downTime=1522300473, phoneEventTime=06:13:24.094 } moveCount:4
+04-18 06:13:24.164 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300589, downTime=1522300589, phoneEventTime=06:13:24.158 } moveCount:0
+04-18 06:13:24.165 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:24.188 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522300589, downTime=1522300589, phoneEventTime=06:13:24.158 } moveCount:0
+04-18 06:13:24.256 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300684, downTime=1522300684, phoneEventTime=06:13:24.254 } moveCount:0
+04-18 06:13:24.256 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:24.351 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522300755, downTime=1522300684, phoneEventTime=06:13:24.325 } moveCount:6
+04-18 06:13:24.511 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522300926, downTime=1522300926, phoneEventTime=06:13:24.495 } moveCount:0
+04-18 06:13:24.511 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:24.587 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522301005, downTime=1522300926, phoneEventTime=06:13:24.575 } moveCount:7
+04-18 06:13:24.599 I/PowerHalMgrImpl( 6892): hdl:748276, pid:6892 
+04-18 06:13:24.736 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522301153, downTime=1522301153, phoneEventTime=06:13:24.723 } moveCount:0
+04-18 06:13:24.736 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:24.810 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522301232, downTime=1522301153, phoneEventTime=06:13:24.801 } moveCount:6
+04-18 06:13:25.163 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522301586, downTime=1522301586, phoneEventTime=06:13:25.156 } moveCount:0
+04-18 06:13:25.164 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:25.234 I/PowerHalMgrImpl( 6892): hdl:748282, pid:6892 
+04-18 06:13:25.240 I/PowerHalMgrImpl( 6892): hdl:748276, pid:6892 
+04-18 06:13:25.242 I/PowerHalMgrImpl( 6892): hdl:748283, pid:6892 
+04-18 06:13:25.311 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522301729, downTime=1522301586, phoneEventTime=06:13:25.299 } moveCount:10
+04-18 06:13:25.376 I/PowerHalMgrImpl( 6892): hdl:748286, pid:6892 
+04-18 06:13:25.712 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522302139, downTime=1522302139, phoneEventTime=06:13:25.708 } moveCount:0
+04-18 06:13:25.713 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:25.724 I/PowerHalMgrImpl( 6892): hdl:748288, pid:6892 
+04-18 06:13:25.781 I/PowerHalMgrImpl( 6892): hdl:748291, pid:6892 
+04-18 06:13:25.788 I/PowerHalMgrImpl( 6892): hdl:748292, pid:6892 
+04-18 06:13:25.792 I/PowerHalMgrImpl( 6892): hdl:748288, pid:6892 
+04-18 06:13:25.805 I/MiInputConsumer( 6892): optimized resample latency: 9391537 ns
+04-18 06:13:25.887 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522302313, downTime=1522302139, phoneEventTime=06:13:25.883 } moveCount:20
+04-18 06:13:25.888 I/ScrollIdentify( 6892): on fling
+04-18 06:13:25.896 I/PowerHalMgrImpl( 6892): hdl:748295, pid:6892 
+04-18 06:13:26.231 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522302655, downTime=1522302655, phoneEventTime=06:13:26.225 } moveCount:0
+04-18 06:13:26.231 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:26.237 I/PowerHalMgrImpl( 6892): hdl:748298, pid:6892 
+04-18 06:13:26.282 I/PowerHalMgrImpl( 6892): hdl:748301, pid:6892 
+04-18 06:13:26.292 I/PowerHalMgrImpl( 6892): hdl:748302, pid:6892 
+04-18 06:13:26.293 I/PowerHalMgrImpl( 6892): hdl:748298, pid:6892 
+04-18 06:13:26.357 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522302786, downTime=1522302655, phoneEventTime=06:13:26.355 } moveCount:14
+04-18 06:13:26.415 I/PowerHalMgrImpl( 6892): hdl:748305, pid:6892 
+04-18 06:13:27.022 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522303450, downTime=1522303450, phoneEventTime=06:13:27.020 } moveCount:0
+04-18 06:13:27.023 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:27.033 I/PowerHalMgrImpl( 6892): hdl:748307, pid:6892 
+04-18 06:13:27.070 I/PowerHalMgrImpl( 6892): hdl:748310, pid:6892 
+04-18 06:13:27.073 I/PowerHalMgrImpl( 6892): hdl:748311, pid:6892 
+04-18 06:13:27.075 I/PowerHalMgrImpl( 6892): hdl:748307, pid:6892 
+04-18 06:13:27.149 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522303568, downTime=1522303450, phoneEventTime=06:13:27.138 } moveCount:12
+04-18 06:13:27.150 I/ScrollIdentify( 6892): on fling
+04-18 06:13:27.157 I/PowerHalMgrImpl( 6892): hdl:748315, pid:6892 
+04-18 06:13:27.662 I/PowerHalMgrImpl( 6892): hdl:748317, pid:6892 
+04-18 06:13:27.710 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522304133, downTime=1522304133, phoneEventTime=06:13:27.703 } moveCount:0
+04-18 06:13:27.710 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:27.726 I/PowerHalMgrImpl( 6892): hdl:748319, pid:6892 
+04-18 06:13:27.753 I/PowerHalMgrImpl( 6892): hdl:748321, pid:6892 
+04-18 06:13:27.759 I/PowerHalMgrImpl( 6892): hdl:748319, pid:6892 
+04-18 06:13:27.763 I/PowerHalMgrImpl( 6892): hdl:748323, pid:6892 
+04-18 06:13:27.826 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522304248, downTime=1522304133, phoneEventTime=06:13:27.818 } moveCount:16
+04-18 06:13:27.827 I/ScrollIdentify( 6892): on fling
+04-18 06:13:27.833 I/PowerHalMgrImpl( 6892): hdl:748326, pid:6892 
+04-18 06:13:28.297 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522304725, downTime=1522304725, phoneEventTime=06:13:28.295 } moveCount:0
+04-18 06:13:28.298 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:28.307 I/PowerHalMgrImpl( 6892): hdl:748330, pid:6892 
+04-18 06:13:28.337 I/PowerHalMgrImpl( 6892): hdl:748331, pid:6892 
+04-18 06:13:28.353 I/PowerHalMgrImpl( 6892): hdl:748334, pid:6892 
+04-18 06:13:28.359 I/PowerHalMgrImpl( 6892): hdl:748335, pid:6892 
+04-18 06:13:28.360 I/PowerHalMgrImpl( 6892): hdl:748330, pid:6892 
+04-18 06:13:28.429 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522304848, downTime=1522304725, phoneEventTime=06:13:28.418 } moveCount:9
+04-18 06:13:28.430 I/ScrollIdentify( 6892): on fling
+04-18 06:13:28.436 I/PowerHalMgrImpl( 6892): hdl:748339, pid:6892 
+04-18 06:13:28.938 I/PowerHalMgrImpl( 6892): hdl:748341, pid:6892 
+04-18 06:13:44.773 I/flutter ( 6892): AI RESPONSE KEYS: [detectedStyle, detectedColors, detected_colors, suggestedShoeColor, recommendations]
+04-18 06:13:44.776 I/flutter ( 6892): STRICT: AI returned 0 recommendations. No local fallback will be used.
+04-18 06:13:44.780 I/flutter ( 6892): MAPPING SUCCESS: Finalized 0 recommendations
+04-18 06:13:44.780 I/flutter ( 6892): FINAL OUTFIT DESCRIPTION: A formal outfit with dominant "lightslategray" and "rosybrown" colors contrasts nicely with these recommended shoes.
+04-18 06:13:44.795 I/flutter ( 6892): API POST MULTIPART: https://solemate-production-e7fd.up.railway.app/api/outfit/analyze with 1 files
+04-18 06:13:56.984 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522333407, downTime=1522333407, phoneEventTime=06:13:56.977 } moveCount:0
+04-18 06:13:56.984 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:56.994 I/PowerHalMgrImpl( 6892): hdl:748343, pid:6892 
+04-18 06:13:57.054 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522333483, downTime=1522333407, phoneEventTime=06:13:57.053 } moveCount:3
+04-18 06:13:57.948 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522334375, downTime=1522334375, phoneEventTime=06:13:57.944 } moveCount:0
+04-18 06:13:57.949 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:57.996 I/PowerHalMgrImpl( 6892): hdl:748346, pid:6892 
+04-18 06:13:58.002 I/PowerHalMgrImpl( 6892): hdl:748349, pid:6892 
+04-18 06:13:58.006 I/PowerHalMgrImpl( 6892): hdl:748346, pid:6892 
+04-18 06:13:58.011 I/PowerHalMgrImpl( 6892): hdl:748350, pid:6892 
+04-18 06:13:58.102 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522334530, downTime=1522334375, phoneEventTime=06:13:58.100 } moveCount:32
+04-18 06:13:58.103 I/ScrollIdentify( 6892): on fling
+04-18 06:13:58.109 I/PowerHalMgrImpl( 6892): hdl:748352, pid:6892 
+04-18 06:13:58.512 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522334940, downTime=1522334940, phoneEventTime=06:13:58.510 } moveCount:0
+04-18 06:13:58.512 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:58.528 I/PowerHalMgrImpl( 6892): hdl:748356, pid:6892 
+04-18 06:13:58.543 I/PowerHalMgrImpl( 6892): hdl:748358, pid:6892 
+04-18 06:13:58.547 I/PowerHalMgrImpl( 6892): hdl:748360, pid:6892 
+04-18 06:13:58.549 I/PowerHalMgrImpl( 6892): hdl:748356, pid:6892 
+04-18 06:13:58.578 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522335007, downTime=1522334940, phoneEventTime=06:13:58.576 } moveCount:14
+04-18 06:13:58.579 I/ScrollIdentify( 6892): on fling
+04-18 06:13:58.591 I/PowerHalMgrImpl( 6892): hdl:748364, pid:6892 
+04-18 06:13:59.953 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522336381, downTime=1522336381, phoneEventTime=06:13:59.950 } moveCount:0
+04-18 06:13:59.953 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:13:59.961 I/PowerHalMgrImpl( 6892): hdl:748367, pid:6892 
+04-18 06:14:00.037 I/PowerHalMgrImpl( 6892): hdl:748369, pid:6892 
+04-18 06:14:00.042 I/PowerHalMgrImpl( 6892): hdl:748371, pid:6892 
+04-18 06:14:00.043 I/PowerHalMgrImpl( 6892): hdl:748367, pid:6892 
+04-18 06:14:00.549 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522336977, downTime=1522336381, phoneEventTime=06:14:00.547 } moveCount:122
+04-18 06:14:00.603 I/PowerHalMgrImpl( 6892): hdl:748372, pid:6892 
+04-18 06:14:01.018 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522337445, downTime=1522337445, phoneEventTime=06:14:01.014 } moveCount:0
+04-18 06:14:01.018 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:01.027 I/PowerHalMgrImpl( 6892): hdl:748374, pid:6892 
+04-18 06:14:01.092 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522337521, downTime=1522337445, phoneEventTime=06:14:01.090 } moveCount:11
+04-18 06:14:02.029 I/PowerHalMgrImpl( 6892): hdl:748374, pid:6892 
+04-18 06:14:34.650 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522371074, downTime=1522371074, phoneEventTime=06:14:34.644 } moveCount:0
+04-18 06:14:34.650 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:34.659 I/PowerHalMgrImpl( 6892): hdl:748377, pid:6892 
+04-18 06:14:34.709 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522371138, downTime=1522371074, phoneEventTime=06:14:34.707 } moveCount:5
+04-18 06:14:35.661 I/PowerHalMgrImpl( 6892): hdl:748377, pid:6892 
+04-18 06:14:35.906 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522372333, downTime=1522372333, phoneEventTime=06:14:35.903 } moveCount:0
+04-18 06:14:35.907 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:35.916 I/PowerHalMgrImpl( 6892): hdl:748380, pid:6892 
+04-18 06:14:35.956 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522372384, downTime=1522372333, phoneEventTime=06:14:35.954 } moveCount:7
+04-18 06:14:36.921 I/PowerHalMgrImpl( 6892): hdl:748382, pid:6892 
+04-18 06:14:37.984 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522374411, downTime=1522374411, phoneEventTime=06:14:37.981 } moveCount:0
+04-18 06:14:37.984 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:37.992 I/PowerHalMgrImpl( 6892): hdl:748384, pid:6892 
+04-18 06:14:38.070 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522374498, downTime=1522374411, phoneEventTime=06:14:38.068 } moveCount:11
+04-18 06:14:38.987 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522375414, downTime=1522375414, phoneEventTime=06:14:38.983 } moveCount:0
+04-18 06:14:38.987 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:39.017 I/PowerHalMgrImpl( 6892): hdl:748387, pid:6892 
+04-18 06:14:39.036 I/PowerHalMgrImpl( 6892): hdl:748390, pid:6892 
+04-18 06:14:39.039 I/PowerHalMgrImpl( 6892): hdl:748391, pid:6892 
+04-18 06:14:39.041 I/PowerHalMgrImpl( 6892): hdl:748387, pid:6892 
+04-18 06:14:39.094 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522375522, downTime=1522375414, phoneEventTime=06:14:39.092 } moveCount:18
+04-18 06:14:39.147 I/PowerHalMgrImpl( 6892): hdl:748395, pid:6892 
+04-18 06:14:39.871 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522376298, downTime=1522376298, phoneEventTime=06:14:39.868 } moveCount:0
+04-18 06:14:39.871 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:39.882 I/PowerHalMgrImpl( 6892): hdl:748397, pid:6892 
+04-18 06:14:39.901 I/PowerHalMgrImpl( 6892): hdl:748400, pid:6892 
+04-18 06:14:39.904 I/PowerHalMgrImpl( 6892): hdl:748397, pid:6892 
+04-18 06:14:39.907 I/PowerHalMgrImpl( 6892): hdl:748401, pid:6892 
+04-18 06:14:39.941 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522376369, downTime=1522376298, phoneEventTime=06:14:39.939 } moveCount:15
+04-18 06:14:39.942 I/ScrollIdentify( 6892): on fling
+04-18 06:14:39.952 I/PowerHalMgrImpl( 6892): hdl:748405, pid:6892 
+04-18 06:14:40.984 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522377412, downTime=1522377412, phoneEventTime=06:14:40.981 } moveCount:0
+04-18 06:14:40.984 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:40.991 I/PowerHalMgrImpl( 6892): hdl:748408, pid:6892 
+04-18 06:14:41.036 I/PowerHalMgrImpl( 6892): hdl:748409, pid:6892 
+04-18 06:14:41.043 I/PowerHalMgrImpl( 6892): hdl:748412, pid:6892 
+04-18 06:14:41.044 I/PowerHalMgrImpl( 6892): hdl:748408, pid:6892 
+04-18 06:14:41.317 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522377744, downTime=1522377412, phoneEventTime=06:14:41.314 } moveCount:75
+04-18 06:14:41.373 I/PowerHalMgrImpl( 6892): hdl:748413, pid:6892 
+04-18 06:14:41.690 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522378117, downTime=1522378117, phoneEventTime=06:14:41.687 } moveCount:0
+04-18 06:14:41.690 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:41.699 I/PowerHalMgrImpl( 6892): hdl:748415, pid:6892 
+04-18 06:14:41.748 I/PowerHalMgrImpl( 6892): hdl:748418, pid:6892 
+04-18 06:14:41.752 I/PowerHalMgrImpl( 6892): hdl:748419, pid:6892 
+04-18 06:14:41.755 I/PowerHalMgrImpl( 6892): hdl:748415, pid:6892 
+04-18 06:14:42.255 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522378681, downTime=1522378117, phoneEventTime=06:14:42.251 } moveCount:93
+04-18 06:14:42.256 I/ScrollIdentify( 6892): on fling
+04-18 06:14:42.268 I/PowerHalMgrImpl( 6892): hdl:748423, pid:6892 
+04-18 06:14:44.499 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522380926, downTime=1522380926, phoneEventTime=06:14:44.495 } moveCount:0
+04-18 06:14:44.499 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:14:44.510 I/PowerHalMgrImpl( 6892): hdl:748425, pid:6892 
+04-18 06:14:44.530 I/PowerHalMgrImpl( 6892): hdl:748427, pid:6892 
+04-18 06:14:44.534 I/PowerHalMgrImpl( 6892): hdl:748429, pid:6892 
+04-18 06:14:44.539 I/PowerHalMgrImpl( 6892): hdl:748425, pid:6892 
+04-18 06:14:44.558 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522380986, downTime=1522380926, phoneEventTime=06:14:44.555 } moveCount:13
+04-18 06:14:44.611 I/PowerHalMgrImpl( 6892): hdl:748433, pid:6892 
+04-18 06:16:01.270 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522457696, downTime=1522457696, phoneEventTime=06:16:01.265 } moveCount:0
+04-18 06:16:01.271 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:01.281 I/PowerHalMgrImpl( 6892): hdl:748437, pid:6892 
+04-18 06:16:01.310 I/PowerHalMgrImpl( 6892): hdl:748439, pid:6892 
+04-18 06:16:01.314 I/PowerHalMgrImpl( 6892): hdl:748437, pid:6892 
+04-18 06:16:01.316 I/PowerHalMgrImpl( 6892): hdl:748439, pid:6892 
+04-18 06:16:01.518 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522457946, downTime=1522457696, phoneEventTime=06:16:01.516 } moveCount:55
+04-18 06:16:01.573 I/PowerHalMgrImpl( 6892): hdl:748443, pid:6892 
+04-18 06:16:01.729 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522458156, downTime=1522458156, phoneEventTime=06:16:01.726 } moveCount:0
+04-18 06:16:01.729 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:01.737 I/PowerHalMgrImpl( 6892): hdl:748445, pid:6892 
+04-18 06:16:01.777 I/PowerHalMgrImpl( 6892): hdl:748447, pid:6892 
+04-18 06:16:01.784 I/PowerHalMgrImpl( 6892): hdl:748445, pid:6892 
+04-18 06:16:01.802 I/PowerHalMgrImpl( 6892): hdl:748449, pid:6892 
+04-18 06:16:01.903 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522458331, downTime=1522458156, phoneEventTime=06:16:01.901 } moveCount:36
+04-18 06:16:01.957 I/PowerHalMgrImpl( 6892): hdl:748452, pid:6892 
+04-18 06:16:02.259 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522458685, downTime=1522458685, phoneEventTime=06:16:02.254 } moveCount:0
+04-18 06:16:02.259 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:02.272 I/PowerHalMgrImpl( 6892): hdl:748454, pid:6892 
+04-18 06:16:02.311 I/PowerHalMgrImpl( 6892): hdl:748457, pid:6892 
+04-18 06:16:02.317 I/PowerHalMgrImpl( 6892): hdl:748454, pid:6892 
+04-18 06:16:02.320 I/PowerHalMgrImpl( 6892): hdl:748458, pid:6892 
+04-18 06:16:02.597 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522459018, downTime=1522458685, phoneEventTime=06:16:02.587 } moveCount:59
+04-18 06:16:02.654 I/PowerHalMgrImpl( 6892): hdl:748459, pid:6892 
+04-18 06:16:02.956 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522459382, downTime=1522459382, phoneEventTime=06:16:02.951 } moveCount:0
+04-18 06:16:02.957 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:02.967 I/PowerHalMgrImpl( 6892): hdl:748461, pid:6892 
+04-18 06:16:02.995 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522459423, downTime=1522459382, phoneEventTime=06:16:02.993 } moveCount:4
+04-18 06:16:03.084 I/flutter ( 6892): API POST MULTIPART: https://solemate-production-e7fd.up.railway.app/api/outfit/recommend-shoes with 1 files
+04-18 06:16:03.983 I/PowerHalMgrImpl( 6892): hdl:748463, pid:6892 
+04-18 06:16:04.372 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522460799, downTime=1522460799, phoneEventTime=06:16:04.368 } moveCount:0
+04-18 06:16:04.372 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:04.387 I/PowerHalMgrImpl( 6892): hdl:748465, pid:6892 
+04-18 06:16:04.422 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522460850, downTime=1522460799, phoneEventTime=06:16:04.420 } moveCount:4
+04-18 06:16:05.390 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522461816, downTime=1522461816, phoneEventTime=06:16:05.386 } moveCount:0
+04-18 06:16:05.390 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:05.404 I/PowerHalMgrImpl( 6892): hdl:748468, pid:6892 
+04-18 06:16:05.409 I/PowerHalMgrImpl( 6892): hdl:748469, pid:6892 
+04-18 06:16:05.436 I/PowerHalMgrImpl( 6892): hdl:748472, pid:6892 
+04-18 06:16:05.439 I/PowerHalMgrImpl( 6892): hdl:748473, pid:6892 
+04-18 06:16:05.441 I/PowerHalMgrImpl( 6892): hdl:748469, pid:6892 
+04-18 06:16:05.646 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522462074, downTime=1522461816, phoneEventTime=06:16:05.644 } moveCount:37
+04-18 06:16:05.711 I/PowerHalMgrImpl( 6892): hdl:748474, pid:6892 
+04-18 06:16:17.446 I/HandWritingStubImpl( 6892): refreshLastKeyboardType: 1
+04-18 06:16:17.447 I/HandWritingStubImpl( 6892): getCurrentKeyboardType: 1
+04-18 06:16:17.470 D/InsetsController( 6892): hide(ime(), fromIme=false)
+04-18 06:16:17.471 I/ImeTracker( 6892): com.solemate.app.solemate_app:20469973: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+04-18 06:16:18.329 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522474756, downTime=1522474756, phoneEventTime=06:16:18.325 } moveCount:0
+04-18 06:16:18.329 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:18.344 I/PowerHalMgrImpl( 6892): hdl:748501, pid:6892 
+04-18 06:16:18.378 I/PowerHalMgrImpl( 6892): hdl:748504, pid:6892 
+04-18 06:16:18.380 I/PowerHalMgrImpl( 6892): hdl:748504, pid:6892 
+04-18 06:16:18.390 I/PowerHalMgrImpl( 6892): hdl:748501, pid:6892 
+04-18 06:16:18.789 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522475217, downTime=1522474756, phoneEventTime=06:16:18.786 } moveCount:84
+04-18 06:16:18.842 I/PowerHalMgrImpl( 6892): hdl:748507, pid:6892 
+04-18 06:16:30.038 I/flutter ( 6892): AI RESPONSE KEYS: [detectedStyle, detectedColors, detected_colors, suggestedShoeColor, recommendations]
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Oxfords in Maroon
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Oxfords in White
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Oxfords in Black
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Derbies in Maroon
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Derbies in White
+04-18 06:16:30.040 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Derbies in Black
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Loafers in Maroon
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Loafers in White
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Loafers in Black
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Chelsea Boots in Maroon
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Chelsea Boots in White
+04-18 06:16:30.041 I/flutter ( 6892): FINAL TITLE FOR RECOMMENDATION: Chelsea Boots in Black
+04-18 06:16:30.042 I/flutter ( 6892): MAPPING SUCCESS: Finalized 12 recommendations
+04-18 06:16:30.042 I/flutter ( 6892): FINAL OUTFIT DESCRIPTION: A formal outfit with dominant "lightslategray" and "rosybrown" colors contrasts nicely with these recommended shoes.
+04-18 06:16:30.055 I/flutter ( 6892): API POST MULTIPART: https://solemate-production-e7fd.up.railway.app/api/outfit/analyze with 1 files
+04-18 06:16:42.172 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522498599, downTime=1522498599, phoneEventTime=06:16:42.168 } moveCount:0
+04-18 06:16:42.173 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:42.185 I/PowerHalMgrImpl( 6892): hdl:748509, pid:6892 
+04-18 06:16:42.254 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522498682, downTime=1522498599, phoneEventTime=06:16:42.252 } moveCount:8
+04-18 06:16:43.187 I/PowerHalMgrImpl( 6892): hdl:748509, pid:6892 
+04-18 06:16:43.259 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522499686, downTime=1522499686, phoneEventTime=06:16:43.256 } moveCount:0
+04-18 06:16:43.259 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:43.271 I/PowerHalMgrImpl( 6892): hdl:748512, pid:6892 
+04-18 06:16:43.299 I/PowerHalMgrImpl( 6892): hdl:748515, pid:6892 
+04-18 06:16:43.305 I/PowerHalMgrImpl( 6892): hdl:748516, pid:6892 
+04-18 06:16:43.305 I/PowerHalMgrImpl( 6892): hdl:748512, pid:6892 
+04-18 06:16:43.349 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522499778, downTime=1522499686, phoneEventTime=06:16:43.348 } moveCount:18
+04-18 06:16:43.350 I/ScrollIdentify( 6892): on fling
+04-18 06:16:43.358 I/PowerHalMgrImpl( 6892): hdl:748519, pid:6892 
+04-18 06:16:44.370 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522500796, downTime=1522500796, phoneEventTime=06:16:44.366 } moveCount:0
+04-18 06:16:44.370 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:44.379 I/PowerHalMgrImpl( 6892): hdl:748523, pid:6892 
+04-18 06:16:44.409 I/PowerHalMgrImpl( 6892): hdl:748526, pid:6892 
+04-18 06:16:44.412 I/PowerHalMgrImpl( 6892): hdl:748523, pid:6892 
+04-18 06:16:44.416 I/PowerHalMgrImpl( 6892): hdl:748527, pid:6892 
+04-18 06:16:44.436 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522500863, downTime=1522500796, phoneEventTime=06:16:44.433 } moveCount:13
+04-18 06:16:44.490 I/PowerHalMgrImpl( 6892): hdl:748531, pid:6892 
+04-18 06:16:45.235 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522501662, downTime=1522501662, phoneEventTime=06:16:45.231 } moveCount:0
+04-18 06:16:45.235 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:45.243 I/PowerHalMgrImpl( 6892): hdl:748533, pid:6892 
+04-18 06:16:45.282 I/PowerHalMgrImpl( 6892): hdl:748535, pid:6892 
+04-18 06:16:45.287 I/PowerHalMgrImpl( 6892): hdl:748537, pid:6892 
+04-18 06:16:45.288 I/PowerHalMgrImpl( 6892): hdl:748533, pid:6892 
+04-18 06:16:45.333 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522501761, downTime=1522501662, phoneEventTime=06:16:45.331 } moveCount:19
+04-18 06:16:45.334 I/ScrollIdentify( 6892): on fling
+04-18 06:16:45.344 I/PowerHalMgrImpl( 6892): hdl:748541, pid:6892 
+04-18 06:16:46.272 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522502700, downTime=1522502700, phoneEventTime=06:16:46.269 } moveCount:0
+04-18 06:16:46.273 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:46.282 I/PowerHalMgrImpl( 6892): hdl:748544, pid:6892 
+04-18 06:16:46.334 I/PowerHalMgrImpl( 6892): hdl:748546, pid:6892 
+04-18 06:16:46.340 I/PowerHalMgrImpl( 6892): hdl:748548, pid:6892 
+04-18 06:16:46.341 I/PowerHalMgrImpl( 6892): hdl:748544, pid:6892 
+04-18 06:16:46.625 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522503053, downTime=1522502700, phoneEventTime=06:16:46.623 } moveCount:79
+04-18 06:16:46.626 I/ScrollIdentify( 6892): on fling
+04-18 06:16:46.637 I/PowerHalMgrImpl( 6892): hdl:748551, pid:6892 
+04-18 06:16:47.829 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522504256, downTime=1522504256, phoneEventTime=06:16:47.826 } moveCount:0
+04-18 06:16:47.829 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:47.837 I/PowerHalMgrImpl( 6892): hdl:748554, pid:6892 
+04-18 06:16:47.883 I/PowerHalMgrImpl( 6892): hdl:748556, pid:6892 
+04-18 06:16:47.891 I/PowerHalMgrImpl( 6892): hdl:748554, pid:6892 
+04-18 06:16:47.893 I/PowerHalMgrImpl( 6892): hdl:748558, pid:6892 
+04-18 06:16:48.147 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522504574, downTime=1522504256, phoneEventTime=06:16:48.144 } moveCount:72
+04-18 06:16:48.201 I/PowerHalMgrImpl( 6892): hdl:748561, pid:6892 
+04-18 06:16:48.663 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522505090, downTime=1522505090, phoneEventTime=06:16:48.659 } moveCount:0
+04-18 06:16:48.664 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:48.671 I/PowerHalMgrImpl( 6892): hdl:748563, pid:6892 
+04-18 06:16:48.711 I/PowerHalMgrImpl( 6892): hdl:748566, pid:6892 
+04-18 06:16:48.714 I/PowerHalMgrImpl( 6892): hdl:748567, pid:6892 
+04-18 06:16:48.716 I/PowerHalMgrImpl( 6892): hdl:748563, pid:6892 
+04-18 06:16:48.753 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522505176, downTime=1522505090, phoneEventTime=06:16:48.745 } moveCount:13
+04-18 06:16:48.817 I/PowerHalMgrImpl( 6892): hdl:748571, pid:6892 
+04-18 06:16:48.949 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522505375, downTime=1522505375, phoneEventTime=06:16:48.945 } moveCount:0
+04-18 06:16:48.949 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:48.961 I/PowerHalMgrImpl( 6892): hdl:748573, pid:6892 
+04-18 06:16:49.055 I/PowerHalMgrImpl( 6892): hdl:748575, pid:6892 
+04-18 06:16:49.061 I/PowerHalMgrImpl( 6892): hdl:748577, pid:6892 
+04-18 06:16:49.062 I/PowerHalMgrImpl( 6892): hdl:748573, pid:6892 
+04-18 06:16:49.104 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522505530, downTime=1522505375, phoneEventTime=06:16:49.099 } moveCount:22
+04-18 06:16:49.159 I/PowerHalMgrImpl( 6892): hdl:748580, pid:6892 
+04-18 06:16:49.814 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522506241, downTime=1522506241, phoneEventTime=06:16:49.811 } moveCount:0
+04-18 06:16:49.814 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:49.821 I/PowerHalMgrImpl( 6892): hdl:748582, pid:6892 
+04-18 06:16:49.859 I/PowerHalMgrImpl( 6892): hdl:748584, pid:6892 
+04-18 06:16:49.864 I/PowerHalMgrImpl( 6892): hdl:748586, pid:6892 
+04-18 06:16:49.865 I/PowerHalMgrImpl( 6892): hdl:748582, pid:6892 
+04-18 06:16:49.916 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522506337, downTime=1522506241, phoneEventTime=06:16:49.907 } moveCount:17
+04-18 06:16:49.970 I/PowerHalMgrImpl( 6892): hdl:748590, pid:6892 
+04-18 06:16:50.440 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522506865, downTime=1522506865, phoneEventTime=06:16:50.435 } moveCount:0
+04-18 06:16:50.440 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:50.449 I/PowerHalMgrImpl( 6892): hdl:748592, pid:6892 
+04-18 06:16:50.480 I/PowerHalMgrImpl( 6892): hdl:748594, pid:6892 
+04-18 06:16:50.486 I/PowerHalMgrImpl( 6892): hdl:748596, pid:6892 
+04-18 06:16:50.487 I/PowerHalMgrImpl( 6892): hdl:748592, pid:6892 
+04-18 06:16:50.516 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522506941, downTime=1522506865, phoneEventTime=06:16:50.510 } moveCount:14
+04-18 06:16:50.517 I/ScrollIdentify( 6892): on fling
+04-18 06:16:50.523 I/PowerHalMgrImpl( 6892): hdl:748600, pid:6892 
+04-18 06:16:51.069 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522507497, downTime=1522507497, phoneEventTime=06:16:51.066 } moveCount:0
+04-18 06:16:51.070 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:51.082 I/PowerHalMgrImpl( 6892): hdl:748603, pid:6892 
+04-18 06:16:51.116 I/PowerHalMgrImpl( 6892): hdl:748605, pid:6892 
+04-18 06:16:51.125 I/PowerHalMgrImpl( 6892): hdl:748607, pid:6892 
+04-18 06:16:51.128 I/PowerHalMgrImpl( 6892): hdl:748603, pid:6892 
+04-18 06:16:51.196 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522507624, downTime=1522507497, phoneEventTime=06:16:51.194 } moveCount:27
+04-18 06:16:51.197 I/ScrollIdentify( 6892): on fling
+04-18 06:16:51.208 I/PowerHalMgrImpl( 6892): hdl:748611, pid:6892 
+04-18 06:16:51.626 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522508054, downTime=1522508054, phoneEventTime=06:16:51.624 } moveCount:0
+04-18 06:16:51.626 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:51.637 I/PowerHalMgrImpl( 6892): hdl:748614, pid:6892 
+04-18 06:16:51.722 I/PowerHalMgrImpl( 6892): hdl:748616, pid:6892 
+04-18 06:16:51.727 I/PowerHalMgrImpl( 6892): hdl:748618, pid:6892 
+04-18 06:16:51.729 I/PowerHalMgrImpl( 6892): hdl:748614, pid:6892 
+04-18 06:16:51.900 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522508327, downTime=1522508054, phoneEventTime=06:16:51.896 } moveCount:50
+04-18 06:16:51.901 I/ScrollIdentify( 6892): on fling
+04-18 06:16:51.911 I/PowerHalMgrImpl( 6892): hdl:748621, pid:6892 
+04-18 06:16:52.436 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=1522508864, downTime=1522508864, phoneEventTime=06:16:52.433 } moveCount:0
+04-18 06:16:52.437 D/VRI[MainActivity]( 6892): getMiuiFreeformStackInfo mTmpFrames.miuiFreeFormStackInfo: null
+04-18 06:16:52.444 I/PowerHalMgrImpl( 6892): hdl:748624, pid:6892 
+04-18 06:16:52.484 I/PowerHalMgrImpl( 6892): hdl:748626, pid:6892 
+04-18 06:16:52.489 I/PowerHalMgrImpl( 6892): hdl:748624, pid:6892 
+04-18 06:16:52.492 I/PowerHalMgrImpl( 6892): hdl:748628, pid:6892 
+04-18 06:16:52.628 I/MIUIInput( 6892): [MotionEvent] ViewRootImpl windowName 'com.solemate.app.solemate_app/com.solemate.app.solemate_app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=1522509057, downTime=1522508864, phoneEventTime=06:16:52.627 } moveCount:37
+04-18 06:16:52.683 I/PowerHalMgrImpl( 6892): hdl:748631, pid:6892 

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "shoes": [
+        {
+            "id": "girl_sandal1",
+            "name": "Girl Sandal (Testing)",
+            "thumbnailUrl": "https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/shoes/Sandals/thumbnail.png",
+            "modelUrl": "https://solemate-mod-buck-213433448245-ap-southeast-2-an.s3.ap-southeast-2.amazonaws.com/shoes/Sandals/girl_sandal1.glb",
+            "scale": [-1.00, -1.00, -1.02],
+            "positionOffset": [-0.1237, -0.0353, -0.0023],
+            "rotationOffset": [-178.3509, 4.8744, 0.1402]
+        }
+    ]
+}

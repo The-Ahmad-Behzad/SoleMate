@@ -1,0 +1,115 @@
+{
+    "1667584347408331:62401": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "2352",
+                "compressedSize": "2569",
+                "extension": "mesh",
+                "originalRAM": "2352",
+                "originalSize": "2569",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849636:1743"
+        }
+    },
+    "1674231915849509:1541": {
+        "IResourceController": {
+            "name": "stitch_03",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584347408331:62401",
+            "fileId": "1674231915849635:1742",
+            "publicId": "1674231915850065:2084",
+            "expected_hash": "9df18ae7eb9c7f2f9be011f3769de19c",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584347408331:62401",
+            "name": "Files/File_1674231915849635_1742.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849635:1742": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849635_1742.mesh"
+        }
+    },
+    "1674231915849636:1743": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849636_1743.mesh"
+        }
+    },
+    "1674231915850065:2084": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/stitch_03.mesh",
+                "hash": "9df18ae7eb9c7f2f9be011f3769de19c"
+            }
+        }
+    }
+}

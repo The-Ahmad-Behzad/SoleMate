@@ -1,0 +1,115 @@
+{
+    "1667584347785598:62458": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "4728",
+                "compressedSize": "4656",
+                "extension": "mesh",
+                "originalRAM": "4728",
+                "originalSize": "4656",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849643:1749"
+        }
+    },
+    "1674231915849510:1544": {
+        "IResourceController": {
+            "name": "stitch_01",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584347785598:62458",
+            "fileId": "1674231915849642:1748",
+            "publicId": "1674231915850066:2087",
+            "expected_hash": "ef7bd0314869d72de5a4ac63972d3262",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584347785598:62458",
+            "name": "Files/File_1674231915849642_1748.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849642:1748": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849642_1748.mesh"
+        }
+    },
+    "1674231915849643:1749": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849643_1749.mesh"
+        }
+    },
+    "1674231915850066:2087": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/stitch_01.mesh",
+                "hash": "ef7bd0314869d72de5a4ac63972d3262"
+            }
+        }
+    }
+}

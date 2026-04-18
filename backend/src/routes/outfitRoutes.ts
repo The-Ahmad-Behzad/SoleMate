@@ -1,14 +1,28 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middleware/authMiddleware.js';
-import { analyzeOutfit, getRecommendations, getOutfitHistory } from '../controllers/outfitController.js';
+import { authMiddleware, optionalAuthMiddleware } from '../middleware/authMiddleware.js';
+import { 
+  analyzeOutfit, 
+  getRecommendations, 
+  getOutfitHistory,
+  matchShoesToOutfit,
+  recommendOutfitFromImage,
+  checkOutfitMismatch
+} from '../controllers/outfitController.js';
+import multer from 'multer';
 
+const upload = multer({ storage: multer.memoryStorage() });
 const router = Router();
 
-router.use(authMiddleware);
-router.post('/analyze', analyzeOutfit);
-router.post('/recommend', getRecommendations);
-router.get('/history', getOutfitHistory);
+router.post('/analyze', authMiddleware, upload.single('outfitImage'), analyzeOutfit);
+router.post('/recommend', authMiddleware, getRecommendations);
+router.get('/history', optionalAuthMiddleware, getOutfitHistory);
+
+// New AI endpoints
+router.post('/recommend-shoes', authMiddleware, upload.single('outfitImage'), matchShoesToOutfit);
+router.post('/recommend-outfit-for-shoe', authMiddleware, upload.single('file'), recommendOutfitFromImage);
+router.post('/check-mismatch', authMiddleware, upload.single('image'), checkOutfitMismatch);
 
 export default router;
+
 
 

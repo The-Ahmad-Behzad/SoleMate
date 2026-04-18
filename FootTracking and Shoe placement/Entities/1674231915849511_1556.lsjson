@@ -1,0 +1,80 @@
+{
+    "1667584349547899:63128": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "3072",
+                        "uncompressed_hash": "a778a7dfdc4d3d1f83eec904fd05964a"
+                    },
+                    "v": "1674231915849872:1929"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "6894",
+                "compressedSize": "1801",
+                "extension": "jpg",
+                "originalRAM": "5184",
+                "originalSize": "1801",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "3",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849674:1776"
+        }
+    },
+    "1674231915849511:1556": {
+        "IResourceController": {
+            "name": "normal_tile3",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584349547899:63128",
+            "fileId": "1674231915849672:1774",
+            "originalId": "1674231915849673:1775",
+            "publicId": "1674231915850070:2100",
+            "expected_hash": "a778a7dfdc4d3d1f83eec904fd05964a",
+            "additional": {
+                "originHash": "a778a7dfdc4d3d1f83eec904fd05964a",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584349547899:63128",
+            "name": "Files/File_1674231915849672_1774.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849672:1774": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849672_1774.jpg"
+        }
+    },
+    "1674231915849673:1775": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849673_1775.jpg"
+        }
+    },
+    "1674231915849674:1776": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849674_1776.jpg"
+        }
+    },
+    "1674231915849872:1929": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849872_1929.jpg"
+        }
+    },
+    "1674231915850070:2100": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Textures/normal_tile3.jpg",
+                "hash": "a778a7dfdc4d3d1f83eec904fd05964a"
+            }
+        }
+    }
+}

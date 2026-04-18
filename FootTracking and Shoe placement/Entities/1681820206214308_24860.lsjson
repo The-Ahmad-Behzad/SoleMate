@@ -1,0 +1,42 @@
+{
+    "1681820206211718:24859": {
+        "IFileManager": {
+            "path": "Files/File_1681820206211718_24859"
+        }
+    },
+    "1681820206214308:24860": {
+        "IResourceController": {
+            "name": "touch_collision",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1681820206214311:24861",
+            "fileId": "1681820206211718:24859",
+            "originalId": "1681820206250236:24865",
+            "publicId": "1681820206336568:24874",
+            "expected_hash": "af6b298f22ea5f4c36ab3dca0bdd8f44",
+            "additional": {
+                "isUnpackedInPublic": "false"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1681820206214311:24861",
+            "name": "Files/File_1681820206211718_24859",
+            "flags": 1
+        }
+    },
+    "1681820206250236:24865": {
+        "IFileManager": {
+            "path": "Files/File_1681820206250236_24865.lsmat"
+        }
+    },
+    "1681820206336568:24874": {
+        "IResourceController": {
+            "public": {
+                "path": "Materials/touch_collision.lsmat",
+                "hash": "5e8e6095fcef75d57c71701f94a4ba79"
+            }
+        }
+    }
+}

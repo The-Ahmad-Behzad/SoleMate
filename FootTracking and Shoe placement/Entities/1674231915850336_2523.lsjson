@@ -1,0 +1,24 @@
+{
+    "1674231915850061:2070": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins"
+            }
+        }
+    },
+    "1674231915850336:2523": {
+        "IResourceController": {
+            "name": "Moccasins",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1674231915850061:2070",
+            "resources": [
+                "1674231915850271:2519",
+                "1674231915850327:2521",
+                "1674231915850336:2522"
+            ]
+        }
+    }
+}

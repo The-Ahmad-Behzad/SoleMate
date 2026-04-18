@@ -1,0 +1,125 @@
+{
+    "1667584348686314:62748": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "24976",
+                "compressedSize": "17904",
+                "extension": "mesh",
+                "originalRAM": "24976",
+                "originalSize": "17904",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "boneData"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849659:1763"
+        }
+    },
+    "1674231915849510:1551": {
+        "IResourceController": {
+            "name": "braided_cord",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584348686314:62748",
+            "fileId": "1674231915849658:1762",
+            "publicId": "1674231915850068:2094",
+            "expected_hash": "dd8a7327a20ea8197351a176f937f890",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "boneData"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584348686314:62748",
+            "name": "Files/File_1674231915849658_1762.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849658:1762": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849658_1762.mesh"
+        }
+    },
+    "1674231915849659:1763": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849659_1763.mesh"
+        }
+    },
+    "1674231915850068:2094": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/braided_cord.mesh",
+                "hash": "dd8a7327a20ea8197351a176f937f890"
+            }
+        }
+    }
+}

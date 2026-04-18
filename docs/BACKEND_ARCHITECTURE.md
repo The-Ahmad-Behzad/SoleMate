@@ -163,10 +163,11 @@ SoleMate follows a **Hybrid Layered (N-Tier) Architecture** with cloud-integrate
 - ❌ Error handling in UI not implemented
 - ❌ Loading states not handled
 
-#### Kotlin Native Module (Not Started)
-- ❌ AR features not integrated with BFF
-- ❌ Native-to-Flutter data bridge missing
-- ❌ AR shoe overlay data fetching not implemented
+#### Kotlin Native Module (Snap Camera Kit)
+- ✅ Snap Camera Kit SDK Integrated
+- ✅ `ARActivity.kt` utilizing Lens Groups
+- ❌ Lens ID Dynamic Fetching (from BFF/Config) not implemented
+- ❌ Native-to-Flutter data bridge for specific Shoe Lens selection
 
 #### Additional Features (Not Started)
 - ❌ Real-time outfit color extraction
@@ -540,7 +541,7 @@ final products = await catalogRepo.getProducts();
 
 #### 2. AR Try-On Screen → Shoe Display
 
-**Current State**: ❌ Not Connected (Uses Kotlin AR Module)
+**Current State**: ⚠️ Partially Connected (Native Snap AR Activity exists)
 
 **How to Connect**:
 
@@ -554,10 +555,11 @@ Future<void> _loadShoeForAR(String shoeId) async {
   if (response.statusCode == 200) {
     final product = Product.fromJson(jsonDecode(response.body));
     
-    // Pass to Kotlin AR module
-    await _arModule.loadShoeModel(
-      modelUrl: product.modelUrl,
-      textureUrl: product.textureUrl,
+    // Pass Lens ID to Native Module
+    // Note: Product model needs to store 'lensId' or 'lensGroupId'
+    await _arModule.launchARSession(
+      lensId: product.arLensId, 
+      lensGroupId: product.arLensGroupId
     );
   }
 }
@@ -565,22 +567,22 @@ Future<void> _loadShoeForAR(String shoeId) async {
 
 **API Call**:
 - Endpoint: `GET /api/catalog/:id`
-- Authentication: Not required
-- Response: Single Product object with modelUrl and textureUrl
+- Response: Product object with `arLensId` and `arLensGroupId`
 
-**Native Bridge** (To Be Implemented):
+**Native Bridge**:
 ```kotlin
 // android/app/src/main/kotlin/.../MainActivity.kt
 
 @FlutterMethod
-fun loadShoeModel(call: MethodCall, result: Result) {
-    val modelUrl = call.argument<String>("modelUrl")
-    val textureUrl = call.argument<String>("textureUrl")
+fun launchARSession(call: MethodCall, result: Result) {
+    val lensId = call.argument<String>("lensId")
+    val groupId = call.argument<String>("lensGroupId")
     
-    // Load 3D model into AR scene
-    arSceneView.loadModel(modelUrl)
-    arSceneView.applyTexture(textureUrl)
-    
+    val intent = Intent(this, ARActivity::class.java).apply {
+        putExtra("LENS_ID", lensId)
+        putExtra("LENS_GROUP_ID", groupId)
+    }
+    startActivity(intent)
     result.success(true)
 }
 ```

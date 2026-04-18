@@ -1,0 +1,38 @@
+{
+    "1772641227154266:12114": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/RightShoeController.js",
+                "hash": "a9db5f736ec3fc3fa9796060cab234ed"
+            }
+        }
+    },
+    "1772641227155320:12115": {
+        "IFileManager": {
+            "path": "Files/File_1772641227155320_12115.js"
+        }
+    },
+    "1772641227161421:12116": {
+        "IResourceController": {
+            "name": "RightShoeController",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1772641227161454:12117",
+            "fileId": "1772641227155320:12115",
+            "publicId": "1772641227154266:12114",
+            "expected_hash": "a9db5f736ec3fc3fa9796060cab234ed"
+        },
+        "IResourceManager": {
+            "uid": "1772641227161454:12117",
+            "name": "Files/File_1772641227155320_12115.js",
+            "flags": 1
+        }
+    },
+    "1772641227161454:12117": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

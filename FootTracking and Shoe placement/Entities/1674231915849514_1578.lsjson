@@ -1,0 +1,43 @@
+{
+    "1674231915849514:1578": {
+        "IResourceController": {
+            "name": "stitch_01_mask",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584353767585:64295",
+            "fileId": "1674231915849735:1825",
+            "originalId": "1674231915849740:1826",
+            "publicId": "1674231915850078:2126",
+            "expected_hash": "64724f54fe23c6cb758b2e4bab910969",
+            "additional": {
+                "originHash": "64724f54fe23c6cb758b2e4bab910969",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584353767585:64295",
+            "name": "Files/File1889.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849735:1825": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849735_1825.webp"
+        }
+    },
+    "1674231915849740:1826": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849740_1826.webp"
+        }
+    },
+    "1674231915850078:2126": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/stitch_01_mask.webp",
+                "hash": "64724f54fe23c6cb758b2e4bab910969"
+            }
+        }
+    }
+}

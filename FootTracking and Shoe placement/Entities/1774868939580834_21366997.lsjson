@@ -1,0 +1,66 @@
+{
+    "1774868939576897:21366994": {
+        "IFileManager": {
+            "path": "Files/File_1774868939576897_21366994.jpeg"
+        }
+    },
+    "1774868939580834:21366997": {
+        "IResourceController": {
+            "name": "material_0_baseColor",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774868939582134:21366998",
+            "fileId": "1774868939576897:21366994",
+            "originalId": "1774868939582674:21367003",
+            "publicId": "1774868940570361:21367463",
+            "expected_hash": "5a1a5978bb432201da4d2d17cb812ee3",
+            "additional": {
+                "originHash": "5a1a5978bb432201da4d2d17cb812ee3"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1774868939582134:21366998",
+            "name": "Files/File_1774868939576897_21366994.jpg",
+            "flags": 1
+        }
+    },
+    "1774868939582134:21366998": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "4194304",
+                "compressedSize": "145874",
+                "extension": "jpeg",
+                "originalRAM": "4194304",
+                "originalSize": "145874",
+                "settings": {
+                    "isCompressed": "false",
+                    "level": "0",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1774868939606037:21367009"
+        }
+    },
+    "1774868939582674:21367003": {
+        "IFileManager": {
+            "path": "Files/File_1774868939582674_21367003.jpeg"
+        }
+    },
+    "1774868939606037:21367009": {
+        "IFileManager": {
+            "path": "Files/File_1774868939606037_21367009.jpeg"
+        }
+    },
+    "1774868940570361:21367463": {
+        "IResourceController": {
+            "public": {
+                "path": "../AdditionalFiles/3D Resources/Sandal 1/girl_sandal1/Textures/material_0_baseColor.jpeg",
+                "hash": "5a1a5978bb432201da4d2d17cb812ee3"
+            }
+        }
+    }
+}

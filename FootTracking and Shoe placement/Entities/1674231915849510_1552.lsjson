@@ -1,0 +1,80 @@
+{
+    "1667584348919758:63060": {
+        "Compression::IController": {
+            "compressed_files": [
+                {
+                    "k": {
+                        "settings_hash": "3072",
+                        "uncompressed_hash": "4640def64198bf8b291a8d6c94f95894"
+                    },
+                    "v": "1674231915849869:1927"
+                }
+            ],
+            "infos": {
+                "compressedRAM": "34728",
+                "compressedSize": "5068",
+                "extension": "jpg",
+                "originalRAM": "26112",
+                "originalSize": "5068",
+                "settings": {
+                    "isCompressed": "true",
+                    "level": "3",
+                    "subtype": "9",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849663:1766"
+        }
+    },
+    "1674231915849510:1552": {
+        "IResourceController": {
+            "name": "stitch_alpha_2",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584348919758:63060",
+            "fileId": "1674231915849660:1764",
+            "originalId": "1674231915849662:1765",
+            "publicId": "1674231915850069:2096",
+            "expected_hash": "4640def64198bf8b291a8d6c94f95894",
+            "additional": {
+                "originHash": "4640def64198bf8b291a8d6c94f95894",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584348919758:63060",
+            "name": "Files/File_1674231915849660_1764.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849660:1764": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849660_1764.jpg"
+        }
+    },
+    "1674231915849662:1765": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849662_1765.jpg"
+        }
+    },
+    "1674231915849663:1766": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849663_1766.jpg"
+        }
+    },
+    "1674231915849869:1927": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849869_1927.jpg"
+        }
+    },
+    "1674231915850069:2096": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Textures/stitch_alpha_2.jpg",
+                "hash": "4640def64198bf8b291a8d6c94f95894"
+            }
+        }
+    }
+}

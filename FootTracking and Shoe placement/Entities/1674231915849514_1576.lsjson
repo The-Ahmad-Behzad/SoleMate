@@ -1,0 +1,43 @@
+{
+    "1674231915849514:1576": {
+        "IResourceController": {
+            "name": "fabric_01",
+            "type": 1,
+            "subtype": 9,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584353537364:64261",
+            "fileId": "1674231915849730:1821",
+            "originalId": "1674231915849731:1822",
+            "publicId": "1674231915850077:2124",
+            "expected_hash": "673d891f697ae3c8286d313cd373e254",
+            "additional": {
+                "originHash": "673d891f697ae3c8286d313cd373e254",
+                "subtype": "9"
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584353537364:64261",
+            "name": "Files/File1885.jpg",
+            "flags": 1
+        }
+    },
+    "1674231915849730:1821": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849730_1821.webp"
+        }
+    },
+    "1674231915849731:1822": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849731_1822.webp"
+        }
+    },
+    "1674231915850077:2124": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/Textures/fabric_01.webp",
+                "hash": "673d891f697ae3c8286d313cd373e254"
+            }
+        }
+    }
+}

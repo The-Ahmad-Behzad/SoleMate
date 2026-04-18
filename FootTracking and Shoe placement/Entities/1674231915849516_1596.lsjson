@@ -1,0 +1,39 @@
+{
+    "1674231915849516:1596": {
+        "IResourceController": {
+            "name": "Shoe Stich Shadows",
+            "type": 2,
+            "subtype": 1,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584356381436:64736",
+            "fileId": "1674231915849785:1863",
+            "originalId": "1674231915849786:1864",
+            "publicId": "1674231915850084:2145",
+            "expected_hash": "4f9ea7abe8ae4cc33d47b95528d7b455"
+        },
+        "IResourceManager": {
+            "uid": "1667584356381436:64736",
+            "name": "Files/File_1674231915849785_1863",
+            "flags": 1
+        }
+    },
+    "1674231915849785:1863": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849785_1863"
+        }
+    },
+    "1674231915849786:1864": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849786_1864.lsmat"
+        }
+    },
+    "1674231915850084:2145": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Sneakers 1/materials/Shoe Stich Shadows.lsmat",
+                "hash": "75a3866e73dc635c1f2da6f69c98c439"
+            }
+        }
+    }
+}

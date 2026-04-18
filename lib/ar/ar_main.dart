@@ -57,10 +57,14 @@ class ARMain {
   }
   
   /// 🔹 Opens AR Camera via native Kotlin function
-  Future<void> openARView(BuildContext context) async {
+  /// 🔹 Opens AR Camera via native Kotlin function
+  Future<void> openARView(BuildContext context, {String? lensId, String? groupId}) async {
     _lastContext = context;
     try {
-      final result = await platform.invokeMethod('openARView');
+      final result = await platform.invokeMethod('openARView', {
+        'lensId': lensId,
+        'groupId': groupId,
+      });
       debugPrint("✅ AR view opened successfully: $result");
       
       // After AR view closes, check if we should open Image Manager
@@ -111,13 +115,13 @@ class ARMain {
   }
 
   /// 🔹 Checks for camera permissions before opening AR view
-  Future<void> checkPermissionsAndOpenAR(BuildContext context) async {
+  Future<void> checkPermissionsAndOpenAR(BuildContext context, {String? lensId, String? groupId}) async {
     // Initialize handler for native callbacks (must be set up before AR opens)
     initMethodCallHandler(context);
     
     final status = await Permission.camera.request();
     if (status.isGranted) {
-      await openARView(context);
+      await openARView(context, lensId: lensId, groupId: groupId);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Camera permission denied.")),

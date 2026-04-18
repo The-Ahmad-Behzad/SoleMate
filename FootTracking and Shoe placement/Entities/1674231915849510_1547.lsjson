@@ -1,0 +1,115 @@
+{
+    "1667584348170884:62621": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "22932",
+                "compressedSize": "17236",
+                "extension": "mesh",
+                "originalRAM": "22932",
+                "originalSize": "17236",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849650:1755"
+        }
+    },
+    "1674231915849510:1547": {
+        "IResourceController": {
+            "name": "outsole_rubber",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584348170884:62621",
+            "fileId": "1674231915849649:1754",
+            "publicId": "1674231915850067:2090",
+            "expected_hash": "a03d5f7b51e03c7c98d38666b803d19c",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584348170884:62621",
+            "name": "Files/File_1674231915849649_1754.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849649:1754": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849649_1754.mesh"
+        }
+    },
+    "1674231915849650:1755": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849650_1755.mesh"
+        }
+    },
+    "1674231915850067:2090": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/outsole_rubber.mesh",
+                "hash": "a03d5f7b51e03c7c98d38666b803d19c"
+            }
+        }
+    }
+}

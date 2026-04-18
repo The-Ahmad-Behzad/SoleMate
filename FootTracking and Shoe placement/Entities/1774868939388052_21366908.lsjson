@@ -1,0 +1,22 @@
+{
+    "1774868939388052:21366908": {
+        "IResourceController": {
+            "name": "Textures",
+            "type": 0,
+            "subtype": -1,
+            "dependency": 0,
+            "hidden": false,
+            "publicId": "1774868940568072:21367462",
+            "resources": [
+                "1774868939580834:21366997"
+            ]
+        }
+    },
+    "1774868940568072:21367462": {
+        "IResourceController": {
+            "public": {
+                "path": "../AdditionalFiles/3D Resources/Sandal 1/girl_sandal1/Textures"
+            }
+        }
+    }
+}

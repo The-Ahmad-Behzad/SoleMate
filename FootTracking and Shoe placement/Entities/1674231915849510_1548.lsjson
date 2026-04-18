@@ -1,0 +1,115 @@
+{
+    "1667584348297523:62691": {
+        "Compression::IController": {
+            "compressed_files": "",
+            "infos": {
+                "compressedRAM": "58560",
+                "compressedSize": "49653",
+                "extension": "mesh",
+                "originalRAM": "58560",
+                "originalSize": "49653",
+                "settings": {
+                    "attributeFormat": "",
+                    "draco": {
+                        "colorBits": "8",
+                        "compressLvl": "7",
+                        "normalBits": "8",
+                        "posBits": "11",
+                        "texBits": "10"
+                    },
+                    "info": {
+                        "hasBlendShapes": "false",
+                        "vertexAttribs": [
+                            {
+                                "canBeDisabled": "false",
+                                "format": "9",
+                                "semantic": "position"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "normal"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "tangent"
+                            },
+                            {
+                                "canBeDisabled": "true",
+                                "format": "9",
+                                "semantic": "texture0"
+                            }
+                        ]
+                    },
+                    "isCompressed": "false",
+                    "type": "0"
+                }
+            },
+            "uncompressed_file": "1674231915849652:1757"
+        }
+    },
+    "1674231915849510:1548": {
+        "IResourceController": {
+            "name": "leather",
+            "type": 3,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1667584348297523:62691",
+            "fileId": "1674231915849651:1756",
+            "publicId": "1674231915850068:2091",
+            "expected_hash": "952b29ee8ace9568f33ad2f064cffa67",
+            "additional": {
+                "info": {
+                    "hasBlendShapes": "false",
+                    "vertexAttribs": [
+                        {
+                            "canBeDisabled": "false",
+                            "format": "9",
+                            "semantic": "position"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "normal"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "tangent"
+                        },
+                        {
+                            "canBeDisabled": "true",
+                            "format": "9",
+                            "semantic": "texture0"
+                        }
+                    ]
+                }
+            }
+        },
+        "IResourceManager": {
+            "uid": "1667584348297523:62691",
+            "name": "Files/File_1674231915849651_1756.mesh",
+            "flags": 1
+        }
+    },
+    "1674231915849651:1756": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849651_1756.mesh"
+        }
+    },
+    "1674231915849652:1757": {
+        "IFileManager": {
+            "path": "Files/File_1674231915849652_1757.mesh"
+        }
+    },
+    "1674231915850068:2091": {
+        "IResourceController": {
+            "public": {
+                "path": "3D Resources/Moccasins/Meshes/Meshes/leather.mesh",
+                "hash": "952b29ee8ace9568f33ad2f064cffa67"
+            }
+        }
+    }
+}

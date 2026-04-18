@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import '../config/api_config.dart';
@@ -24,7 +25,10 @@ class ApiClient {
       }
     }
 
-    return http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API GET: $uri');
+    final response = await http.get(uri, headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API GET Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> post(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -38,7 +42,10 @@ class ApiClient {
       }
     }
 
-    return http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API POST: $uri');
+    final response = await http.post(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API POST Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> put(String endpoint, dynamic body, {bool requiresAuth = false}) async {
@@ -52,7 +59,10 @@ class ApiClient {
       }
     }
 
-    return http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API PUT: $uri');
+    final response = await http.put(uri, body: jsonEncode(body), headers: headers).timeout(ApiConfig.timeout);
+    debugPrint('API PUT Response [${response.statusCode}]: ${response.body.length > 500 ? response.body.substring(0, 500) + '...' : response.body}');
+    return response;
   }
 
   Future<http.Response> delete(String endpoint, {bool requiresAuth = false}) async {
@@ -62,11 +72,42 @@ class ApiClient {
     if (requiresAuth) {
       final token = await _getAuthToken();
       if (token != null) {
+        debugPrint('AUTH_TOKEN_DIAGNOSTIC: $token');
         headers['Authorization'] = 'Bearer $token';
       }
     }
 
+    debugPrint('API DELETE: $uri');
     return http.delete(uri, headers: headers).timeout(ApiConfig.timeout);
+  }
+
+  Future<http.StreamedResponse> postMultipart(
+    String endpoint, {
+    Map<String, String>? fields,
+    List<http.MultipartFile>? files,
+    bool requiresAuth = false,
+  }) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}$endpoint');
+    final request = http.MultipartRequest('POST', uri);
+
+    if (requiresAuth) {
+      final token = await _getAuthToken();
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+    }
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    if (files != null) {
+      request.files.addAll(files);
+    }
+
+    debugPrint('API POST MULTIPART: $uri with ${files?.length ?? 0} files');
+    final response = await request.send().timeout(ApiConfig.timeout);
+    return response;
   }
 }
 

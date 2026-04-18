@@ -1,0 +1,38 @@
+{
+    "1774878784144326:25577321": {
+        "IResourceController": {
+            "public": {
+                "path": "Scripts/DynamicShoeLoader.js",
+                "hash": "e2af1a920c5a70631d31f3c0f9899488"
+            }
+        }
+    },
+    "1774878784144912:25577323": {
+        "IFileManager": {
+            "path": "Files/File_1774878784144912_25577323.js"
+        }
+    },
+    "1774878784148360:25577324": {
+        "IResourceController": {
+            "name": "DynamicShoeLoader",
+            "type": 4,
+            "subtype": 0,
+            "dependency": 0,
+            "hidden": false,
+            "uid": "1774878784148392:25577325",
+            "fileId": "1774878784144912:25577323",
+            "publicId": "1774878784144326:25577321",
+            "expected_hash": "e2af1a920c5a70631d31f3c0f9899488"
+        },
+        "IResourceManager": {
+            "uid": "1774878784148392:25577325",
+            "name": "Files/File_1774878784144912_25577323.js",
+            "flags": 1
+        }
+    },
+    "1774878784148392:25577325": {
+        "ScriptModulesController": {
+            "dependent_module_names": []
+        }
+    }
+}

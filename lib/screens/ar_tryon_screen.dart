@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:provider/provider.dart';
+import '../services/navigation_service.dart';
 import '../theme/theme_config.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/product_card.dart';
@@ -7,6 +10,7 @@ import '../services/auth_service.dart';
 import '../services/tryon_api_service.dart';
 import '../ar/ar_main.dart';
 import '../models/product.dart';
+import '../repositories/catalog_repository.dart';
 import 'auth/login_screen.dart';
 import 'catalog_screen.dart';
 import 'outfit_match_screen.dart';
@@ -28,18 +32,47 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
   int _selectedShoeIndex = 0;
   bool _isARActive = false;
   bool _isSaving = false;
+  final CatalogRepository _catalogRepository = CatalogRepository();
+  List<Product> _products = [];
+  bool _isLoadingProducts = true;
   Product? _selectedProduct;
+  StreamSubscription<String>? _voiceSubscription;
 
   @override
   void initState() {
     super.initState();
     _selectedProduct = widget.selectedProduct;
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    setState(() => _isLoadingProducts = true);
+    try {
+      final products = await _catalogRepository.getProducts();
+      if (mounted) {
+        setState(() {
+          _products = products;
+          _isLoadingProducts = false;
+          // Pre-select first product if requested product is null
+          if (_selectedProduct == null && products.isNotEmpty) {
+            _selectedProduct = products[0];
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading products for AR selection: $e');
+      if (mounted) {
+        setState(() => _isLoadingProducts = false);
+      }
+    }
   }
 
   /// Opens AR Camera using ARMain widget
   Future<void> _openARView() async {
     setState(() => _isARActive = true);
-    await _arMain.checkPermissionsAndOpenAR(context);
+    final lensId = _selectedProduct?.arLensId;
+    final groupId = _selectedProduct?.arLensGroupId;
+    await _arMain.checkPermissionsAndOpenAR(context, lensId: lensId, groupId: groupId);
     setState(() => _isARActive = false);
   }
 
@@ -116,9 +149,9 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CatalogScreen()),
-              );
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => CatalogScreen()),
+                );
             },
             child: const Text('View all'),
           ),
@@ -406,96 +439,151 @@ class _ARTryOnScreenState extends State<ARTryOnScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Select Shoe',
-              style: AppTypography.headline4.copyWith(
-                color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Select Shoe',
+                  style: AppTypography.headline4.copyWith(
+                    color: isDark ? AppColors.darkForeground : AppColors.lightForeground,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 20),
+                  onPressed: _loadProducts,
+                  tooltip: 'Refresh Catalog',
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.lg),
             
-            // Shoe Grid
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: AppSpacing.lg,
-                mainAxisSpacing: AppSpacing.lg,
-                childAspectRatio: 1.0,
-              ),
-              itemCount: SampleShoes.arSelection.length,
-              itemBuilder: (context, index) {
-                final shoe = SampleShoes.arSelection[index];
-                final isSelected = _selectedShoeIndex == index;
-                
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedShoeIndex = index;
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: AppRadius.radiusLarge,
-                      border: Border.all(
-                        color: isSelected ? AppColors.secondary : AppColors.lightBorder,
-                        width: isSelected ? 2 : 1,
-                      ),
-                      gradient: AppGradients.elementGradient,
+            // Shoe Selection
+            if (_isLoadingProducts)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.xl),
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            else if (_products.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Column(
+                  children: [
+                    const Icon(Icons.info_outline, size: 48, color: AppColors.accent),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      'No shoes found in catalog.',
+                      style: AppTypography.bodyLarge,
                     ),
-                    child: Stack(
-                      children: [
-                        // Shoe Image
-                        ClipRRect(
-                          borderRadius: AppRadius.radiusLarge,
-                          child: Image.asset(
-                            shoe.imagePath,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  gradient: AppGradients.elementGradient,
-                                  borderRadius: AppRadius.radiusLarge,
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.shopping_bag,
-                                    color: AppColors.accent,
-                                    size: 40,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                    const SizedBox(height: AppSpacing.lg),
+                    OutlineButton(
+                      text: 'Retry',
+                      onPressed: _loadProducts,
+                      size: CustomButtonSize.small,
+                    ),
+                  ],
+                ),
+              )
+            else
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: AppSpacing.lg,
+                  mainAxisSpacing: AppSpacing.lg,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: _products.length,
+                itemBuilder: (context, index) {
+                  final shoe = _products[index];
+                  final isSelected = _selectedProduct?.id == shoe.id;
+                  
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedProduct = shoe;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: AppRadius.radiusLarge,
+                        border: Border.all(
+                          color: isSelected ? AppColors.secondary : AppColors.lightBorder,
+                          width: isSelected ? 2 : 1,
                         ),
-                        
-                        // Selection indicator
-                        if (isSelected)
+                        gradient: AppGradients.elementGradient,
+                      ),
+                      child: Stack(
+                        children: [
+                          // Shoe Image
+                          Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: AppRadius.radiusLarge,
+                              child: (shoe.thumbnailUrl != null && shoe.thumbnailUrl!.startsWith('http'))
+                                ? Image.network(
+                                    shoe.thumbnailUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.shopping_bag, size: 40)),
+                                  )
+                                : Image.asset(
+                                    shoe.thumbnailUrl ?? 'assets/images/shoes/nike_journey_run.png',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.shopping_bag, size: 40)),
+                                  ),
+                            ),
+                          ),
+                          
+                          // Selection indicator
+                          if (isSelected)
+                            Positioned(
+                              top: AppSpacing.sm,
+                              right: AppSpacing.sm,
+                              child: Container(
+                                padding: const EdgeInsets.all(AppSpacing.xs),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondary,
+                                  borderRadius: AppRadius.radiusFull,
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: AppColors.secondaryForeground,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          
+                          // Name overlay
                           Positioned(
-                            top: AppSpacing.sm,
-                            right: AppSpacing.sm,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
                             child: Container(
                               padding: const EdgeInsets.all(AppSpacing.xs),
                               decoration: BoxDecoration(
-                                color: AppColors.secondary,
-                                borderRadius: AppRadius.radiusFull,
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                                ),
+                                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppRadius.lg)),
                               ),
-                              child: const Icon(
-                                Icons.check,
-                                color: AppColors.secondaryForeground,
-                                size: 16,
+                              child: Text(
+                                shoe.name,
+                                style: AppTypography.caption.copyWith(color: Colors.white),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
           ],
         ),
       ),
