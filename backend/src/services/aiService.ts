@@ -1,6 +1,6 @@
 import { ProductModel } from '../models/Product.js';
 
-const AI_BASE_URL = 'https://outfit-recommendation-production.up.railway.app';
+const AI_BASE_URL = 'https://cooperative-essence-production-7eb2.up.railway.app';
 
 export class AIService {
     private static instance: AIService;
